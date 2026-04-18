@@ -8,8 +8,20 @@
 <link rel="stylesheet" href="css/novel-nav.css">
 <style>
   body { background: #0a0a0c; color: #ededed; }
-  body::before { opacity: 0.08; }
-  .wrap { max-width: 520px; margin: 0 auto; background: #0a0a0c; min-height: 100vh; }
+  body::before { opacity: 0.14; mix-blend-mode: overlay; }
+
+  .outer { display: flex; justify-content: center; }
+  .wrap { max-width: 720px; width: 100%; background: #0a0a0c; min-height: 100vh; }
+
+  @media (min-width: 1200px) {
+    .outer { align-items: flex-start; }
+    .wrap { max-width: 680px; }
+    /* side rails reserved — marginalia and chapter metadata to be added in future iter */
+    .rail-left, .rail-right {
+      width: 240px; flex-shrink: 0;
+      min-height: 100vh;
+    }
+  }
 
   /* status-bar-ish top frame */
   .status-frame {
@@ -190,7 +202,7 @@
     width: var(--p, 0%);
     transition: width 0.1s;
   }
-  .progress-bar .pct { color: #d14829; font-weight: 700; }
+  .progress-bar .pct { color: #ededed; font-weight: 700; }
 
   .end-marker {
     text-align: center;
@@ -238,6 +250,8 @@
 </head>
 <body>
 
+<div class="outer">
+<div class="rail-left"></div>
 <div class="wrap">
 
   <div class="status-frame">
@@ -352,6 +366,10 @@
   </div>
   <div class="bar" id="bar"></div>
 </div>
+
+</div><!-- .wrap -->
+<div class="rail-right"></div>
+</div><!-- .outer -->
 
 <script src="js/state.js"></script>
 <script src="js/ui.js"></script>
