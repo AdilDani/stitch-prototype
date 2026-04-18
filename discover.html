@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STITCH — Discover</title>
+<link rel="stylesheet" href="css/core.css">
+<style>
+  .wrap { max-width: 520px; margin: 0 auto; padding: 0 0 80px; }
+
+  .crown {
+    padding: 28px 22px 16px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .crown h1 {
+    font-size: 48px;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+  }
+  .crown p {
+    font-family: var(--font-editorial); font-style: italic;
+    color: var(--muted); font-size: 15px;
+    margin-top: 8px;
+  }
+
+  .search-bar {
+    position: relative;
+    padding: 14px 22px 10px;
+    background: var(--paper);
+    border-bottom: 1.5px solid var(--ink);
+    position: sticky; top: var(--nav-h); z-index: 50;
+  }
+  .search-bar .icon {
+    position: absolute;
+    left: 34px; top: 50%; transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .search-bar input {
+    width: 100%;
+    padding: 10px 10px 10px 34px;
+    font-family: var(--font-body); font-size: 15px;
+    border: none; border-bottom: 1.5px solid var(--ink);
+    background: transparent;
+    outline: none;
+  }
+  .search-bar input::placeholder { color: var(--muted-2); font-style: italic; }
+
+  .tag-strip {
+    display: flex; gap: 8px;
+    padding: 14px 22px 14px;
+    overflow-x: auto;
+    border-bottom: 1.5px solid var(--ink);
+    -webkit-overflow-scrolling: touch;
+  }
+  .tag-strip::-webkit-scrollbar { display: none; }
+
+  .section { padding: 28px 22px 0; }
+  .section-head {
+    display: flex; align-items: end; justify-content: space-between;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .section-head .label {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 26px; letter-spacing: -0.02em;
+  }
+  .section-head .arrow-link {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .section-head .arrow-link:hover { color: var(--accent); }
+
+  .trending-row {
+    display: flex; gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .trending-row::-webkit-scrollbar { display: none; }
+  .trend-card {
+    flex: 0 0 70%;
+    scroll-snap-align: start;
+    aspect-ratio: 3/4;
+    position: relative;
+    border: 1.5px solid var(--ink);
+    overflow: hidden;
+  }
+  .trend-card svg { width: 100%; height: 100%; display: block; }
+  .trend-card .meta {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 14px;
+    background: linear-gradient(to top, rgba(10,10,10,0.95), transparent 80%);
+    color: var(--paper);
+  }
+  .trend-card .g-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    background: var(--accent); color: var(--paper);
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 9px; letter-spacing: 0.14em;
+    margin-bottom: 8px;
+  }
+  .trend-card .t {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 22px; line-height: 1.05; letter-spacing: -0.02em;
+  }
+  .trend-card .a {
+    margin-top: 4px;
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.06em; color: rgba(244,242,236,0.7);
+  }
+
+  /* curated grid (asymmetric) */
+  .curated-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .cur-card {
+    position: relative;
+    border: 1.5px solid var(--ink);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    background: var(--paper);
+    transition: transform 0.15s;
+  }
+  .cur-card:hover { transform: translate(-2px, -2px); box-shadow: 3px 3px 0 var(--accent); }
+  .cur-card .art { aspect-ratio: 4/5; overflow: hidden; background: var(--paper-2); }
+  .cur-card .art svg { width: 100%; height: 100%; display: block; }
+  .cur-card .info { padding: 10px 12px 12px; }
+  .cur-card .ti {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 14px; letter-spacing: -0.01em; line-height: 1.1;
+  }
+  .cur-card .au {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--muted); letter-spacing: 0.06em;
+    margin-top: 3px;
+  }
+
+  .wide-banner {
+    grid-column: 1 / -1;
+    aspect-ratio: 16/7;
+    border: 1.5px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+    color: var(--paper);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    margin-top: 16px;
+  }
+  .wide-banner .bg { position: absolute; inset: 0; }
+  .wide-banner .bg svg { width: 100%; height: 100%; }
+  .wide-banner .content { position: relative; }
+  .wide-banner .k {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 28px; letter-spacing: -0.03em; line-height: 1;
+  }
+  .wide-banner .s { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    padding: 60px 20px;
+    text-align: center;
+    border: 1.5px dashed var(--ink);
+    font-family: var(--font-editorial); font-style: italic;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<nav class="global-nav" data-global-nav></nav>
+
+<div class="wrap">
+
+  <section class="crown">
+    <h1 class="display">Discover.</h1>
+    <p>What you read next is up to you. These are the novels currently available.</p>
+  </section>
+
+  <div class="search-bar">
+    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+    <input id="search" placeholder="Discover stories, authors, tags…">
+  </div>
+
+  <div class="tag-strip" id="tags"></div>
+
+  <section class="section" id="trending-section">
+    <div class="section-head">
+      <div class="label">Trending now</div>
+      <a class="arrow-link">See all →</a>
+    </div>
+    <div class="trending-row" id="trending"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div class="label">Curated catalog</div>
+      <div class="count mono" id="cat-count" style="color: var(--muted);"></div>
+    </div>
+    <div class="curated-grid" id="catalog"></div>
+  </section>
+
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  renderGlobalNav('discover');
+
+  const ALL_TAGS = ['All', 'Sci-Fi', 'Fantasy', 'Horror', 'Thriller', 'Literary', 'Post-Apocalyptic', 'Urban'];
+  const TAG_MATCH = {
+    'Sci-Fi': n => /sci-fi/i.test(n.genre),
+    'Fantasy': n => /fantasy/i.test(n.genre),
+    'Horror': n => /horror|lovecraft/i.test(n.genre),
+    'Thriller': n => /thriller/i.test(n.genre),
+    'Literary': n => /literary/i.test(n.genre),
+    'Post-Apocalyptic': n => /post-apocalyptic/i.test(n.genre),
+    'Urban': n => /urban/i.test(n.genre),
+  };
+
+  let activeTag = 'All';
+  let query = '';
+
+  const tagsEl = document.getElementById('tags');
+  tagsEl.innerHTML = ALL_TAGS.map(t => `<button class="chip ${t==='All'?'active':''}" data-tag="${t}">${t}</button>`).join('');
+  tagsEl.addEventListener('click', e => {
+    const b = e.target.closest('[data-tag]'); if (!b) return;
+    activeTag = b.dataset.tag;
+    tagsEl.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.dataset.tag === activeTag));
+    render();
+  });
+
+  document.getElementById('search').addEventListener('input', e => {
+    query = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  // trending (first 5 by latestChapter)
+  const trending = document.getElementById('trending');
+  trending.innerHTML = STITCH.NOVELS.slice().sort((a,b) => b.latestChapter - a.latestChapter).slice(0,5).map(n => `
+    <a class="trend-card" href="novel-home.html?id=${n.id}">
+      ${coverSvg(n.cover)}
+      <div class="meta">
+        <span class="g-tag">${n.genre.split('/')[0].trim().toUpperCase()}</span>
+        <div class="t">${n.title}</div>
+        <div class="a">By ${n.author}</div>
+      </div>
+    </a>
+  `).join('');
+
+  function filtered() {
+    return STITCH.NOVELS.filter(n => {
+      if (activeTag !== 'All' && TAG_MATCH[activeTag] && !TAG_MATCH[activeTag](n)) return false;
+      if (query && !(n.title + ' ' + n.author + ' ' + n.genre).toLowerCase().includes(query)) return false;
+      return true;
+    });
+  }
+
+  function render() {
+    const list = filtered();
+    document.getElementById('cat-count').textContent = list.length + ' novels';
+    const catalog = document.getElementById('catalog');
+
+    if (!list.length) {
+      catalog.innerHTML = `<div class="empty-state">No novels match that filter yet.</div>`;
+      return;
+    }
+
+    catalog.innerHTML = list.map((n, i) => `
+      <a class="cur-card" href="novel-home.html?id=${n.id}">
+        <div class="art">${coverSvg(n.cover)}</div>
+        <div class="info">
+          <div class="ti">${n.title}</div>
+          <div class="au">${n.genre.toUpperCase()} · ${n.author}</div>
+        </div>
+      </a>
+    `).join('') + (list.length > 3 ? `
+      <a class="wide-banner" href="novel-home.html?id=long-winter">
+        <div class="bg">${coverSvg('cover-winter')}</div>
+        <div class="content">
+          <div class="s">Author collective / weekly</div>
+          <div class="k">Wasteland Diaries</div>
+        </div>
+      </a>` : '');
+
+    // trending row hides when searching
+    document.getElementById('trending-section').style.display = query || activeTag !== 'All' ? 'none' : '';
+  }
+
+  render();
+</script>
+
+</body>
+</html>

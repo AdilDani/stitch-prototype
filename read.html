@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STITCH_ENGINE — Ch. 04</title>
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/novel-nav.css">
+<style>
+  body { background: #0a0a0c; color: #ededed; }
+  body::before { opacity: 0.08; }
+  .wrap { max-width: 520px; margin: 0 auto; background: #0a0a0c; min-height: 100vh; }
+
+  /* status-bar-ish top frame */
+  .status-frame {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 10px 16px;
+    background: rgba(10,10,12,0.85);
+    backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--font-mono); font-size: 11px;
+    color: rgba(237,237,237,0.65);
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid rgba(237,237,237,0.1);
+  }
+  .status-frame .left, .status-frame .right {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .status-frame .back-btn {
+    width: 32px; height: 32px;
+    display: grid; place-items: center;
+    border: 1px solid rgba(237,237,237,0.2);
+    color: #ededed;
+  }
+  .status-frame .back-btn:hover { background: #d14829; border-color: #d14829; }
+  .status-frame .time {
+    font-weight: 700;
+    color: #ededed;
+  }
+  .status-frame .battery {
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+
+  /* audio envelope floating pill */
+  .audio-pill {
+    position: fixed;
+    bottom: 80px; right: 16px;
+    z-index: 90;
+    width: 56px; height: 56px;
+    background: #0a0a0c;
+    border: 1.5px solid rgba(237,237,237,0.3);
+    display: grid; place-items: center;
+    color: #ededed;
+    cursor: pointer;
+  }
+  .audio-pill:hover { background: #d14829; border-color: #d14829; }
+  .audio-pill svg { width: 20px; height: 20px; }
+  .audio-pill.playing { background: #d14829; border-color: #d14829; }
+
+  /* chapter head */
+  .ch-head {
+    padding: 60px 24px 32px;
+    text-align: left;
+    border-bottom: 1px solid rgba(237,237,237,0.08);
+  }
+  .ch-head .eyebrow {
+    color: rgba(237,237,237,0.55);
+    margin-bottom: 14px;
+    display: block;
+  }
+  .ch-head .num {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: #d14829;
+    letter-spacing: 0.3em;
+    margin-bottom: 18px;
+  }
+  .ch-head h1 {
+    font-family: var(--font-editorial);
+    font-weight: 900;
+    font-size: 42px;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: #ededed;
+  }
+  .ch-head .author-stamp {
+    margin-top: 24px;
+    display: flex; align-items: center; gap: 12px;
+    font-family: var(--font-mono); font-size: 11px;
+    color: rgba(237,237,237,0.5);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .ch-head .author-stamp .avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #d14829; color: #ededed;
+    display: grid; place-items: center;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px;
+  }
+
+  /* splash block */
+  .splash {
+    position: relative;
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    margin: 0;
+  }
+  .splash svg { width: 100%; height: 100%; display: block; }
+  .splash-caption {
+    position: absolute;
+    left: 14px; bottom: 14px;
+    background: rgba(10,10,10,0.85);
+    color: #ededed;
+    padding: 6px 10px;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    border-left: 2px solid #d14829;
+  }
+
+  /* prose block */
+  .prose {
+    padding: 32px 28px 24px;
+    font-family: var(--font-editorial);
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.7;
+    color: rgba(237,237,237,0.88);
+  }
+  .prose p { margin-bottom: 22px; }
+  .prose p.drop::first-letter {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 66px;
+    float: left;
+    line-height: 0.9;
+    padding-right: 12px;
+    padding-top: 6px;
+    color: #d14829;
+  }
+  .prose em { color: #ededed; }
+  .prose .pullquote {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.3;
+    color: #ededed;
+    padding: 24px 0 24px 24px;
+    margin: 32px 0;
+    border-left: 3px solid #d14829;
+  }
+  .prose .scene-break {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px;
+    margin: 40px 0;
+    font-family: var(--font-mono); font-size: 16px;
+    color: rgba(237,237,237,0.35);
+    letter-spacing: 0.4em;
+  }
+
+  /* progress bar (bottom, fixed) */
+  .progress-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10,10,12,0.92);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(237,237,237,0.1);
+    padding: 10px 16px 14px;
+    font-family: var(--font-mono); font-size: 10px;
+    color: rgba(237,237,237,0.6);
+    letter-spacing: 0.1em;
+  }
+  .progress-bar .row {
+    display: flex; justify-content: space-between;
+    text-transform: uppercase;
+  }
+  .progress-bar .bar {
+    margin-top: 6px;
+    height: 3px;
+    background: rgba(237,237,237,0.12);
+    position: relative;
+  }
+  .progress-bar .bar::before {
+    content: ''; position: absolute; inset: 0;
+    background: #d14829;
+    width: var(--p, 0%);
+    transition: width 0.1s;
+  }
+  .progress-bar .pct { color: #d14829; font-weight: 700; }
+
+  .end-marker {
+    text-align: center;
+    padding: 60px 22px 120px;
+    font-family: var(--font-mono); font-size: 11px;
+    color: rgba(237,237,237,0.4);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .end-marker .nxt {
+    display: block;
+    margin-top: 24px;
+    padding: 16px;
+    border: 1px solid rgba(237,237,237,0.2);
+    color: #ededed;
+    background: #12121a;
+    text-align: left;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+  .end-marker .nxt b { display: block; color: #d14829; font-size: 11px; letter-spacing: 0.18em; margin-bottom: 6px; }
+  .end-marker .nxt span {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 20px; letter-spacing: -0.01em;
+    color: #ededed; text-transform: none; display: block; margin-top: 4px;
+  }
+
+  /* audio volume visualizer */
+  .env-viz {
+    position: fixed;
+    bottom: 54px; right: 16px;
+    display: flex; align-items: flex-end; gap: 2px;
+    height: 24px;
+    z-index: 90;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    opacity: 0;
+  }
+  .env-viz.active { opacity: 1; }
+  .env-viz span {
+    width: 3px;
+    background: #d14829;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="status-frame">
+    <div class="left">
+      <a class="back-btn" href="chapters.html?id=stitch-engine">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </a>
+      <span class="time">04:15 AM</span>
+    </div>
+    <div class="right">
+      <span>LTE</span>
+      <span class="battery">
+        <svg width="16" height="10" viewBox="0 0 24 14" fill="none"><rect x="1" y="1" width="20" height="12" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="22" y="5" width="1.5" height="4" fill="currentColor"/><rect x="3" y="3" width="16" height="8" fill="#d14829"/></svg>
+        82%
+      </span>
+    </div>
+  </div>
+
+  <section class="ch-head">
+    <span class="eyebrow">STITCH_ENGINE · ACT 01 INITIALIZATION</span>
+    <div class="num">— CHAPTER IV —</div>
+    <h1>The Architecture of Silence</h1>
+    <div class="author-stamp">
+      <span class="avatar">SA</span>
+      <span>System Architect · 22 min read · released today</span>
+    </div>
+  </section>
+
+  <section class="splash">
+    ${''}
+    <svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <radialGradient id="spg" cx="50%" cy="35%">
+          <stop offset="0%" stop-color="#d14829" stop-opacity="0.8"/>
+          <stop offset="40%" stop-color="#2a1a30" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#0a0a0c"/>
+        </radialGradient>
+      </defs>
+      <rect width="800" height="500" fill="#0a0a0c"/>
+      <rect width="800" height="500" fill="url(#spg)"/>
+      <g fill="#0a0a0c">
+        <polygon points="0,500 80,320 160,500"/>
+        <polygon points="120,500 220,280 320,500"/>
+        <polygon points="260,500 400,160 540,500"/>
+        <polygon points="460,500 580,280 700,500"/>
+        <polygon points="620,500 720,340 800,500"/>
+      </g>
+      <g fill="#0a0a0c" opacity="0.95">
+        <rect x="40" y="380" width="30" height="120"/>
+        <rect x="120" y="340" width="40" height="160"/>
+        <rect x="220" y="360" width="28" height="140"/>
+        <rect x="340" y="320" width="38" height="180"/>
+        <rect x="460" y="350" width="34" height="150"/>
+        <rect x="560" y="330" width="40" height="170"/>
+        <rect x="660" y="360" width="30" height="140"/>
+        <rect x="720" y="340" width="40" height="160"/>
+      </g>
+      <circle cx="560" cy="180" r="3" fill="#f2b705"/>
+      <circle cx="240" cy="220" r="2" fill="#f2b705"/>
+      <circle cx="380" cy="260" r="2" fill="#f2b705"/>
+    </svg>
+    <div class="splash-caption">Cover plate — Citadel, eastern approach</div>
+  </section>
+
+  <article class="prose" id="prose">
+    <p class="drop">The Citadel was quieter than it had any right to be. Iris had grown up listening to the low, constant hum of the city's infrastructure — the pumps, the vents, the distant drone of the trans-sector rail — but here, four thousand meters above the grid, there was nothing. Not even wind.</p>
+
+    <p>She walked the outer platform with the soles of her work boots rolling against the etched steel, each step producing a sound that seemed to exist only in her own skull. Emerine had warned her about this. <em>"They build the upper floors to absorb. Absorb sound, absorb light, absorb you if you're not careful."</em></p>
+
+    <p>She stopped at the rail. The city below was a quilt of lights, seamed and re-seamed, patched where the old infrastructure had refused to speak to the new. She could see the seams from here. She could always see the seams. It was, in its own strange way, the reason she had been hired.</p>
+
+    <div class="pullquote">"Every stitched thing was stitched by someone. The question you should be asking is not whether they are still here, but whether they are still listening."</div>
+
+    <p>The door behind her opened without a sound. She turned slowly. She had learned, years ago, never to flinch. Architect-0 stood in the frame, hands folded, eyes the color of wet concrete.</p>
+
+    <p>"You came alone," he said. It was not a question.</p>
+
+    <p>"You asked me to."</p>
+
+    <p>He studied her for a long moment. She waited. This was how conversations went up here, she had been told — they happened mostly in the pauses. She counted the beats. She listened to the absence of wind. She wondered, as she often did, whether the silence was designed or simply found.</p>
+
+    <div class="scene-break">· · ·</div>
+
+    <p>"The anomaly," he said at last, "has been growing. We have known this for three cycles. What we did not know, until very recently, is that it is growing <em>toward</em> you."</p>
+
+    <p>She almost laughed. She would have laughed, if the word <em>toward</em> hadn't hit her in the chest like a dropped wrench. She opened her mouth to say something clever, something dismissive, and found that the Citadel had stolen her voice along with everything else.</p>
+
+    <p>"How long," she said finally, and the question came out in a register she did not recognize, "have you known?"</p>
+
+    <p>Architect-0 did not answer. He turned, instead, and walked back into the dark of the corridor, and after a moment — the longest moment of her life — Iris Kain followed.</p>
+  </article>
+
+  <div class="end-marker">
+    — END CHAPTER IV —
+    <div class="nxt">
+      <b>NEXT · CHAPTER 05</b>
+      <span>Executing Runtime Protocol</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="env-viz" id="env"></div>
+<button class="audio-pill" id="audio" title="Toggle ambient audio">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/></svg>
+</button>
+
+<div class="progress-bar">
+  <div class="row">
+    <span>CHAPTER IV · THE ARCHITECTURE OF SILENCE</span>
+    <span class="pct" id="pct">0%</span>
+  </div>
+  <div class="bar" id="bar"></div>
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  // scroll progress
+  const pct = document.getElementById('pct');
+  const bar = document.getElementById('bar');
+  function updateProgress() {
+    const scrollY = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const p = Math.max(0, Math.min(1, scrollY / maxScroll));
+    pct.textContent = Math.round(p * 100) + '%';
+    bar.style.setProperty('--p', (p * 100) + '%');
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  // audio envelope visualizer
+  const audio = document.getElementById('audio');
+  const env = document.getElementById('env');
+  env.innerHTML = Array.from({length: 12}).map((_, i) => `<span style="height: 2px"></span>`).join('');
+  let playing = false;
+  let tick = 0;
+  let interval;
+  audio.addEventListener('click', () => {
+    playing = !playing;
+    audio.classList.toggle('playing', playing);
+    env.classList.toggle('active', playing);
+    if (playing) {
+      interval = setInterval(() => {
+        tick += 0.3;
+        // normal-distribution-ish envelope
+        env.querySelectorAll('span').forEach((s, i) => {
+          const center = 6;
+          const dist = Math.abs(i - center);
+          const base = Math.exp(-dist*dist / 6);
+          const noise = (Math.sin(tick + i) + 1) / 2;
+          const h = 3 + base * 18 * (0.6 + 0.4 * noise);
+          s.style.height = h + 'px';
+        });
+      }, 60);
+    } else {
+      clearInterval(interval);
+      env.querySelectorAll('span').forEach(s => s.style.height = '2px');
+    }
+  });
+</script>
+</body>
+</html>

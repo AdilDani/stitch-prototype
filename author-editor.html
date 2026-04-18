@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prose &amp; Protocol — Chapter Editor</title>
+<link rel="stylesheet" href="css/core.css">
+<style>
+  body { background: var(--paper); overflow: hidden; }
+  body::before { opacity: 0.06; }
+
+  /* top bar */
+  .topbar {
+    height: 56px;
+    background: var(--ink);
+    color: var(--paper);
+    display: grid;
+    grid-template-columns: 260px 1fr auto;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .topbar .brand {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 16px; letter-spacing: -0.01em;
+  }
+  .topbar .brand small { display: block; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; color: rgba(244,242,236,0.55); font-weight: 400; margin-top: 2px; text-transform: uppercase; }
+  .tabs {
+    display: flex; gap: 20px;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .tabs a { color: rgba(244,242,236,0.5); padding: 8px 0; border-bottom: 2px solid transparent; }
+  .tabs a:hover { color: var(--paper); }
+  .tabs a.active { color: var(--paper); border-bottom-color: var(--accent); }
+  .topbar-actions { display: flex; gap: 10px; }
+  .topbar-btn {
+    padding: 8px 16px;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    border: 1px solid rgba(244,242,236,0.4);
+    color: var(--paper);
+    cursor: pointer;
+    background: transparent;
+  }
+  .topbar-btn.primary { background: var(--accent); border-color: var(--accent); }
+  .topbar-btn:hover { background: rgba(244,242,236,0.1); }
+  .topbar-btn.primary:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+
+  /* 3-pane layout */
+  .layout {
+    display: grid;
+    grid-template-columns: 240px 1fr 320px;
+    height: calc(100vh - 56px);
+  }
+
+  /* left: chapters list */
+  .chap-list {
+    background: var(--paper-2);
+    border-right: 1.5px solid var(--ink);
+    overflow-y: auto;
+  }
+  .chap-head {
+    padding: 16px 18px;
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase;
+    border-bottom: 1.5px solid var(--ink);
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--paper);
+  }
+  .chap-head .add {
+    width: 24px; height: 24px;
+    background: var(--ink); color: var(--paper);
+    display: grid; place-items: center;
+    cursor: pointer;
+  }
+  .chap-item {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .chap-item:hover { background: var(--paper); }
+  .chap-item.active { background: var(--ink); color: var(--paper); border-left: 3px solid var(--accent); padding-left: 15px; }
+  .chap-item .n { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--muted); }
+  .chap-item.active .n { color: rgba(244,242,236,0.55); }
+  .chap-item .t { font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: -0.01em; line-height: 1.2; margin-top: 2px; }
+  .chap-item .status { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: 0.1em; margin-top: 4px; text-transform: uppercase; }
+  .chap-item.active .status { color: rgba(244,242,236,0.6); }
+
+  /* center: editor */
+  .editor {
+    overflow-y: auto;
+    padding: 32px 48px 120px;
+  }
+  .ch-title-block {
+    margin-bottom: 32px;
+    padding-bottom: 22px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .ch-title-block .eyebrow { display: block; margin-bottom: 10px; }
+  .ch-title-block input.title {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 42px; letter-spacing: -0.03em;
+    width: 100%; border: none; outline: none; background: transparent;
+    padding: 0;
+    color: var(--ink);
+  }
+  .ch-title-block .meta-row {
+    margin-top: 14px;
+    display: flex; gap: 12px; align-items: center;
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--muted); letter-spacing: 0.08em;
+  }
+
+  /* block */
+  .block {
+    position: relative;
+    margin-bottom: 16px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--paper);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .block:hover { border-color: var(--ink); }
+  .block.selected { border-color: var(--ink); box-shadow: 4px 4px 0 var(--accent); }
+  .block-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper-2);
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .block-head .btag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-weight: 700; color: var(--ink);
+  }
+  .block-head .btag .dot { width: 8px; height: 8px; background: var(--accent); }
+  .block-head .tools { display: flex; gap: 4px; }
+  .block-head .tools button {
+    padding: 3px 8px;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    cursor: pointer;
+  }
+  .block-head .tools button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .block-body { padding: 16px 18px; }
+  .block-body textarea {
+    width: 100%;
+    border: none; outline: none; background: transparent;
+    font-family: var(--font-editorial);
+    font-size: 17px; line-height: 1.6; color: var(--ink);
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .block.splash .block-body { padding: 0; }
+  .block.splash .preview {
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+  }
+  .block.splash .preview svg { width: 100%; height: 100%; display: block; }
+  .block.splash .caption {
+    padding: 10px 14px;
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--muted); letter-spacing: 0.08em;
+  }
+
+  .add-block {
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 1.5px dashed var(--line-strong);
+    color: var(--muted);
+    cursor: pointer;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .add-block:hover { border-color: var(--ink); color: var(--ink); }
+
+  /* right: inspector */
+  .inspector {
+    background: var(--paper-2);
+    border-left: 1.5px solid var(--ink);
+    overflow-y: auto;
+    padding: 0;
+  }
+  .insp-head {
+    padding: 16px 18px;
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase;
+    border-bottom: 1.5px solid var(--ink);
+    background: var(--paper);
+  }
+  .insp-sec { padding: 20px 18px; border-bottom: 1px solid var(--line); }
+  .insp-sec h4 {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 14px; font-weight: 700;
+  }
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block;
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--muted); letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .field select, .field input[type=text] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    font-family: var(--font-body); font-size: 13px;
+    outline: none;
+  }
+  .field input[type=number] {
+    width: 72px;
+    padding: 6px 10px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    font-family: var(--font-mono); font-size: 13px;
+    outline: none;
+    text-align: center;
+  }
+
+  /* AUDIO ENVELOPE GRAPH */
+  .envelope {
+    padding: 14px;
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    position: relative;
+    margin-bottom: 10px;
+  }
+  .envelope svg { width: 100%; height: 120px; display: block; }
+  .envelope .readout {
+    padding-top: 10px;
+    border-top: 1px solid rgba(244,242,236,0.15);
+    margin-top: 10px;
+    font-family: var(--font-mono); font-size: 10px;
+    color: rgba(244,242,236,0.65);
+    letter-spacing: 0.06em;
+  }
+  .envelope .readout b { color: var(--accent); }
+
+  .slider-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 8px;
+    font-family: var(--font-mono); font-size: 11px;
+  }
+  .slider-row input[type=range] {
+    flex: 1;
+    -webkit-appearance: none; appearance: none;
+    height: 2px; background: var(--ink); outline: none;
+  }
+  .slider-row input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 16px; height: 16px;
+    background: var(--accent);
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+  }
+  .slider-row .lbl { min-width: 60px; color: var(--muted); letter-spacing: 0.08em; }
+  .slider-row .val { font-weight: 700; color: var(--ink); min-width: 32px; text-align: right; }
+
+  .spread-label {
+    display: flex; justify-content: space-between;
+    font-family: var(--font-mono); font-size: 9px;
+    color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .asset-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px;
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    margin-bottom: 10px;
+  }
+  .asset-row .ic {
+    width: 30px; height: 30px;
+    background: var(--ink); color: var(--paper);
+    display: grid; place-items: center;
+  }
+  .asset-row .ic svg { width: 14px; height: 14px; }
+  .asset-row .name { font-family: var(--font-display); font-weight: 700; font-size: 12px; flex: 1; }
+  .asset-row .change-btn {
+    padding: 4px 10px; font-family: var(--font-mono); font-size: 10px;
+    border: 1px solid var(--ink); background: var(--paper); cursor: pointer;
+    letter-spacing: 0.08em;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    PROSE &amp; PROTOCOL
+    <small>The Long Winter</small>
+  </div>
+  <div class="tabs">
+    <a href="author-editor.html" class="active">Editor</a>
+    <a href="author-story-bible.html">Story Bible</a>
+    <a href="author-story-bible.html#assets">Assets</a>
+  </div>
+  <div class="topbar-actions">
+    <button class="topbar-btn">Preview</button>
+    <button class="topbar-btn primary">Save</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="chap-list">
+    <div class="chap-head">
+      <span>Chapters</span>
+      <div class="add"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+    </div>
+    <div class="chap-item">
+      <div class="n">CH. 01</div>
+      <div class="t">First Frost</div>
+      <div class="status">Published · 2 weeks ago</div>
+    </div>
+    <div class="chap-item">
+      <div class="n">CH. 02</div>
+      <div class="t">Cold Lattice</div>
+      <div class="status">Published · 12 days ago</div>
+    </div>
+    <div class="chap-item">
+      <div class="n">CH. 03</div>
+      <div class="t">The Tower Replies</div>
+      <div class="status">Published · 9 days ago</div>
+    </div>
+    <div class="chap-item active">
+      <div class="n">CH. 04</div>
+      <div class="t">The Descent</div>
+      <div class="status">Editing · 3 blocks</div>
+    </div>
+    <div class="chap-item">
+      <div class="n">CH. 05</div>
+      <div class="t">Untitled</div>
+      <div class="status">Draft · 0 blocks</div>
+    </div>
+  </aside>
+
+  <main class="editor">
+
+    <div class="ch-title-block">
+      <span class="eyebrow">CHAPTER 04 · YEAR 47 OF THE SNOW</span>
+      <input class="title" value="The Descent">
+      <div class="meta-row">
+        <span>3 blocks</span><span>·</span>
+        <span>1,240 words</span><span>·</span>
+        <span>Audio envelope set</span>
+      </div>
+    </div>
+
+    <div class="block selected" data-block="1">
+      <div class="block-head">
+        <span class="btag"><span class="dot"></span>BLOCK 1 · TEXT</span>
+        <div class="tools">
+          <button>Split</button>
+          <button>Merge</button>
+          <button>Delete</button>
+        </div>
+      </div>
+      <div class="block-body">
+        <textarea>Iris stood at the edge of the platform, listening. The Citadel was quieter than it had any right to be — she had grown up with the drone of the trans-sector rail, the pumps, the vents. Here, four thousand meters above the grid, there was nothing. Not even wind.
+
+She walked, each footstep producing a sound that seemed to exist only in her own skull.</textarea>
+      </div>
+    </div>
+
+    <div class="block splash" data-block="2">
+      <div class="block-head">
+        <span class="btag"><span class="dot"></span>BLOCK 2 · SPLASH ART</span>
+        <div class="tools">
+          <button>Replace</button>
+          <button>Delete</button>
+        </div>
+      </div>
+      <div class="block-body">
+        <div class="preview">
+          <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+            <rect width="800" height="450" fill="#c8d4da"/>
+            <polygon points="0,260 90,220 160,260 240,210 320,250 400,180 480,230 560,190 640,240 720,200 800,250 800,450 0,450" fill="#8a9aa3"/>
+            <polygon points="0,320 90,290 160,310 240,280 320,300 400,260 480,290 560,270 640,300 720,280 800,310 800,450 0,450" fill="#5f7a82"/>
+            <text x="60" y="420" fill="#0d0d0f" font-family="Archivo" font-weight="900" font-size="28" letter-spacing="-1">YEAR 47 · EASTERN APPROACH</text>
+          </svg>
+        </div>
+        <div class="caption">hero-winter-east.webp · 1600×900 · uploaded 2 days ago</div>
+      </div>
+    </div>
+
+    <div class="block" data-block="3">
+      <div class="block-head">
+        <span class="btag"><span class="dot"></span>BLOCK 3 · TEXT</span>
+        <div class="tools">
+          <button>Split</button>
+          <button>Merge</button>
+          <button>Delete</button>
+        </div>
+      </div>
+      <div class="block-body">
+        <textarea>She stopped at the rail. The city below was a quilt of lights, seamed and re-seamed, patched where the old infrastructure had refused to speak to the new. She could see the seams from here. She could always see the seams.
+
+It was, in its own strange way, the reason she had been hired.</textarea>
+      </div>
+    </div>
+
+    <button class="add-block">+ Add new block</button>
+
+  </main>
+
+  <aside class="inspector">
+    <div class="insp-head">Inspector</div>
+
+    <section class="insp-sec">
+      <h4>BLOCK 2 · SPLASH SETTINGS</h4>
+      <div class="field">
+        <label>Animation</label>
+        <select>
+          <option>Parallax fade-in</option>
+          <option>Scroll-driven zoom</option>
+          <option>Static (no motion)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Z-index</label>
+        <select>
+          <option>Layer 2 — Foreground</option>
+          <option>Layer 1 — Mid-ground</option>
+          <option>Layer 0 — Background</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Placement</label>
+        <select>
+          <option>Full-bleed between paragraphs</option>
+          <option>Inline figure (40%)</option>
+          <option>Pinned to chapter top</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="insp-sec">
+      <h4>AUDIO MAP · CHAPTER 04</h4>
+      <div class="asset-row">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+        <div class="name">winter-drone-v2.wav</div>
+        <button class="change-btn">Change</button>
+      </div>
+
+      <div class="envelope">
+        <svg id="env" viewBox="0 0 300 120" preserveAspectRatio="none"></svg>
+        <div class="readout">ARRAY · <b id="arr">[0.2, 0.6, 1.0, 0.6, 0.2]</b></div>
+      </div>
+
+      <div class="slider-row">
+        <span class="lbl">Peak vol</span>
+        <input type="range" id="peak" min="0" max="1" step="0.01" value="0.85">
+        <span class="val" id="peak-v">0.85</span>
+      </div>
+      <div class="slider-row">
+        <span class="lbl">Peak ¶</span>
+        <input type="number" id="pi" min="1" max="52" value="14">
+      </div>
+      <div class="slider-row">
+        <span class="lbl">Spread</span>
+        <input type="range" id="spread" min="2" max="30" step="1" value="12">
+        <span class="val" id="spread-v">12</span>
+      </div>
+      <div class="spread-label"><span>Tight focus</span><span>Slow build</span></div>
+    </section>
+  </aside>
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  // Interactive audio envelope — normal distribution curve
+  const envSvg = document.getElementById('env');
+  const peakInput = document.getElementById('peak');
+  const spreadInput = document.getElementById('spread');
+  const piInput = document.getElementById('pi');
+  const peakV = document.getElementById('peak-v');
+  const spreadV = document.getElementById('spread-v');
+  const arrOut = document.getElementById('arr');
+
+  const TOTAL_PAR = 52;
+  const W = 300, H = 120, PAD = 8;
+
+  function gaussian(x, mu, sigma) {
+    return Math.exp(-((x - mu) ** 2) / (2 * sigma * sigma));
+  }
+
+  function drawEnvelope() {
+    const peak = parseFloat(peakInput.value);
+    const spread = parseFloat(spreadInput.value);
+    const peakPar = parseFloat(piInput.value);
+
+    peakV.textContent = peak.toFixed(2);
+    spreadV.textContent = spread;
+
+    // build curve across paragraphs
+    const pts = [];
+    const vals = [];
+    for (let i = 0; i < TOTAL_PAR; i++) {
+      const v = gaussian(i, peakPar - 1, spread) * peak;
+      const x = PAD + (i / (TOTAL_PAR - 1)) * (W - PAD * 2);
+      const y = H - PAD - v * (H - PAD * 2);
+      pts.push(`${x},${y}`);
+      vals.push(v);
+    }
+    const path = `M${PAD},${H - PAD} L${pts.join(' L')} L${W - PAD},${H - PAD} Z`;
+    const linePath = `M${pts.join(' L')}`;
+
+    // compact array readout (5 key points around peak)
+    const keyIdx = [peakPar - 3, peakPar - 1, peakPar, peakPar + 1, peakPar + 3].map(i => Math.max(0, Math.min(TOTAL_PAR-1, i - 1)));
+    const keyVals = keyIdx.map(i => gaussian(i, peakPar - 1, spread) * peak);
+    arrOut.textContent = '[' + keyVals.map(v => v.toFixed(2)).join(', ') + ']';
+
+    // grid ticks
+    const ticks = [];
+    for (let x = 0; x <= TOTAL_PAR; x += 10) {
+      const px = PAD + (x / (TOTAL_PAR - 1)) * (W - PAD * 2);
+      ticks.push(`<line x1="${px}" x2="${px}" y1="${H-PAD}" y2="${H-PAD+3}" stroke="rgba(244,242,236,0.3)" stroke-width="0.5"/>`);
+      ticks.push(`<text x="${px}" y="${H-PAD+12}" text-anchor="middle" fill="rgba(244,242,236,0.4)" font-family="JetBrains Mono" font-size="7">${x}</text>`);
+    }
+
+    // peak marker
+    const peakX = PAD + ((peakPar - 1) / (TOTAL_PAR - 1)) * (W - PAD * 2);
+    const peakY = H - PAD - peak * (H - PAD * 2);
+
+    envSvg.innerHTML = `
+      <rect x="0" y="0" width="${W}" height="${H}" fill="#0a0a0a"/>
+      <line x1="${PAD}" y1="${H-PAD}" x2="${W-PAD}" y2="${H-PAD}" stroke="rgba(244,242,236,0.15)" stroke-width="0.5"/>
+      ${ticks.join('')}
+      <path d="${path}" fill="rgba(209,72,41,0.3)"/>
+      <path d="${linePath}" fill="none" stroke="#d14829" stroke-width="1.5"/>
+      <line x1="${peakX}" x2="${peakX}" y1="${PAD}" y2="${H-PAD}" stroke="rgba(242,183,5,0.5)" stroke-width="0.5" stroke-dasharray="2,3"/>
+      <circle cx="${peakX}" cy="${peakY}" r="4" fill="#f2b705"/>
+      <text x="${peakX + 8}" y="${peakY + 2}" fill="#f2b705" font-family="JetBrains Mono" font-size="8">peak ¶${peakPar}</text>
+    `;
+  }
+  drawEnvelope();
+  [peakInput, spreadInput, piInput].forEach(el => el.addEventListener('input', drawEnvelope));
+
+  // block selection
+  document.querySelectorAll('.block').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.block').forEach(x => x.classList.remove('selected'));
+      b.classList.add('selected');
+    });
+  });
+</script>
+</body>
+</html>

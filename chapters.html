@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STITCH_ENGINE — Chapters</title>
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/novel-nav.css">
+<style>
+  body { background: #0a0a0c; color: #ededed; }
+  body::before { opacity: 0.08; }
+  .wrap { max-width: 520px; margin: 0 auto; background: #0a0a0c; min-height: 100vh; padding-bottom: 80px; }
+
+  .back-mirror {
+    position: fixed;
+    top: 16px; left: 16px;
+    z-index: 150;
+    width: 38px; height: 38px;
+    display: grid; place-items: center;
+    background: rgba(10,10,10,0.65);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(237,237,237,0.25);
+    color: #ededed;
+  }
+
+  .header {
+    padding: 60px 22px 24px;
+    border-bottom: 1px solid rgba(237,237,237,0.1);
+  }
+  .header .crumbs {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(237,237,237,0.5);
+    margin-bottom: 16px;
+  }
+  .header .crumbs .sep { color: #d14829; padding: 0 4px; }
+  .header h1 {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 52px; letter-spacing: -0.04em; line-height: 0.92;
+    color: #ededed;
+  }
+  .header .sub {
+    font-family: var(--font-editorial); font-style: italic;
+    font-size: 15px;
+    color: rgba(237,237,237,0.55);
+    margin-top: 10px;
+  }
+
+  .overall {
+    display: flex; gap: 14px; align-items: center;
+    padding: 18px 22px;
+    border-bottom: 1px solid rgba(237,237,237,0.1);
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.1em; color: rgba(237,237,237,0.65);
+    text-transform: uppercase;
+  }
+  .overall .bar {
+    flex: 1;
+    height: 4px;
+    background: rgba(237,237,237,0.15);
+    position: relative;
+  }
+  .overall .bar::before {
+    content: ''; position: absolute; inset: 0;
+    background: #d14829;
+    width: calc(5 / 12 * 100%);
+  }
+
+  /* act header */
+  .act {
+    margin-top: 32px;
+    padding: 0 22px;
+  }
+  .act-head {
+    display: flex; align-items: end; justify-content: space-between;
+    padding-bottom: 14px;
+    border-bottom: 1.5px solid rgba(237,237,237,0.2);
+    margin-bottom: 8px;
+  }
+  .act-head .h {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 26px; letter-spacing: -0.02em;
+    color: #ededed;
+  }
+  .act-head .idx {
+    font-family: var(--font-mono); font-size: 12px;
+    color: #d14829; letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .act-head .clr {
+    padding: 4px 10px;
+    border: 1px solid #d14829;
+    color: #d14829;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .act-head .clr.locked { border-color: rgba(237,237,237,0.3); color: rgba(237,237,237,0.5); }
+
+  /* chapter rows */
+  .ch-list { }
+  .ch {
+    display: grid;
+    grid-template-columns: 42px 1fr auto;
+    gap: 14px;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(237,237,237,0.08);
+    align-items: center;
+    position: relative;
+  }
+  .ch-num {
+    font-family: var(--font-mono); font-size: 14px;
+    font-weight: 700;
+    color: rgba(237,237,237,0.45);
+    letter-spacing: -0.02em;
+  }
+  .ch.cleared .ch-num {
+    color: rgba(237,237,237,0.3);
+    text-decoration: line-through;
+  }
+  .ch.current .ch-num { color: #d14829; }
+  .ch.locked .ch-num { color: rgba(237,237,237,0.25); }
+
+  .ch-title {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 16px; letter-spacing: -0.01em; line-height: 1.2;
+    color: #ededed;
+  }
+  .ch.cleared .ch-title { color: rgba(237,237,237,0.5); }
+  .ch.locked .ch-title {
+    font-family: var(--font-mono); font-size: 12px;
+    color: rgba(237,237,237,0.3); letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 400;
+  }
+  .ch-meta {
+    font-family: var(--font-mono); font-size: 10px;
+    color: rgba(237,237,237,0.4);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .ch .right {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ch .check {
+    width: 22px; height: 22px;
+    background: #d14829;
+    display: grid; place-items: center;
+    color: #ededed;
+  }
+  .ch .check svg { width: 12px; height: 12px; }
+  .ch.locked .check { background: transparent; border: 1px solid rgba(237,237,237,0.2); color: rgba(237,237,237,0.4); }
+
+  .resume-btn {
+    padding: 10px 16px;
+    background: #d14829; color: #ededed;
+    border: none;
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    cursor: pointer;
+  }
+  .resume-btn:hover { background: #ededed; color: #0a0a0c; }
+
+  .ch-progress {
+    grid-column: 1 / -1;
+    height: 3px;
+    background: rgba(237,237,237,0.1);
+    margin-top: 10px;
+    position: relative;
+  }
+  .ch-progress::before {
+    content: ''; position: absolute; inset: 0;
+    width: 28%;
+    background: #d14829;
+  }
+  .ch.cleared .ch-progress::before { width: 100%; background: rgba(237,237,237,0.25); }
+
+  .unlock-note {
+    margin: 14px 0 8px;
+    padding: 12px 14px;
+    border: 1px dashed rgba(237,237,237,0.2);
+    color: rgba(237,237,237,0.55);
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
+  .unlock-note b { color: #d14829; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<a class="back-mirror" href="novel-home.html?id=stitch-engine" title="Back">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+</a>
+
+<div class="wrap">
+
+  <section class="header">
+    <div class="crumbs">STITCH_ENGINE <span class="sep">/</span> Directory</div>
+    <h1>Chapters.</h1>
+    <p class="sub">Twelve chapters across three acts. Read in sequence — each unlocks the next.</p>
+  </section>
+
+  <div class="overall">
+    <span>5 / 12 cleared</span>
+    <div class="bar"></div>
+    <span>42%</span>
+  </div>
+
+  <div id="chapters-container"></div>
+
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  mountNovelNav({ novelId: 'stitch-engine', active: 'chapters' });
+
+  const acts = [
+    {
+      idx: '01', name: 'Initialization', cleared: 4, total: 5,
+      chapters: [
+        { n: 1, title: 'The Cold Boot Sequence', ago: '2 weeks ago', duration: '14 min', state: 'cleared' },
+        { n: 2, title: 'Fragments in the Cache', ago: '12 days ago', duration: '16 min', state: 'cleared' },
+        { n: 3, title: 'Syntax Error: Memory Corrupted', ago: '9 days ago', duration: '18 min', state: 'cleared' },
+        { n: 4, title: 'Compiling the First Thread', ago: '6 days ago', duration: '22 min', state: 'cleared' },
+        { n: 5, title: 'Executing Runtime Protocol', ago: '2 days ago', duration: '18 min', state: 'current', progress: 28 },
+      ],
+    },
+    {
+      idx: '02', name: 'Execution', cleared: 0, total: 4,
+      chapters: [
+        { n: 6, title: 'The Architecture of Silence', ago: 'Friday', duration: '—', state: 'upcoming' },
+        { n: 7, title: '—', state: 'locked' },
+        { n: 8, title: '—', state: 'locked' },
+        { n: 9, title: '—', state: 'locked' },
+      ],
+    },
+    {
+      idx: '03', name: 'Resolution', cleared: 0, total: 3, locked: true,
+      chapters: [
+        { n: 10, title: '—', state: 'locked' },
+        { n: 11, title: '—', state: 'locked' },
+        { n: 12, title: '—', state: 'locked' },
+      ],
+    },
+  ];
+
+  const container = document.getElementById('chapters-container');
+  container.innerHTML = acts.map(act => `
+    <section class="act">
+      <div class="act-head">
+        <div>
+          <span class="idx">Act ${act.idx}</span>
+          <h2 class="h">${act.name}</h2>
+        </div>
+        <div class="clr ${act.locked?'locked':''}">${act.cleared} / ${act.total} ${act.locked?'LOCKED':'CLEARED'}</div>
+      </div>
+      <div class="ch-list">
+        ${act.chapters.map(c => {
+          if (c.state === 'cleared') {
+            return `<a href="read.html?id=stitch-engine&ch=${c.n}" class="ch cleared">
+              <div class="ch-num">${String(c.n).padStart(2,'0')}</div>
+              <div>
+                <div class="ch-title">${c.title}</div>
+                <div class="ch-meta">${c.ago} · ${c.duration}</div>
+              </div>
+              <div class="right">
+                <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              </div>
+            </a>`;
+          }
+          if (c.state === 'current') {
+            return `<div class="ch current">
+              <div class="ch-num">${String(c.n).padStart(2,'0')}</div>
+              <div>
+                <div class="ch-title">${c.title}</div>
+                <div class="ch-meta">IN PROGRESS · ${c.progress}% COMPLETE · ${c.ago}</div>
+              </div>
+              <div class="right">
+                <a href="read.html?id=stitch-engine&ch=${c.n}" class="resume-btn">Resume</a>
+              </div>
+              <div class="ch-progress"></div>
+            </div>`;
+          }
+          if (c.state === 'upcoming') {
+            return `<div class="ch locked">
+              <div class="ch-num">${String(c.n).padStart(2,'0')}</div>
+              <div>
+                <div class="ch-title" style="font-family: var(--font-display); color: #ededed; opacity: 0.6; text-transform: none; font-size: 16px;">${c.title}</div>
+                <div class="ch-meta">UNLOCKS ${c.ago}</div>
+              </div>
+              <div class="right">
+                <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="1"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+              </div>
+            </div>`;
+          }
+          return `<div class="ch locked">
+            <div class="ch-num">${String(c.n).padStart(2,'0')}</div>
+            <div>
+              <div class="ch-title">LOCKED SEQUENCE</div>
+              <div class="ch-meta">UNLOCKS AFTER ACT ${act.idx === '01' ? '01' : acts[parseInt(act.idx)-2].idx} COMPLETION</div>
+            </div>
+            <div class="right">
+              <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="1"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            </div>
+          </div>`;
+        }).join('')}
+        ${act.locked ? '<div class="unlock-note">Unlocks when <b>Act 02</b> is cleared</div>' : ''}
+      </div>
+    </section>
+  `).join('');
+</script>
+</body>
+</html>

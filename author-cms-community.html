@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prose &amp; Protocol — Community CMS</title>
+<link rel="stylesheet" href="css/core.css">
+<style>
+  body { background: var(--paper); overflow: hidden; }
+  body::before { opacity: 0.06; }
+
+  .topbar {
+    height: 56px;
+    background: var(--ink); color: var(--paper);
+    display: grid;
+    grid-template-columns: 260px 1fr auto;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .topbar .brand { font-family: var(--font-display); font-weight: 900; font-size: 16px; letter-spacing: -0.01em; }
+  .topbar .brand small { display: block; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; color: rgba(244,242,236,0.55); font-weight: 400; margin-top: 2px; text-transform: uppercase; }
+  .crumbs { font-family: var(--font-mono); font-size: 11px; color: rgba(244,242,236,0.65); letter-spacing: 0.14em; text-transform: uppercase; }
+  .crumbs .sep { color: var(--accent); padding: 0 6px; }
+  .topbar-actions { display: flex; gap: 10px; }
+  .topbar-btn {
+    padding: 8px 16px; font-family: var(--font-display); font-weight: 700;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    border: 1px solid rgba(244,242,236,0.4); color: var(--paper);
+    cursor: pointer; background: transparent;
+  }
+  .topbar-btn.primary { background: var(--accent); border-color: var(--accent); }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr 320px;
+    height: calc(100vh - 56px);
+  }
+
+  /* LEFT: palette */
+  .palette { background: var(--paper-2); border-right: 1.5px solid var(--ink); overflow-y: auto; }
+  .pal-head {
+    padding: 16px 18px; border-bottom: 1.5px solid var(--ink); background: var(--paper);
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .pal-sub { font-family: var(--font-mono); font-size: 10px; color: var(--muted); padding: 14px 18px 8px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .pal-item {
+    margin: 6px 14px; padding: 12px 14px;
+    background: var(--paper); border: 1.5px solid var(--ink);
+    cursor: grab; user-select: none;
+    transition: transform .12s;
+    display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: center;
+  }
+  .pal-item:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--accent); }
+  .pal-item:active { cursor: grabbing; }
+  .pal-icon {
+    width: 34px; height: 34px; display: grid; place-items: center;
+    background: var(--ink); color: var(--paper);
+  }
+  .pal-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .pal-label { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .pal-desc { font-family: var(--font-mono); font-size: 9.5px; color: var(--muted); letter-spacing: 0.04em; margin-top: 2px; }
+
+  /* CENTER: canvas preview */
+  .canvas-wrap { background: var(--paper-3); overflow-y: auto; padding: 28px; }
+  .canvas {
+    max-width: 640px; margin: 0 auto;
+    background: #0d0d0f; color: #ededed; min-height: 100%;
+    border: 1.5px solid var(--ink);
+    box-shadow: 10px 10px 0 rgba(10,10,10,0.25);
+  }
+  .preview-chip {
+    position: sticky; top: 0; z-index: 2;
+    background: var(--ink); color: var(--paper);
+    padding: 8px 14px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .preview-chip .pulse {
+    width: 8px; height: 8px; background: var(--accent); border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .blk {
+    position: relative; padding: 20px 24px;
+    border-bottom: 1px solid rgba(237,237,237,0.1);
+    cursor: pointer;
+  }
+  .blk.sel { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .blk:hover .blk-tag { opacity: 1; }
+  .blk-tag {
+    position: absolute; top: 8px; right: 8px;
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em;
+    color: var(--accent); background: rgba(0,0,0,0.6);
+    padding: 3px 6px; opacity: 0.5;
+    text-transform: uppercase;
+  }
+
+  /* block types — novel-themed dark */
+  .blk-header { padding: 30px 24px 20px; border-bottom: 1px solid rgba(237,237,237,0.1); }
+  .blk-header .sup { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; color: rgba(237,237,237,0.5); text-transform: uppercase; }
+  .blk-header h1 { font-family: var(--font-display); font-weight: 900; font-size: 36px; letter-spacing: -0.03em; line-height: 1; margin-top: 8px; color: #ededed; }
+
+  .blk-archive .kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; }
+  .blk-archive h3 { font-family: var(--font-editorial); font-weight: 700; font-size: 22px; letter-spacing: -0.01em; line-height: 1.1; color: #ededed; }
+  .blk-archive .excerpt { font-family: var(--font-editorial); font-style: italic; font-size: 13px; line-height: 1.6; color: rgba(237,237,237,0.75); margin-top: 10px; }
+  .blk-archive .pill { display: inline-block; margin-top: 12px; padding: 6px 12px; border: 1px solid rgba(237,237,237,0.3); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #ededed; }
+
+  .blk-video .thumb {
+    height: 180px; background: linear-gradient(135deg, #1a1a1c 0%, #0d0d0f 100%);
+    border: 1px solid rgba(237,237,237,0.15);
+    display: grid; place-items: center; position: relative;
+    margin-bottom: 12px;
+  }
+  .blk-video .play {
+    width: 60px; height: 60px; background: rgba(209,72,41,0.9);
+    display: grid; place-items: center;
+  }
+  .blk-video .play svg { width: 20px; height: 20px; fill: #ededed; }
+  .blk-video .v-title { font-family: var(--font-display); font-weight: 800; font-size: 16px; letter-spacing: -0.005em; color: #ededed; }
+  .blk-video .v-meta { font-family: var(--font-mono); font-size: 10px; color: rgba(237,237,237,0.5); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+
+  .blk-schem { display: grid; grid-template-columns: 80px 1fr auto; gap: 14px; align-items: center; }
+  .blk-schem .box {
+    width: 80px; height: 80px; border: 1px solid rgba(237,237,237,0.3);
+    background: repeating-linear-gradient(45deg, rgba(237,237,237,0.04) 0 2px, transparent 2px 6px);
+    display: grid; place-items: center;
+  }
+  .blk-schem .box svg { width: 36px; height: 36px; stroke: rgba(237,237,237,0.7); fill: none; stroke-width: 1.5; }
+  .blk-schem h3 { font-family: var(--font-display); font-weight: 800; font-size: 15px; color: #ededed; letter-spacing: -0.005em; }
+  .blk-schem p { font-family: var(--font-mono); font-size: 10px; color: rgba(237,237,237,0.5); letter-spacing: 0.08em; margin-top: 4px; text-transform: uppercase; }
+  .blk-schem .cta { font-family: var(--font-display); font-weight: 800; font-size: 10px; color: var(--accent); letter-spacing: 0.14em; text-transform: uppercase; }
+
+  .blk-audio .wave {
+    height: 80px; border: 1px solid rgba(237,237,237,0.2);
+    display: flex; align-items: end; gap: 2px; padding: 10px;
+    background: rgba(237,237,237,0.03);
+  }
+  .blk-audio .wave span {
+    flex: 1; background: rgba(237,237,237,0.7);
+    min-height: 2px;
+  }
+  .blk-audio .wave span.accent { background: var(--accent); }
+  .blk-audio .controls {
+    display: flex; align-items: center; gap: 12px; margin-top: 12px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+    color: rgba(237,237,237,0.7);
+  }
+  .blk-audio .play-sm {
+    width: 30px; height: 30px; background: var(--accent); display: grid; place-items: center;
+  }
+  .blk-audio .play-sm svg { width: 10px; height: 10px; fill: #ededed; }
+  .blk-audio .tx-title { font-family: var(--font-display); font-weight: 800; font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; color: #ededed; margin-bottom: 10px; }
+
+  .canvas-foot {
+    padding: 24px; text-align: center;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.24em;
+    color: rgba(237,237,237,0.35); text-transform: uppercase;
+    border-top: 1px dashed rgba(237,237,237,0.15);
+  }
+
+  .drop-zone {
+    margin: 14px 24px; padding: 18px;
+    border: 1.5px dashed rgba(237,237,237,0.3);
+    text-align: center;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+    color: rgba(237,237,237,0.45); text-transform: uppercase;
+  }
+  .drop-zone.hot { border-color: var(--accent); color: var(--accent); background: rgba(209,72,41,0.08); }
+
+  /* RIGHT: inspector */
+  .inspector {
+    background: var(--paper); border-left: 1.5px solid var(--ink);
+    overflow-y: auto;
+  }
+  .ins-head {
+    padding: 14px 18px; border-bottom: 1.5px solid var(--ink);
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase;
+    background: var(--paper-2);
+  }
+  .ins-head small { display: block; font-family: var(--font-mono); font-weight: 400; font-size: 10px; color: var(--muted); margin-top: 2px; letter-spacing: 0.14em; }
+  .ins-section { padding: 16px 18px; border-bottom: 1px solid var(--line); }
+  .ins-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+  .ins-input, .ins-textarea {
+    width: 100%; padding: 8px 10px;
+    background: var(--paper-2); border: 1px solid var(--line-strong);
+    font-family: var(--font-body); font-size: 13px;
+  }
+  .ins-textarea { min-height: 70px; resize: vertical; font-family: var(--font-editorial); }
+  .ins-input:focus, .ins-textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .ins-select {
+    width: 100%; padding: 8px 10px;
+    background: var(--paper-2); border: 1px solid var(--line-strong);
+    font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .ins-btn-row { display: flex; gap: 8px; margin-top: 12px; }
+  .ins-btn {
+    flex: 1; padding: 9px; font-family: var(--font-display); font-weight: 800;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    background: var(--paper-2); border: 1px solid var(--ink);
+  }
+  .ins-btn.danger { color: var(--accent); border-color: var(--accent); }
+  .ins-btn.primary { background: var(--ink); color: var(--paper); }
+
+  .empty-ins {
+    padding: 40px 20px; text-align: center;
+    font-family: var(--font-mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">PROSE &amp; PROTOCOL <small>NARRATIVE ENGINE</small></div>
+  <div class="crumbs">STITCH_ENGINE <span class="sep">/</span> COMMUNITY CMS <span class="sep">/</span> <span style="color:var(--paper)">COMMUNITY LORE &amp; PROTOCOL</span></div>
+  <div class="topbar-actions">
+    <a href="novel-community.html?id=stitch-engine" target="_blank" class="topbar-btn">PREVIEW</a>
+    <button class="topbar-btn primary">PUBLISH</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="palette">
+    <div class="pal-head">BLOCKS <small style="display:block;font-family:var(--font-mono);font-size:9px;letter-spacing:0.14em;color:var(--muted);font-weight:400;margin-top:2px">COMMUNITY &middot; LORE</small></div>
+    <div class="pal-sub">Drag to canvas</div>
+
+    <div class="pal-item" draggable="true" data-type="header">
+      <div class="pal-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div>
+      <div>
+        <div class="pal-label">Page Header</div>
+        <div class="pal-desc">Novel name + title</div>
+      </div>
+    </div>
+
+    <div class="pal-item" draggable="true" data-type="archive">
+      <div class="pal-icon"><svg viewBox="0 0 24 24"><path d="M3 7v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7M3 7l2-4h14l2 4M3 7h18M9 12h6"/></svg></div>
+      <div>
+        <div class="pal-label">Lore Archive</div>
+        <div class="pal-desc">Text excerpt card</div>
+      </div>
+    </div>
+
+    <div class="pal-item" draggable="true" data-type="video">
+      <div class="pal-icon"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="1"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg></div>
+      <div>
+        <div class="pal-label">Video Log</div>
+        <div class="pal-desc">Thumb + play button</div>
+      </div>
+    </div>
+
+    <div class="pal-item" draggable="true" data-type="schem">
+      <div class="pal-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 10h16M10 4v16"/></svg></div>
+      <div>
+        <div class="pal-label">Schematics</div>
+        <div class="pal-desc">Technical blueprint</div>
+      </div>
+    </div>
+
+    <div class="pal-item" draggable="true" data-type="audio">
+      <div class="pal-icon"><svg viewBox="0 0 24 24"><path d="M3 12h2m4-6v12m4-9v6m4-8v10m4-6h2"/></svg></div>
+      <div>
+        <div class="pal-label">Transmission</div>
+        <div class="pal-desc">Audio + waveform</div>
+      </div>
+    </div>
+
+    <div class="pal-item" draggable="true" data-type="spacer">
+      <div class="pal-icon"><svg viewBox="0 0 24 24"><path d="M4 12h16M4 6h16M4 18h16" stroke-dasharray="3 2"/></svg></div>
+      <div>
+        <div class="pal-label">Divider</div>
+        <div class="pal-desc">Visual break</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="canvas-wrap">
+    <div class="canvas" id="canvas">
+      <div class="preview-chip">
+        <span><span class="pulse" style="display:inline-block;vertical-align:middle;margin-right:8px"></span>LIVE PREVIEW &middot; /novel/stitch-engine/community</span>
+        <span>V 1.0.4</span>
+      </div>
+      <div id="blocks"></div>
+      <div class="canvas-foot">END OF DIRECTORY &middot; V 1.0.4</div>
+    </div>
+  </div>
+
+  <aside class="inspector" id="inspector">
+    <div class="ins-head">INSPECTOR <small>SELECT A BLOCK</small></div>
+    <div class="empty-ins">
+      Click any block in the preview to edit its content and properties.
+    </div>
+  </aside>
+
+</div>
+
+<script src="js/state.js"></script>
+<script>
+  // initial blocks — match the novel-community.html layout
+  let blocks = [
+    { id: 'b1', type: 'header', data: { sup: 'STITCH_ENGINE', title: 'Community Lore & Protocol' } },
+    { id: 'b2', type: 'archive', data: { kicker: 'ARCHIVE // 001', title: 'The First Recursion', excerpt: 'Before the engines were silent, the architects left one instruction encoded in the margin of every schematic. We have only now begun to decode it.', cta: 'READ FULL TEXT' } },
+    { id: 'b3', type: 'video', data: { title: 'Video Log — Incident 47', meta: '04:12 · RESTRICTED TIER', thumbPattern: 'grid' } },
+    { id: 'b4', type: 'schem', data: { title: 'Engine Schematics V2', detail: 'Blueprint · 8 layers', cta: 'VIEW BLUEPRINT' } },
+    { id: 'b5', type: 'audio', data: { title: 'INTERCEPTED TRANSMISSION', durationNow: '01:24', durationTotal: '04:00' } },
+  ];
+  let selected = 'b2';
+
+  const blocksEl = document.getElementById('blocks');
+  const inspectorEl = document.getElementById('inspector');
+
+  function render() {
+    blocksEl.innerHTML = blocks.map(b => renderBlock(b)).join('');
+    blocksEl.querySelectorAll('.blk').forEach(el => {
+      el.addEventListener('click', () => { selected = el.dataset.id; render(); renderInspector(); });
+    });
+  }
+
+  function renderBlock(b) {
+    const sel = b.id === selected ? 'sel' : '';
+    const tag = `<span class="blk-tag">${b.type}</span>`;
+    if (b.type === 'header') {
+      return `<div class="blk blk-header ${sel}" data-id="${b.id}">${tag}
+        <div class="sup">${b.data.sup}</div>
+        <h1>${b.data.title}</h1>
+      </div>`;
+    }
+    if (b.type === 'archive') {
+      return `<div class="blk blk-archive ${sel}" data-id="${b.id}">${tag}
+        <div class="kicker">${b.data.kicker}</div>
+        <h3>${b.data.title}</h3>
+        <p class="excerpt">"${b.data.excerpt}"</p>
+        <span class="pill">${b.data.cta} &rarr;</span>
+      </div>`;
+    }
+    if (b.type === 'video') {
+      return `<div class="blk blk-video ${sel}" data-id="${b.id}">${tag}
+        <div class="thumb"><div class="play"><svg viewBox="0 0 24 24"><path d="M8 5l14 7-14 7z"/></svg></div></div>
+        <div class="v-title">${b.data.title}</div>
+        <div class="v-meta">${b.data.meta}</div>
+      </div>`;
+    }
+    if (b.type === 'schem') {
+      return `<div class="blk blk-schem ${sel}" data-id="${b.id}">${tag}
+        <div class="box"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16"/><path d="M4 10h16M10 4v16M14 14l4 4M6 14l4 4"/></svg></div>
+        <div>
+          <h3>${b.data.title}</h3>
+          <p>${b.data.detail}</p>
+        </div>
+        <span class="cta">${b.data.cta} &rarr;</span>
+      </div>`;
+    }
+    if (b.type === 'audio') {
+      const bars = Array.from({length:38}, (_,i) => {
+        const peak = i < 18 ? (1 - Math.abs(i-9)/12) : (1 - Math.abs(i-27)/14);
+        const h = Math.max(0.15, peak * 0.85 + 0.15);
+        const isAccent = i < 11;
+        return `<span class="${isAccent?'accent':''}" style="height:${h*100}%"></span>`;
+      }).join('');
+      return `<div class="blk blk-audio ${sel}" data-id="${b.id}">${tag}
+        <div class="tx-title">${b.data.title}</div>
+        <div class="wave">${bars}</div>
+        <div class="controls">
+          <div class="play-sm"><svg viewBox="0 0 24 24"><path d="M8 5l14 7-14 7z"/></svg></div>
+          <span>${b.data.durationNow} / ${b.data.durationTotal}</span>
+        </div>
+      </div>`;
+    }
+    if (b.type === 'spacer') {
+      return `<div class="blk ${sel}" data-id="${b.id}" style="padding:18px 24px;border-bottom:1px dashed rgba(237,237,237,0.15)">${tag}
+        <div style="height:1px;background:rgba(237,237,237,0.2)"></div>
+      </div>`;
+    }
+    return '';
+  }
+
+  function renderInspector() {
+    const b = blocks.find(x => x.id === selected);
+    if (!b) {
+      inspectorEl.innerHTML = `<div class="ins-head">INSPECTOR<small>SELECT A BLOCK</small></div><div class="empty-ins">Click any block in the preview to edit.</div>`;
+      return;
+    }
+    let fields = '';
+    if (b.type === 'header') {
+      fields = `
+        <div class="ins-section">
+          <div class="ins-label">Supertitle</div>
+          <input class="ins-input" data-f="sup" value="${b.data.sup}">
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">Title</div>
+          <input class="ins-input" data-f="title" value="${b.data.title}">
+        </div>`;
+    } else if (b.type === 'archive') {
+      fields = `
+        <div class="ins-section">
+          <div class="ins-label">Kicker</div>
+          <input class="ins-input" data-f="kicker" value="${b.data.kicker}">
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">Title</div>
+          <input class="ins-input" data-f="title" value="${b.data.title}">
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">Excerpt</div>
+          <textarea class="ins-textarea" data-f="excerpt">${b.data.excerpt}</textarea>
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">CTA Label</div>
+          <input class="ins-input" data-f="cta" value="${b.data.cta}">
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">Link target</div>
+          <select class="ins-select">
+            <option>Full text archive</option>
+            <option>External URL</option>
+            <option>Story Bible entry</option>
+          </select>
+        </div>`;
+    } else if (b.type === 'video') {
+      fields = `
+        <div class="ins-section">
+          <div class="ins-label">Title</div>
+          <input class="ins-input" data-f="title" value="${b.data.title}">
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">Meta &middot; Duration / Tier</div>
+          <input class="ins-input" data-f="meta" value="${b.data.meta}">
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">Video source</div>
+          <select class="ins-select">
+            <option>Upload to asset library</option>
+            <option>YouTube embed</option>
+            <option>Vimeo embed</option>
+          </select>
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">Access tier</div>
+          <div class="row2">
+            <select class="ins-select"><option>Public</option><option>Followers</option><option selected>Restricted</option></select>
+            <select class="ins-select"><option>Ch. 1+</option><option>Ch. 10+</option><option>Ch. 47+</option></select>
+          </div>
+        </div>`;
+    } else if (b.type === 'schem') {
+      fields = `
+        <div class="ins-section">
+          <div class="ins-label">Title</div>
+          <input class="ins-input" data-f="title" value="${b.data.title}">
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">Detail caption</div>
+          <input class="ins-input" data-f="detail" value="${b.data.detail}">
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">CTA Label</div>
+          <input class="ins-input" data-f="cta" value="${b.data.cta}">
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">Asset file</div>
+          <select class="ins-select">
+            <option>engine-schematic-v2.pdf</option>
+            <option>citadel-blueprints.pdf</option>
+            <option>protocol-map.png</option>
+          </select>
+        </div>`;
+    } else if (b.type === 'audio') {
+      fields = `
+        <div class="ins-section">
+          <div class="ins-label">Title</div>
+          <input class="ins-input" data-f="title" value="${b.data.title}">
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">Audio file</div>
+          <select class="ins-select">
+            <option>transmission_47.wav</option>
+            <option>intercepted_log_12.wav</option>
+            <option>static_feed.wav</option>
+          </select>
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">Playhead display</div>
+          <div class="row2">
+            <input class="ins-input" data-f="durationNow" value="${b.data.durationNow}" placeholder="current">
+            <input class="ins-input" data-f="durationTotal" value="${b.data.durationTotal}" placeholder="total">
+          </div>
+        </div>
+        <div class="ins-section">
+          <div class="ins-label">Waveform style</div>
+          <select class="ins-select">
+            <option>Normal distribution</option>
+            <option>Auto-detect peaks</option>
+            <option>Manual bars</option>
+          </select>
+        </div>`;
+    } else {
+      fields = `<div class="ins-section"><div class="ins-label">Block</div><p style="font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">No properties.</p></div>`;
+    }
+
+    inspectorEl.innerHTML = `
+      <div class="ins-head">${b.type.toUpperCase()} BLOCK<small>ID &middot; ${b.id}</small></div>
+      ${fields}
+      <div class="ins-section">
+        <div class="ins-btn-row">
+          <button class="ins-btn" id="dupBtn">DUPLICATE</button>
+          <button class="ins-btn danger" id="delBtn">DELETE</button>
+        </div>
+        <div class="ins-btn-row" style="margin-top:6px">
+          <button class="ins-btn" id="upBtn">&uarr; MOVE UP</button>
+          <button class="ins-btn" id="downBtn">MOVE DOWN &darr;</button>
+        </div>
+      </div>
+    `;
+
+    inspectorEl.querySelectorAll('[data-f]').forEach(input => {
+      input.addEventListener('input', () => {
+        b.data[input.dataset.f] = input.value;
+        render();
+      });
+    });
+    document.getElementById('delBtn')?.addEventListener('click', () => {
+      blocks = blocks.filter(x => x.id !== b.id);
+      selected = blocks[0]?.id || null;
+      render(); renderInspector();
+    });
+    document.getElementById('dupBtn')?.addEventListener('click', () => {
+      const copy = { ...b, id: 'b' + (Date.now()%10000), data: { ...b.data } };
+      const idx = blocks.findIndex(x => x.id === b.id);
+      blocks.splice(idx+1, 0, copy);
+      selected = copy.id;
+      render(); renderInspector();
+    });
+    document.getElementById('upBtn')?.addEventListener('click', () => {
+      const idx = blocks.findIndex(x => x.id === b.id);
+      if (idx > 0) { [blocks[idx-1], blocks[idx]] = [blocks[idx], blocks[idx-1]]; render(); }
+    });
+    document.getElementById('downBtn')?.addEventListener('click', () => {
+      const idx = blocks.findIndex(x => x.id === b.id);
+      if (idx < blocks.length-1) { [blocks[idx+1], blocks[idx]] = [blocks[idx], blocks[idx+1]]; render(); }
+    });
+  }
+
+  // drag-drop from palette
+  document.querySelectorAll('.pal-item').forEach(item => {
+    item.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/type', item.dataset.type);
+      e.dataTransfer.effectAllowed = 'copy';
+    });
+  });
+
+  blocksEl.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+  blocksEl.addEventListener('drop', e => {
+    e.preventDefault();
+    const type = e.dataTransfer.getData('text/type');
+    if (!type) return;
+    const defaults = {
+      header: { sup: 'NOVEL_NAME', title: 'Page Title' },
+      archive: { kicker: 'ARCHIVE // 00X', title: 'New Entry', excerpt: 'Excerpt text goes here.', cta: 'READ MORE' },
+      video: { title: 'Video Title', meta: '00:00 · PUBLIC', thumbPattern: 'grid' },
+      schem: { title: 'Schematic Name', detail: 'Blueprint · layers', cta: 'VIEW' },
+      audio: { title: 'NEW TRANSMISSION', durationNow: '00:00', durationTotal: '00:00' },
+      spacer: {},
+    };
+    const id = 'b' + Date.now().toString(36);
+    blocks.push({ id, type, data: defaults[type] || {} });
+    selected = id;
+    render(); renderInspector();
+  });
+
+  render();
+  renderInspector();
+</script>
+</body>
+</html>

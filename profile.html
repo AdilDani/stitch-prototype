@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STITCH — Profile</title>
+<link rel="stylesheet" href="css/core.css">
+<style>
+  .wrap { max-width: 520px; margin: 0 auto; padding: 0 0 80px; }
+
+  .profile-hero {
+    padding: 36px 22px 28px;
+    background: var(--paper);
+    border-bottom: 1.5px solid var(--ink);
+    position: relative;
+  }
+  .profile-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(45deg, transparent 0 12px, rgba(10,10,10,0.03) 12px 13px);
+    pointer-events: none;
+  }
+  .profile-top {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 18px;
+  }
+  .avatar-xl {
+    width: 84px; height: 84px;
+    background: var(--ink); color: var(--paper);
+    display: grid; place-items: center;
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 28px; letter-spacing: -0.02em;
+    border: 2px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--accent);
+  }
+  .profile-name { font-size: 28px; line-height: 1; }
+  .profile-handle {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--muted); letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+  .edit-btn {
+    margin-left: auto;
+    padding: 8px 12px;
+    border: 1.5px solid var(--ink);
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer;
+    background: var(--paper);
+  }
+  .edit-btn:hover { background: var(--ink); color: var(--paper); }
+
+  .bio {
+    font-family: var(--font-editorial); font-style: italic;
+    color: var(--ink-2); font-size: 16px;
+    line-height: 1.4;
+    padding-top: 4px;
+  }
+
+  /* streak ring panel */
+  .streak-panel {
+    margin: 24px 22px 0;
+    border: 1.5px solid var(--ink);
+    padding: 24px 20px;
+    background: var(--ink); color: var(--paper);
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 18px;
+    align-items: center;
+    box-shadow: 6px 6px 0 var(--accent);
+  }
+  .streak-ring {
+    width: 120px; height: 120px;
+    position: relative;
+  }
+  .streak-ring .sr-num {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 900;
+    line-height: 1;
+  }
+  .streak-ring .sr-num .big { font-size: 40px; letter-spacing: -0.03em; }
+  .streak-ring .sr-num .lbl { font-size: 9px; letter-spacing: 0.2em; color: rgba(244,242,236,0.6); margin-top: 2px; }
+  .streak-info .stitle {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 22px; letter-spacing: -0.02em; line-height: 1;
+  }
+  .streak-info .sunder {
+    font-family: var(--font-mono); font-size: 11px; color: rgba(244,242,236,0.55);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .streak-info .progress {
+    margin-top: 14px;
+    height: 4px; background: rgba(244,242,236,0.15);
+    position: relative;
+  }
+  .streak-info .progress::before {
+    content: ''; position: absolute;
+    inset: 0;
+    background: var(--accent);
+    width: var(--p, 60%);
+  }
+  .streak-info .to-next {
+    margin-top: 6px;
+    font-family: var(--font-mono); font-size: 10px;
+    color: rgba(244,242,236,0.55);
+    letter-spacing: 0.08em;
+  }
+
+  /* quick stats row */
+  .quick-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1.5px solid var(--ink);
+    border-bottom: 1.5px solid var(--ink);
+    margin: 24px 0 0;
+  }
+  .qs {
+    padding: 20px 16px;
+    text-align: center;
+    border-right: 1px solid var(--line);
+  }
+  .qs:last-child { border-right: none; }
+  .qs .n { font-family: var(--font-display); font-weight: 900; font-size: 28px; letter-spacing: -0.02em; line-height: 1; }
+  .qs .l { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
+  .section { padding: 28px 22px 0; }
+  .section-head {
+    display: flex; align-items: end; justify-content: space-between;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .section-head .label {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 22px; letter-spacing: -0.02em;
+  }
+  .section-head .count { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; }
+
+  /* honors grid */
+  .honors-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .honor {
+    border: 1.5px solid var(--ink);
+    padding: 18px;
+    aspect-ratio: 1;
+    display: flex; flex-direction: column; justify-content: space-between;
+    background: var(--paper);
+    position: relative;
+    overflow: hidden;
+  }
+  .honor::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 80% 20%, rgba(209, 72, 41, 0.08), transparent 60%);
+    pointer-events: none;
+  }
+  .honor .ic {
+    width: 48px; height: 48px;
+    display: grid; place-items: center;
+    border: 1.5px solid var(--ink);
+    background: var(--accent); color: var(--paper);
+  }
+  .honor .ic svg { width: 24px; height: 24px; }
+  .honor .ti {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 15px; letter-spacing: -0.02em; line-height: 1.1;
+  }
+  .honor .sub {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--muted); letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+  .honor.locked { background: var(--paper-2); }
+  .honor.locked .ic { background: var(--paper-2); color: var(--ink); }
+  .honor.locked .ti { color: var(--muted); }
+
+  .reading-history {
+    display: grid; gap: 10px;
+  }
+  .hist {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .hist .thumb {
+    width: 48px; height: 64px;
+    overflow: hidden;
+    border: 1px solid var(--ink);
+  }
+  .hist .thumb svg { width: 100%; height: 100%; }
+  .hist .title { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
+  .hist .meta { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; margin-top: 2px; }
+  .hist .ch { font-family: var(--font-mono); font-size: 11px; color: var(--accent); font-weight: 700; letter-spacing: 0.06em; }
+
+  .logout-row {
+    padding: 40px 22px 0;
+    text-align: center;
+  }
+  .logout-row button {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding-bottom: 2px;
+    border-bottom: 1.5px solid var(--ink);
+    background: transparent;
+  }
+  .logout-row button:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<nav class="global-nav" data-global-nav></nav>
+
+<div class="wrap">
+
+  <section class="profile-hero">
+    <div class="profile-top">
+      <div class="avatar-xl" id="avatar">AM</div>
+      <div>
+        <div class="profile-name display" id="uname">Alex Mercer</div>
+        <div class="profile-handle" id="uhandle">@mercerwrites · joined 2023</div>
+      </div>
+      <button class="edit-btn">Edit</button>
+    </div>
+    <div class="bio" id="bio"></div>
+  </section>
+
+  <section class="streak-panel">
+    <div class="streak-ring">
+      <svg viewBox="0 0 120 120" width="120" height="120">
+        <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(244,242,236,0.15)" stroke-width="6"/>
+        <circle id="ring" cx="60" cy="60" r="54" fill="none" stroke="#d14829" stroke-width="6" stroke-linecap="butt"
+                stroke-dasharray="339.3" stroke-dashoffset="135.7" transform="rotate(-90 60 60)"/>
+      </svg>
+      <div class="sr-num">
+        <div class="big" id="srbig">12</div>
+        <div class="lbl">DAY STREAK</div>
+      </div>
+    </div>
+    <div class="streak-info">
+      <div class="stitle">Unbroken.</div>
+      <div class="sunder">Next milestone — 15-day honor</div>
+      <div class="progress" id="progressbar"></div>
+      <div class="to-next" id="tonext">3 more days to unlock</div>
+    </div>
+  </section>
+
+  <div class="quick-stats">
+    <div class="qs"><div class="n">47</div><div class="l">Chapters read</div></div>
+    <div class="qs"><div class="n">4</div><div class="l">Novels followed</div></div>
+    <div class="qs"><div class="n">128</div><div class="l">Comments posted</div></div>
+  </div>
+
+  <section class="section">
+    <div class="section-head">
+      <div class="label">Archived honors</div>
+      <div class="count">3 of 12 earned</div>
+    </div>
+    <div class="honors-grid">
+      <div class="honor">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg></div>
+        <div>
+          <div class="ti">Day-One Reader</div>
+          <div class="sub">FOLLOWED STITCH_ENGINE AT LAUNCH</div>
+        </div>
+      </div>
+      <div class="honor">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div>
+          <div class="ti">Community Pillar</div>
+          <div class="sub">100+ COMMENTS · 50+ UPVOTES</div>
+        </div>
+      </div>
+      <div class="honor">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div>
+          <div class="ti">Top Contributor</div>
+          <div class="sub">5 THEORIES PINNED BY AUTHOR</div>
+        </div>
+      </div>
+      <div class="honor locked">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="1"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div>
+          <div class="ti">???</div>
+          <div class="sub">LOCKED · KEEP READING</div>
+        </div>
+      </div>
+      <div class="honor locked">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="1"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div>
+          <div class="ti">???</div>
+          <div class="sub">LOCKED · 15-DAY STREAK</div>
+        </div>
+      </div>
+      <div class="honor locked">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="1"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div>
+          <div class="ti">???</div>
+          <div class="sub">LOCKED · COMPLETE A NOVEL</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div class="label">Recently read</div>
+      <div class="count">this month</div>
+    </div>
+    <div class="reading-history" id="history"></div>
+  </section>
+
+  <div class="logout-row">
+    <button onclick="location.href='login.html'">Log out ↗</button>
+  </div>
+
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  renderGlobalNav(null);
+
+  const u = STITCH.getUser();
+  document.getElementById('avatar').textContent = u.initials;
+  document.getElementById('uname').textContent = u.username;
+  document.getElementById('uhandle').textContent = u.handle + ' · joined ' + u.joined;
+  document.getElementById('bio').textContent = u.bio;
+  document.getElementById('srbig').textContent = u.streak;
+
+  // streak ring progress
+  const ring = document.getElementById('ring');
+  const pct = Math.min(1, u.streak / u.streakTarget);
+  const CIRC = 339.3;
+  ring.setAttribute('stroke-dashoffset', CIRC * (1 - pct));
+  document.getElementById('progressbar').style.setProperty('--p', (pct * 100) + '%');
+  document.getElementById('tonext').textContent = (u.streakTarget - u.streak) + ' more days to unlock';
+
+  // recent history
+  const hist = [
+    { novel: 'stitch-engine', ch: 5, date: '2 days ago' },
+    { novel: 'obsidian-throne', ch: 41, date: '4 days ago' },
+    { novel: 'whispers-deep', ch: 12, date: '1 week ago' },
+    { novel: 'concrete-echoes', ch: 8, date: '2 weeks ago' },
+  ];
+  document.getElementById('history').innerHTML = hist.map(h => {
+    const n = STITCH.getNovel(h.novel);
+    return `<div class="hist">
+      <div class="thumb">${coverSvg(n.cover)}</div>
+      <div>
+        <div class="title">${n.title}</div>
+        <div class="meta">${h.date} · ${n.author}</div>
+      </div>
+      <div class="ch">CH.${h.ch}</div>
+    </div>`;
+  }).join('');
+</script>
+</body>
+</html>

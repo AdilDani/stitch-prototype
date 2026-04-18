@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STITCH — Home</title>
+<link rel="stylesheet" href="css/core.css">
+<style>
+  .wrap { max-width: 520px; margin: 0 auto; padding: 0 0 120px; }
+
+  .hero-strip {
+    padding: 28px 22px 20px;
+    background: var(--paper);
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .hero-strip .hello {
+    font-family: var(--font-editorial); font-style: italic;
+    color: var(--muted); font-size: 15px;
+  }
+  .hero-strip .name {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 42px; letter-spacing: -0.03em; line-height: 1;
+    margin-top: 4px;
+  }
+  .hero-strip .streak-inline {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 14px;
+    padding: 6px 10px;
+    border: 1px solid var(--ink);
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .hero-strip .streak-inline .flame {
+    width: 12px; height: 12px; background: var(--accent);
+    clip-path: polygon(50% 0%, 80% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 20% 30%);
+  }
+
+  .section { padding: 28px 22px 0; }
+  .section-head {
+    display: flex; align-items: end; justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .section-head .label {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .section-head .count { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+
+  /* countdown cards — scroll horizontally */
+  .countdown-row {
+    display: flex; gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .countdown-row::-webkit-scrollbar { display: none; }
+  .countdown-card {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 20px;
+    border: 1.5px solid var(--ink);
+    position: relative;
+    min-height: 190px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .countdown-card .cc-head {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(244,242,236,0.6);
+  }
+  .countdown-card .cc-head .rec {
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .countdown-card .cc-head .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: blink 1s infinite; }
+  .countdown-card .cc-time {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 44px;
+    letter-spacing: -0.02em;
+    color: var(--paper);
+    margin-top: 12px;
+  }
+  .countdown-card .cc-novel {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    margin-top: 8px;
+  }
+  .countdown-card .cc-ch {
+    font-family: var(--font-mono); font-size: 11px;
+    color: rgba(244,242,236,0.6); margin-top: 4px;
+    letter-spacing: 0.08em;
+  }
+  .countdown-card .cc-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 16px;
+  }
+  .countdown-card .author { font-family: var(--font-mono); font-size: 11px; color: rgba(244,242,236,0.6); }
+  .notify-btn {
+    background: var(--accent); color: var(--paper);
+    border: none;
+    padding: 6px 12px;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    cursor: pointer;
+  }
+  .notify-btn.set { background: var(--paper); color: var(--ink); }
+
+  @keyframes blink { 50% { opacity: 0.3; } }
+
+  /* library grid */
+  .library-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .lib-card {
+    display: block;
+    position: relative;
+    aspect-ratio: 5/7;
+    border: 1.5px solid var(--ink);
+    overflow: hidden;
+    background: var(--ink);
+    transition: transform 0.15s;
+  }
+  .lib-card:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--accent); }
+  .lib-card svg { width: 100%; height: 100%; display: block; }
+  .lib-card .unread-flag {
+    position: absolute;
+    top: 10px; left: 10px;
+    background: var(--accent); color: var(--paper);
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 10px; letter-spacing: 0.14em;
+    padding: 3px 8px;
+  }
+  .lib-card .lib-meta {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 12px;
+    background: linear-gradient(to top, rgba(10,10,10,0.95), transparent);
+    color: var(--paper);
+  }
+  .lib-card .lib-title {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 14px; letter-spacing: -0.01em;
+    margin-bottom: 2px;
+  }
+  .lib-card .lib-ch {
+    font-family: var(--font-mono); font-size: 10px;
+    color: rgba(244,242,236,0.75);
+    letter-spacing: 0.08em;
+  }
+  .lib-add {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 10px;
+    border: 1.5px dashed var(--ink);
+    aspect-ratio: 5/7;
+    background: var(--paper-2);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .lib-add:hover { background: var(--ink); color: var(--paper); }
+  .lib-add .plus {
+    width: 48px; height: 48px;
+    border: 1.5px solid currentColor;
+    display: grid; place-items: center;
+  }
+  .lib-add .label {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    text-align: center;
+  }
+  .lib-add .sub { font-family: var(--font-mono); font-size: 10px; color: currentColor; opacity: 0.55; letter-spacing: 0.05em; }
+
+  /* quick actions fab */
+  .fab {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    width: 56px; height: 56px;
+    background: var(--ink); color: var(--paper);
+    border: 1.5px solid var(--ink);
+    display: grid; place-items: center;
+    cursor: pointer;
+    z-index: 50;
+    box-shadow: 4px 4px 0 var(--accent);
+  }
+  .fab:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--accent); }
+
+  /* join by code strip */
+  .join-strip {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border: 1.5px dashed var(--ink);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    background: var(--paper-2);
+  }
+  .join-strip .txt {
+    font-family: var(--font-editorial); font-style: italic;
+    color: var(--muted); font-size: 14px; line-height: 1.3;
+  }
+  .join-strip a {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    border-bottom: 1.5px solid var(--ink);
+    padding: 0 0 2px;
+    white-space: nowrap;
+  }
+  .join-strip a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* schedule */
+  .schedule { display: grid; gap: 8px; }
+  .sched-row {
+    display: grid; grid-template-columns: 80px 1fr auto; align-items: center; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sched-row .when {
+    font-family: var(--font-mono); font-size: 12px;
+    font-weight: 700; letter-spacing: -0.01em;
+  }
+  .sched-row .what {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 13px; letter-spacing: 0;
+  }
+  .sched-row .meta {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--muted); letter-spacing: 0.06em;
+  }
+  .sched-row .bell {
+    width: 28px; height: 28px;
+    border: 1px solid var(--ink);
+    display: grid; place-items: center;
+    cursor: pointer;
+  }
+  .sched-row .bell:hover { background: var(--ink); color: var(--paper); }
+</style>
+</head>
+<body>
+
+<nav class="global-nav" data-global-nav></nav>
+
+<div class="wrap">
+
+  <section class="hero-strip">
+    <div class="hello">Good evening,</div>
+    <div class="name" id="hello-name">Alex</div>
+    <div class="streak-inline"><span class="flame"></span> <span id="streak-str">12-day streak</span></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div class="label">Next chapters</div>
+      <div class="count" id="cd-count"></div>
+    </div>
+    <div class="countdown-row" id="countdowns"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div class="label">Your library</div>
+      <div class="count" id="lib-count"></div>
+    </div>
+    <div class="library-grid" id="library"></div>
+
+    <div class="join-strip">
+      <div class="txt">Got a private code from an author?</div>
+      <a href="join-code.html">Join private novel →</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div class="label">Release schedule</div>
+      <div class="count">next 7 days</div>
+    </div>
+    <div class="schedule" id="schedule"></div>
+  </section>
+
+</div>
+
+<a class="fab" href="discover.html" aria-label="Discover">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</a>
+
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  renderGlobalNav('home');
+
+  const u = STITCH.getUser();
+  document.getElementById('hello-name').textContent = u.username.split(' ')[0] + '.';
+  document.getElementById('streak-str').textContent = u.streak + '-day streak · ' + (u.streakTarget - u.streak) + ' to next milestone';
+
+  // countdowns — only novels where latestChapter < totalChapters
+  const upcoming = [
+    { novel: 'obsidian-throne', chapter: 42, endTs: Date.now() + 12*3600*1000 + 45*60*1000 },
+    { novel: 'whispers-deep', chapter: 13, endTs: Date.now() + 26*3600*1000 + 12*60*1000 },
+    { novel: 'stitch-engine', chapter: 6, endTs: Date.now() + 58*3600*1000 },
+    { novel: 'long-winter', chapter: 13, endTs: Date.now() + 96*3600*1000 },
+  ];
+
+  const cdEl = document.getElementById('countdowns');
+  document.getElementById('cd-count').textContent = upcoming.length + ' upcoming';
+  cdEl.innerHTML = upcoming.map((c, idx) => {
+    const novel = STITCH.getNovel(c.novel);
+    return `
+      <div class="countdown-card" data-end="${c.endTs}" data-idx="${idx}">
+        <div class="cc-head"><span class="rec"><span class="dot"></span>Releasing in</span><span>REC ${String(idx+1).padStart(2,'0')}</span></div>
+        <div>
+          <div class="cc-time" data-timer="${c.endTs}">--:--:--</div>
+          <div class="cc-novel">${novel.title}</div>
+          <div class="cc-ch">Chapter ${c.chapter}</div>
+        </div>
+        <div class="cc-foot">
+          <span class="author">By ${novel.author}</span>
+          <button class="notify-btn" data-notify="${idx}">Notify</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function tickTimers() {
+    document.querySelectorAll('[data-timer]').forEach(el => {
+      const end = parseInt(el.dataset.timer);
+      const rem = Math.max(0, end - Date.now());
+      const h = Math.floor(rem / 3600000);
+      const m = Math.floor((rem % 3600000) / 60000);
+      const s = Math.floor((rem % 60000) / 1000);
+      el.textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+    });
+  }
+  tickTimers();
+  setInterval(tickTimers, 1000);
+
+  cdEl.addEventListener('click', e => {
+    const btn = e.target.closest('[data-notify]');
+    if (!btn) return;
+    btn.classList.toggle('set');
+    btn.textContent = btn.classList.contains('set') ? 'Notifying' : 'Notify';
+  });
+
+  // library
+  const lib = document.getElementById('library');
+  const libItems = u.followed.map(id => STITCH.getNovel(id)).filter(Boolean);
+  document.getElementById('lib-count').textContent = libItems.length + ' novels';
+  lib.innerHTML = libItems.map((n, i) => {
+    const unread = i === 0;
+    return `
+      <a class="lib-card" href="novel-home.html?id=${n.id}">
+        ${coverSvg(n.cover)}
+        ${unread ? '<span class="unread-flag">UNREAD</span>' : ''}
+        <div class="lib-meta">
+          <div class="lib-title">${n.title}</div>
+          <div class="lib-ch">Ch. ${n.latestChapter} · ${unread ? '2 mins ago' : 'Read'}</div>
+        </div>
+      </a>
+    `;
+  }).join('') + `
+    <a class="lib-add" href="discover.html">
+      <div class="plus"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      <div class="label">Discover new</div>
+      <div class="sub">Browse catalog</div>
+    </a>
+  `;
+
+  // schedule
+  const schedule = [
+    { day: 'Today', time: '18:00', what: 'The Obsidian Throne', ch: 'Chapter 42', novel: 'obsidian-throne' },
+    { day: 'Tomorrow', time: '06:30', what: 'Whispers of the Deep', ch: 'Chapter 13', novel: 'whispers-deep' },
+    { day: 'Fri', time: '20:00', what: 'Stitch Engine', ch: 'Chapter 6 — The Architecture of Silence', novel: 'stitch-engine' },
+    { day: 'Sun', time: '10:00', what: 'The Long Winter', ch: 'Chapter 13', novel: 'long-winter' },
+  ];
+  document.getElementById('schedule').innerHTML = schedule.map(s => `
+    <div class="sched-row">
+      <div>
+        <div class="when">${s.day}</div>
+        <div class="meta">${s.time}</div>
+      </div>
+      <div>
+        <div class="what">${s.what}</div>
+        <div class="meta">${s.ch}</div>
+      </div>
+      <div class="bell" title="Notify me">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+      </div>
+    </div>
+  `).join('');
+</script>
+
+</body>
+</html>

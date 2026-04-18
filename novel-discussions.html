@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STITCH_ENGINE — Discussions</title>
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/novel-nav.css">
+<style>
+  body { background: #0a0a0c; color: #ededed; }
+  body::before { opacity: 0.08; }
+  .wrap { max-width: 520px; margin: 0 auto; background: #0a0a0c; min-height: 100vh; padding-bottom: 100px; }
+
+  .back-mirror {
+    position: fixed; top: 16px; left: 16px; z-index: 150;
+    width: 38px; height: 38px;
+    display: grid; place-items: center;
+    background: rgba(10,10,10,0.65);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(237,237,237,0.25);
+    color: #ededed;
+  }
+
+  .header {
+    padding: 60px 22px 24px;
+    border-bottom: 1px solid rgba(237,237,237,0.1);
+  }
+  .crumbs {
+    font-family: var(--font-mono); font-size: 11px;
+    color: rgba(237,237,237,0.5); letter-spacing: 0.14em;
+    text-transform: uppercase; margin-bottom: 14px;
+  }
+  .crumbs .sep { color: #d14829; padding: 0 5px; }
+  .header h1 {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 48px; letter-spacing: -0.04em; line-height: 0.92;
+    color: #ededed;
+  }
+  .header .sub {
+    font-family: var(--font-editorial); font-style: italic;
+    font-size: 15px; color: rgba(237,237,237,0.55);
+    margin-top: 10px;
+  }
+
+  .filters {
+    display: flex; gap: 8px; padding: 16px 22px 14px;
+    overflow-x: auto;
+    border-bottom: 1px solid rgba(237,237,237,0.1);
+    background: rgba(10,10,12,0.9);
+    position: sticky; top: 0; z-index: 40;
+    backdrop-filter: blur(8px);
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .fchip {
+    padding: 6px 12px;
+    border: 1px solid rgba(237,237,237,0.2);
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    background: transparent; color: #ededed;
+  }
+  .fchip.active { background: #d14829; color: #ededed; border-color: #d14829; }
+
+  .create-strip {
+    padding: 18px 22px;
+    border-bottom: 1px solid rgba(237,237,237,0.1);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .create-strip .avatar {
+    width: 36px; height: 36px;
+    background: #d14829; color: #ededed;
+    display: grid; place-items: center;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 13px;
+  }
+  .create-strip .composer {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid rgba(237,237,237,0.2);
+    background: #12121a;
+    font-family: var(--font-editorial); font-style: italic;
+    color: rgba(237,237,237,0.5);
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .create-btn {
+    padding: 10px 14px;
+    background: #d14829; color: #ededed;
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+  }
+  .create-btn:hover { background: #ededed; color: #0a0a0c; }
+
+  .feed { padding: 0; }
+  .post {
+    padding: 22px 22px;
+    border-bottom: 1px solid rgba(237,237,237,0.08);
+  }
+  .post-top {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .post-who {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .post-who .av {
+    width: 32px; height: 32px;
+    background: rgba(237,237,237,0.15); color: #ededed;
+    display: grid; place-items: center;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px;
+  }
+  .post-who .nm { font-family: var(--font-display); font-weight: 700; font-size: 13px; }
+  .post-who .w { font-family: var(--font-mono); font-size: 10px; color: rgba(237,237,237,0.45); letter-spacing: 0.1em; }
+  .post-age { font-family: var(--font-mono); font-size: 10px; color: rgba(237,237,237,0.4); letter-spacing: 0.08em; }
+
+  .ch-pill {
+    display: inline-flex; align-items: center;
+    padding: 3px 8px;
+    font-family: var(--font-mono); font-size: 9px;
+    font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    border: 1px solid rgba(237,237,237,0.25);
+    color: rgba(237,237,237,0.7);
+    margin-bottom: 10px;
+  }
+  .ch-pill.spoil { background: #d14829; border-color: #d14829; color: #ededed; }
+
+  .post h3 {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 19px; letter-spacing: -0.02em; line-height: 1.2;
+    color: #ededed;
+    margin-bottom: 10px;
+  }
+  .post p.body {
+    font-family: var(--font-body); font-size: 14px; line-height: 1.55;
+    color: rgba(237,237,237,0.8);
+    margin-bottom: 14px;
+  }
+  .post .tag-line {
+    display: flex; gap: 8px; margin-bottom: 12px;
+  }
+  .tag-line .tg {
+    padding: 3px 8px;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    border: 1px solid rgba(237,237,237,0.2);
+    color: rgba(237,237,237,0.6);
+  }
+  .tag-line .tg.theory { color: #f2b705; border-color: rgba(242, 183, 5, 0.5); }
+  .tag-line .tg.review { color: #5ad; border-color: rgba(90, 170, 221, 0.5); }
+  .tag-line .tg.question { color: #a07dff; border-color: rgba(160, 125, 255, 0.5); }
+
+  .post-foot {
+    display: flex; align-items: center; gap: 16px;
+    font-family: var(--font-mono); font-size: 11px;
+    color: rgba(237,237,237,0.5);
+  }
+  .post-foot .action { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+  .post-foot .action:hover { color: #d14829; }
+  .post-foot .spacer { flex: 1; }
+
+  .sp-wrap { position: relative; margin-bottom: 14px; }
+  .sp-wrap.spoil .body { filter: blur(7px); pointer-events: none; user-select: none; }
+  .sp-wrap .sp-cover {
+    position: absolute; inset: 0;
+    background: rgba(10,10,10,0.88);
+    color: #ededed;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 4px;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    cursor: pointer; transition: opacity 0.3s;
+  }
+  .sp-wrap .sp-cover .sub {
+    font-weight: 400; font-size: 10px;
+    color: rgba(237,237,237,0.6); letter-spacing: 0.1em;
+  }
+  .sp-wrap.revealed .body { filter: none; pointer-events: auto; }
+  .sp-wrap.revealed .sp-cover { opacity: 0; pointer-events: none; }
+
+  .compose-fab {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    z-index: 60;
+    width: 56px; height: 56px;
+    background: #d14829; color: #ededed;
+    display: grid; place-items: center;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #ededed;
+  }
+</style>
+</head>
+<body>
+
+<a class="back-mirror" href="novel-home.html?id=stitch-engine" title="Back">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+</a>
+
+<div class="wrap">
+
+  <section class="header">
+    <div class="crumbs">STITCH_ENGINE <span class="sep">/</span> Discussions</div>
+    <h1>The Silent Archive.</h1>
+    <p class="sub">Community threads, theories, and reviews. Posts above your read cap (Ch. 05) are blurred.</p>
+  </section>
+
+  <div class="filters">
+    <button class="fchip active" data-f="all">All threads</button>
+    <button class="fchip" data-f="theory">Theories</button>
+    <button class="fchip" data-f="review">Reviews</button>
+    <button class="fchip" data-f="question">Questions</button>
+    <button class="fchip" data-f="ch1">CH. 01-05</button>
+    <button class="fchip" data-f="chhi">CH. 06+</button>
+  </div>
+
+  <div class="create-strip">
+    <div class="avatar">AM</div>
+    <div class="composer">Share a theory, ask a question, drop a review...</div>
+    <button class="create-btn">Create</button>
+  </div>
+
+  <div class="feed" id="feed"></div>
+
+</div>
+
+<a class="compose-fab" href="#" title="Compose">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</a>
+
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  mountNovelNav({ novelId: 'stitch-engine', active: 'discussions' });
+
+  let filter = 'all';
+
+  // local posts for stitch-engine + enrich
+  const posts = [
+    { id:'e1', ch:12, spoiler:true, who:'CipherReader', init:'CR', age:'2h', title:"The revelation about the Architect's motives.", body:"The revelation about the Architect's true motives completely changes the context of the first three chapters. Did anyone else catch the subtle foreshadowing in the dialogue during the train sequence? Specifically when he mentioned 'the architects who came before'.", tag:'theory', likes:142, comments:24, cat:'theory' },
+    { id:'e2', ch:24, spoiler:true, who:'Archivist_99', init:'A9', age:'5h', title:'Chapter 24 — the glass shatter scene.', body:"I can't believe they actually killed off the main antagonist this early. The power vacuum it leaves in the city is going to completely derail the protagonist's original plan. The glass shatter was visceral — I had to read it twice.", tag:'review', likes:512, comments:88, cat:'review' },
+    { id:'e3', ch:4, spoiler:false, who:'LoreSeeker', init:'LS', age:'1d', title:'Mapped the family tree from the prologue.', body:"Spent a few hours mapping out the connections between the families mentioned in the prologue. The structure looks suspiciously close to the old city grid layout. I'll post the diagram in Media tomorrow.", tag:'theory', likes:89, comments:34, cat:'theory' },
+    { id:'e4', ch:5, spoiler:false, who:'NullCatalyst', init:'NC', age:'8h', title:'Iris Kain is the most compelling protagonist this decade.', body:"The way she sees 'seams' in the city is a gorgeous metaphor for how we all look for meaning in broken systems. Full review in replies.", tag:'review', likes:231, comments:42, cat:'review' },
+    { id:'e5', ch:3, spoiler:false, who:'ProtocolEye', init:'PE', age:'2d', title:'What does the phrase "remainder-3" actually mean?', body:"It keeps appearing in the margins. A glitch? An AI? A reader cameo? I'm genuinely stuck.", tag:'question', likes:40, comments:18, cat:'question' },
+    { id:'e6', ch:8, spoiler:true, who:'SystemWatch', init:'SW', age:'3d', title:'About that body count in chapter 8.', body:"Six named characters gone in one chapter. This is cormac-mccarthy-level pacing and I am not recovering. Spoilers below.", tag:'review', likes:1200, comments:320, cat:'review' },
+  ];
+
+  function filtered() {
+    if (filter === 'all') return posts;
+    if (filter === 'ch1') return posts.filter(p => p.ch <= 5);
+    if (filter === 'chhi') return posts.filter(p => p.ch > 5);
+    return posts.filter(p => p.cat === filter);
+  }
+
+  function render() {
+    const cap = STITCH.getUser().readCaps['stitch-engine'] ?? 5;
+    document.getElementById('feed').innerHTML = filtered().map(p => {
+      const isBlur = p.spoiler || p.ch > cap;
+      const chLbl = isBlur ? `CH. ${p.ch} · SPOILER` : `CH. ${p.ch}`;
+      return `
+        <article class="post">
+          <div class="post-top">
+            <div class="post-who">
+              <div class="av">${p.init}</div>
+              <div>
+                <div class="nm">@${p.who}</div>
+                <div class="w">STITCH_ENGINE</div>
+              </div>
+            </div>
+            <div class="post-age">${p.age} ago</div>
+          </div>
+          <span class="ch-pill ${isBlur?'spoil':''}">${chLbl}</span>
+          <h3>${p.title}</h3>
+          <div class="sp-wrap ${isBlur?'spoil':''}">
+            <p class="body">${p.body}</p>
+            ${isBlur?`<div class="sp-cover">Contains spoilers<span class="sub">Ch. ${p.ch} · Tap to reveal</span></div>`:''}
+          </div>
+          <div class="tag-line"><span class="tg ${p.cat}">${p.cat.toUpperCase()}</span></div>
+          <div class="post-foot">
+            <div class="action"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H7V10l4.66-9.58A1 1 0 0 1 12.56.57a3.94 3.94 0 0 1 2.44 3.31 4 4 0 0 1 0 2"/></svg> ${fmtNum(p.likes)}</div>
+            <div class="action"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> ${p.comments}</div>
+            <div class="spacer"></div>
+            <div class="action"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div>
+          </div>
+        </article>
+      `;
+    }).join('');
+  }
+  render();
+
+  document.querySelectorAll('.fchip').forEach(c => c.addEventListener('click', () => {
+    document.querySelectorAll('.fchip').forEach(x => x.classList.toggle('active', x === c));
+    filter = c.dataset.f;
+    render();
+  }));
+
+  document.getElementById('feed').addEventListener('click', e => {
+    const w = e.target.closest('.sp-wrap.spoil');
+    if (w && !w.classList.contains('revealed') && e.target.closest('.sp-cover')) {
+      w.classList.add('revealed');
+      e.stopPropagation();
+    }
+  });
+</script>
+</body>
+</html>

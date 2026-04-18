@@ -1,0 +1,86 @@
+/* ============================================================
+   NOVEL-NAV — hidden by default, slides in on top-edge hover
+   ============================================================ */
+.nnav-host {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  pointer-events: none;
+}
+.nnav-hotzone {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 24px;
+  pointer-events: auto;
+}
+.nnav-pulse {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64px; height: 4px;
+  background: var(--novel-accent, #d14829);
+  opacity: 0.65;
+  animation: pulseBar 2s ease-in-out infinite;
+  pointer-events: auto;
+  cursor: pointer;
+}
+@keyframes pulseBar {
+  0%, 100% { opacity: 0.25; width: 48px; }
+  50% { opacity: 0.85; width: 80px; }
+}
+.nnav {
+  pointer-events: auto;
+  background: rgba(10, 10, 10, 0.96);
+  backdrop-filter: blur(8px);
+  color: #ededed;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  transform: translateY(-100%);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  font-family: var(--font-display);
+}
+.nnav.open { transform: translateY(0); }
+.nnav-back {
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #ededed;
+  transition: background 0.15s;
+}
+.nnav-back:hover { background: var(--novel-accent, #d14829); border-color: var(--novel-accent, #d14829); }
+.nnav-title {
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.nnav-links {
+  display: flex; gap: 4px; justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.nnav-link {
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(237,237,237,0.55);
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.nnav-link:hover { color: #ededed; }
+.nnav-link.active {
+  color: #ededed;
+  border-bottom-color: var(--novel-accent, #d14829);
+}
+
+@media (max-width: 600px) {
+  .nnav { grid-template-columns: auto auto; grid-template-rows: auto auto; }
+  .nnav-links { grid-column: 1 / -1; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+  .nnav-title { font-size: 12px; }
+}

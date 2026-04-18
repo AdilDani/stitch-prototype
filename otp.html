@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STITCH — Verify</title>
+<link rel="stylesheet" href="css/core.css">
+<style>
+  body { min-height: 100vh; display: grid; place-items: center; padding: 40px 20px; }
+  .wrap { width: 100%; max-width: 520px; }
+  .step-crumbs {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 40px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .step-crumbs .done { color: var(--ink); }
+  .step-crumbs .active { color: var(--accent); }
+  .step-crumbs .bar { flex: 1; height: 1.5px; background: var(--ink); opacity: 0.2; }
+  .step-crumbs .bar.filled { opacity: 1; }
+
+  h1 {
+    font-size: 64px;
+    margin-bottom: 16px;
+  }
+  .subtitle {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    color: var(--muted);
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .email-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--ink);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    margin: 12px 0 48px;
+  }
+  .email-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+  .otp-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .otp-cell {
+    aspect-ratio: 1;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 32px;
+    text-align: center;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+    transition: all 0.15s;
+  }
+  .otp-cell:focus {
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: 4px 4px 0 var(--accent);
+  }
+  .otp-cell.filled {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .action-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .resend {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 2px;
+  }
+  .resend:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .resend-timer { color: var(--muted); font-family: var(--font-mono); font-size: 12px; }
+
+  .status-line {
+    margin-top: 24px;
+    padding: 12px 14px;
+    border-left: 3px solid var(--accent);
+    background: var(--paper-2);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .status-line.err { border-left-color: var(--accent); color: var(--accent); }
+
+  .helplink {
+    margin-top: 40px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .helplink a { border-bottom: 1px solid var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="step-crumbs">
+    <span class="done">01 · IDENTITY</span>
+    <span class="bar filled"></span>
+    <span class="active">02 · 2FA</span>
+    <span class="bar"></span>
+    <span>03 · ACCESS</span>
+  </div>
+
+  <h1 class="display">Verify.</h1>
+  <p class="subtitle">Six-digit code sent to your inbox. Code expires in 10 minutes.</p>
+  <div class="email-chip">
+    <span class="dot"></span>
+    hello@editorialbrutalist.com
+  </div>
+
+  <div class="otp-grid" id="otp">
+    <input class="otp-cell" inputmode="numeric" maxlength="1" autofocus>
+    <input class="otp-cell" inputmode="numeric" maxlength="1">
+    <input class="otp-cell" inputmode="numeric" maxlength="1">
+    <input class="otp-cell" inputmode="numeric" maxlength="1">
+    <input class="otp-cell" inputmode="numeric" maxlength="1">
+    <input class="otp-cell" inputmode="numeric" maxlength="1">
+  </div>
+
+  <div class="action-row">
+    <div id="resend">
+      <span class="resend-timer" id="timer">Resend in 0:28</span>
+    </div>
+    <button class="btn" id="verify-btn" disabled style="opacity: 0.4; cursor: not-allowed;">Verify</button>
+  </div>
+
+  <div class="status-line" id="status">
+    Tip — any 6 digits will work in this prototype. Try <b style="font-family:var(--font-mono);">123456</b>.
+  </div>
+
+  <div class="helplink">
+    Didn't get the code? Check your spam folder, or <a href="login.html">try a different email</a>.
+  </div>
+</div>
+
+<script>
+  const cells = document.querySelectorAll('.otp-cell');
+  const verifyBtn = document.getElementById('verify-btn');
+  const status = document.getElementById('status');
+
+  function syncBtn() {
+    const val = Array.from(cells).map(c => c.value).join('');
+    if (val.length === 6) {
+      verifyBtn.disabled = false;
+      verifyBtn.style.opacity = 1;
+      verifyBtn.style.cursor = 'pointer';
+    } else {
+      verifyBtn.disabled = true;
+      verifyBtn.style.opacity = 0.4;
+      verifyBtn.style.cursor = 'not-allowed';
+    }
+  }
+
+  cells.forEach((c, i) => {
+    c.addEventListener('input', e => {
+      const v = c.value.replace(/\D/g, '').slice(0,1);
+      c.value = v;
+      c.classList.toggle('filled', !!v);
+      if (v && i < cells.length - 1) cells[i+1].focus();
+      syncBtn();
+    });
+    c.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !c.value && i > 0) cells[i-1].focus();
+    });
+    c.addEventListener('paste', e => {
+      e.preventDefault();
+      const p = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6);
+      p.split('').forEach((ch, j) => {
+        if (cells[j]) { cells[j].value = ch; cells[j].classList.add('filled'); }
+      });
+      (cells[p.length] || cells[5]).focus();
+      syncBtn();
+    });
+  });
+
+  verifyBtn.addEventListener('click', () => {
+    location.href = 'home.html';
+  });
+
+  // timer
+  let t = 28;
+  const timer = document.getElementById('timer');
+  const tick = setInterval(() => {
+    t--;
+    if (t <= 0) {
+      clearInterval(tick);
+      document.getElementById('resend').innerHTML = '<a class="resend" onclick="location.reload()">Resend code</a>';
+    } else {
+      timer.textContent = `Resend in 0:${String(t).padStart(2,'0')}`;
+    }
+  }, 1000);
+</script>
+
+</body>
+</html>

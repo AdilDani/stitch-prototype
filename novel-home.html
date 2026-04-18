@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STITCH_ENGINE — Novel</title>
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/novel-nav.css">
+<style>
+  body { background: #0a0a0c; color: #ededed; }
+  body::before { opacity: 0.08; }
+
+  .wrap { max-width: 520px; margin: 0 auto; background: #0a0a0c; min-height: 100vh; position: relative; }
+
+  /* back arrow top-left — mirror of hidden nav back */
+  .back-mirror {
+    position: fixed;
+    top: 16px; left: 16px;
+    z-index: 150;
+    width: 38px; height: 38px;
+    display: grid; place-items: center;
+    background: rgba(10,10,10,0.65);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(237,237,237,0.25);
+    color: #ededed;
+  }
+  .back-mirror:hover { background: var(--accent); border-color: var(--accent); }
+
+  /* hero art block */
+  .hero-block {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: #0a0a0c;
+  }
+  .hero-block .bg { position: absolute; inset: 0; }
+  .hero-block .bg svg { width: 100%; height: 100%; display: block; }
+  .hero-block .bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(10,10,12,0) 40%, rgba(10,10,12,0.95) 100%);
+  }
+  .hero-overlay {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 24px 22px 28px;
+    color: #ededed;
+  }
+  .hero-overlay .eyebrow { color: rgba(237,237,237,0.55); display: block; margin-bottom: 12px; }
+  .hero-overlay .title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 52px;
+    letter-spacing: -0.05em;
+    line-height: 0.88;
+    color: #ededed;
+  }
+  .hero-overlay .author {
+    margin-top: 10px;
+    font-family: var(--font-mono); font-size: 12px;
+    color: rgba(237,237,237,0.7);
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .hero-overlay .meta-line {
+    margin-top: 14px;
+    display: flex; gap: 14px;
+    font-family: var(--font-mono); font-size: 11px;
+    color: rgba(237,237,237,0.5);
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+
+  /* intro section */
+  .intro {
+    padding: 28px 22px 20px;
+    border-bottom: 1px solid rgba(237,237,237,0.1);
+  }
+  .intro .stamp { border-color: #d14829; color: #d14829; }
+  .intro .pull {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.3;
+    color: #ededed;
+    margin-top: 18px;
+  }
+  .intro .pull::before, .intro .pull::after { color: #d14829; }
+
+  /* latest chapter CTA */
+  .latest {
+    position: relative;
+    margin: 22px;
+    padding: 24px 20px;
+    border: 1px solid rgba(237,237,237,0.2);
+    background: linear-gradient(135deg, #12121a, #0a0a0c);
+    display: grid;
+    gap: 14px;
+  }
+  .latest .tag {
+    background: transparent;
+    border-color: #d14829;
+    color: #d14829;
+    align-self: start;
+  }
+  .latest .ch-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(237,237,237,0.55);
+    letter-spacing: 0.16em;
+  }
+  .latest .ch-title {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 28px; letter-spacing: -0.02em; line-height: 1;
+    color: #ededed;
+  }
+  .latest .ch-sub {
+    font-family: var(--font-editorial); font-style: italic;
+    color: rgba(237,237,237,0.6);
+    font-size: 15px; margin-top: 4px;
+  }
+  .latest .progress-line {
+    height: 2px; background: rgba(237,237,237,0.15);
+    position: relative;
+    margin-top: 6px;
+  }
+  .latest .progress-line::before {
+    content: ''; position: absolute;
+    inset: 0; width: 28%;
+    background: #d14829;
+  }
+  .latest .progress-label {
+    display: flex; justify-content: space-between;
+    font-family: var(--font-mono); font-size: 10px;
+    color: rgba(237,237,237,0.55);
+    letter-spacing: 0.08em; margin-top: 6px;
+  }
+  .latest-btn {
+    width: 100%;
+    padding: 16px;
+    background: #ededed; color: #0a0a0c;
+    border: none;
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .latest-btn:hover { background: #d14829; color: #ededed; }
+
+  /* characters section */
+  .section { padding: 28px 22px; border-bottom: 1px solid rgba(237,237,237,0.1); }
+  .section-head {
+    display: flex; align-items: end; justify-content: space-between;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(237,237,237,0.1);
+  }
+  .section-head h2 {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 24px; letter-spacing: -0.02em;
+    color: #ededed;
+  }
+  .section-head .count {
+    font-family: var(--font-mono); font-size: 11px;
+    color: rgba(237,237,237,0.5);
+    letter-spacing: 0.08em;
+  }
+
+  .character-row {
+    display: flex; gap: 12px; overflow-x: auto;
+    padding-bottom: 4px;
+    scroll-snap-type: x mandatory;
+  }
+  .character-row::-webkit-scrollbar { display: none; }
+  .char-card {
+    flex: 0 0 160px;
+    scroll-snap-align: start;
+    border: 1px solid rgba(237,237,237,0.15);
+    background: #12121a;
+    padding: 14px;
+    position: relative;
+  }
+  .char-card .avatar {
+    width: 60px; height: 60px;
+    background: #1c1c24;
+    border: 1px solid rgba(237,237,237,0.2);
+    display: grid; place-items: center;
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 20px;
+    color: #d14829;
+    margin-bottom: 12px;
+  }
+  .char-card .name { font-family: var(--font-display); font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
+  .char-card .role { font-family: var(--font-mono); font-size: 10px; color: rgba(237,237,237,0.5); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 4px; }
+  .char-card .tag-line {
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid rgba(237,237,237,0.1);
+    font-family: var(--font-editorial); font-style: italic;
+    font-size: 12px;
+    color: rgba(237,237,237,0.7);
+    line-height: 1.3;
+  }
+
+  /* news feed */
+  .news-list { display: grid; gap: 14px; }
+  .news-item {
+    display: grid;
+    grid-template-columns: 62px 1fr;
+    gap: 14px;
+    padding: 14px 0;
+    border-top: 1px solid rgba(237,237,237,0.1);
+  }
+  .news-item:first-child { border-top: none; padding-top: 0; }
+  .news-date {
+    font-family: var(--font-mono); font-size: 11px;
+    color: rgba(237,237,237,0.55);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .news-date b { color: #d14829; font-weight: 700; font-size: 22px; letter-spacing: -0.02em; display: block; font-family: var(--font-display); }
+  .news-title { font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: -0.01em; color: #ededed; line-height: 1.2; }
+  .news-body { font-family: var(--font-body); font-size: 13px; color: rgba(237,237,237,0.65); margin-top: 4px; line-height: 1.5; }
+
+  /* stats strip */
+  .stats-strip {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    padding: 24px 0;
+    border-bottom: 1px solid rgba(237,237,237,0.1);
+  }
+  .stat { text-align: center; padding: 0 10px; border-right: 1px solid rgba(237,237,237,0.1); }
+  .stat:last-child { border-right: none; }
+  .stat .n { font-family: var(--font-display); font-weight: 900; font-size: 28px; letter-spacing: -0.03em; color: #d14829; }
+  .stat .l { font-family: var(--font-mono); font-size: 10px; color: rgba(237,237,237,0.55); letter-spacing: 0.14em; text-transform: uppercase; margin-top: 2px; }
+
+  .footer-end {
+    padding: 40px 22px;
+    text-align: center;
+    font-family: var(--font-mono); font-size: 10px;
+    color: rgba(237,237,237,0.4);
+    letter-spacing: 0.18em; text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<a class="back-mirror" href="home.html" title="Back to NovelSite">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+</a>
+
+<div class="wrap">
+
+  <section class="hero-block">
+    <div class="bg" id="hero-bg"></div>
+    <div class="hero-overlay">
+      <span class="eyebrow">Serialized · Currently publishing</span>
+      <div class="title">Stitch<br>Engine</div>
+      <div class="author">By System Architect</div>
+      <div class="meta-line">
+        <span>12 chapters</span><span>·</span><span>Sci-Fi</span><span>·</span><span>Weekly</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="intro">
+    <span class="stamp">COLD BOOT</span>
+    <p class="pull">"The city was stitched together from fragments of deleted timelines. Most people never noticed the seams."</p>
+  </section>
+
+  <div class="latest">
+    <span class="tag">Latest chapter</span>
+    <div>
+      <div class="ch-num">CHAPTER 05 / 12</div>
+      <div class="ch-title">Executing Runtime Protocol</div>
+      <div class="ch-sub">Released 2 days ago · 18 min read</div>
+    </div>
+    <div>
+      <div class="progress-line"></div>
+      <div class="progress-label"><span>Resume at 28%</span><span>Paragraph 14 / 52</span></div>
+    </div>
+    <a class="latest-btn" href="read.html?id=stitch-engine&ch=5">
+      <span>Resume reading</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Cast</h2>
+      <span class="count">6 featured</span>
+    </div>
+    <div class="character-row">
+      <div class="char-card">
+        <div class="avatar">IR</div>
+        <div class="name">Iris Kain</div>
+        <div class="role">PROTAGONIST · ENGINEER</div>
+        <div class="tag-line">"I can see the seams, but I can't unsee them."</div>
+      </div>
+      <div class="char-card">
+        <div class="avatar">A0</div>
+        <div class="name">Architect-0</div>
+        <div class="role">ANTAGONIST · ???</div>
+        <div class="tag-line">"Every stitched thing was stitched by someone."</div>
+      </div>
+      <div class="char-card">
+        <div class="avatar">EM</div>
+        <div class="name">Emerine</div>
+        <div class="role">ALLY · FIXER</div>
+        <div class="tag-line">"I don't fix cities. I fix what cities forget."</div>
+      </div>
+      <div class="char-card">
+        <div class="avatar">R3</div>
+        <div class="name">Remnant-3</div>
+        <div class="role">AI · UNSTABLE</div>
+        <div class="tag-line">"My memory loops. So does yours. Different wavelengths."</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Dispatches</h2>
+      <span class="count">3 posts</span>
+    </div>
+    <div class="news-list">
+      <div class="news-item">
+        <div class="news-date"><b>02</b>APR · 2026</div>
+        <div>
+          <div class="news-title">Chapter 06 pre-released for day-one readers</div>
+          <div class="news-body">If you had the Day-One Reader honor, Ch. 06 unlocks 24 hours early. Enjoy the view from the ground floor of the Citadel.</div>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-date"><b>25</b>MAR · 2026</div>
+        <div>
+          <div class="news-title">Intercepted transmission posted in Community</div>
+          <div class="news-body">Four-minute audio piece. Headphones recommended. Spoiler-free for anyone caught up through Ch. 04.</div>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-date"><b>18</b>MAR · 2026</div>
+        <div>
+          <div class="news-title">Engine Schematic v2 in Community</div>
+          <div class="news-body">Annotated blueprint of the core mechanism. Readers have been theorizing about layer 3 all week — take a look.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="stats-strip">
+      <div class="stat"><div class="n">14.2k</div><div class="l">Readers</div></div>
+      <div class="stat"><div class="n">8.4%</div><div class="l">Engagement</div></div>
+      <div class="stat"><div class="n">412</div><div class="l">Theories</div></div>
+    </div>
+  </section>
+
+  <div class="footer-end">END OF SURFACE · SCROLL TO TOP FOR NAV</div>
+
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  document.getElementById('hero-bg').innerHTML = artSvg('hero');
+  mountNovelNav({ novelId: 'stitch-engine', active: 'home' });
+</script>
+</body>
+</html>

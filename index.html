@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STITCH — Prototype Map</title>
+<link rel="stylesheet" href="css/core.css">
+<style>
+  .hero-wrap { padding: 80px 20px 60px; max-width: 1100px; margin: 0 auto; position: relative; }
+  .hero-wrap .eyebrow { display: inline-block; margin-bottom: 20px; }
+  .giant {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(80px, 14vw, 220px);
+    line-height: 0.82;
+    letter-spacing: -0.06em;
+  }
+  .giant span.k { color: var(--accent); }
+  .kicker {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(18px, 2.4vw, 26px);
+    max-width: 620px;
+    margin-top: 28px;
+    color: var(--ink-2);
+    line-height: 1.35;
+  }
+  .meta-strip {
+    display: flex; gap: 40px;
+    margin-top: 40px; padding-top: 24px;
+    border-top: 1.5px solid var(--ink);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+  .meta-strip > div { display: flex; flex-direction: column; gap: 4px; }
+  .meta-strip b { font-family: var(--font-display); font-size: 14px; font-weight: 800; letter-spacing: 0; }
+
+  .sections { max-width: 1100px; margin: 0 auto; padding: 40px 20px 120px; }
+  .section-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px; align-items: end;
+    margin-top: 72px; margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .section-head .idx {
+    font-family: var(--font-mono);
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .section-head .title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 36px;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .section-head .ticker {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .section-desc {
+    font-family: var(--font-editorial);
+    font-size: 16px;
+    color: var(--muted);
+    margin-bottom: 24px;
+    max-width: 700px;
+  }
+
+  .page-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 0;
+    border: 1.5px solid var(--ink);
+  }
+  .page-card {
+    border-right: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--paper);
+    transition: background 0.15s, transform 0.15s;
+    min-height: 220px;
+    position: relative;
+  }
+  .page-card:hover { background: var(--ink); color: var(--paper); }
+  .page-card:hover .pc-num { color: var(--accent); }
+  .page-card .pc-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .page-card .pc-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    flex: 1;
+  }
+  .page-card .pc-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 6px;
+    border: 1px solid currentColor;
+    align-self: flex-start;
+  }
+  .page-card .pc-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+  .page-card:hover .pc-desc { color: rgba(244,242,236,0.7); }
+
+  .page-card.new-build::after {
+    content: 'BUILT FROM SCRATCH';
+    position: absolute;
+    top: 10px; right: 10px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 2px 6px;
+  }
+  .page-card:hover.new-build::after { color: var(--accent); border-color: var(--accent); }
+
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 38px;
+    background: var(--ink); color: var(--paper);
+    display: flex; align-items: center; padding: 0 20px;
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    z-index: 500;
+    gap: 20px;
+  }
+  .top-bar .dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: blink 1.4s infinite; }
+  @keyframes blink { 50% { opacity: 0.3; } }
+  .top-bar .sep { opacity: 0.4; }
+  body { padding-top: 38px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <span class="dot"></span>
+  <span>Stitch prototype</span>
+  <span class="sep">//</span>
+  <span>V 0.1.0 — internal review</span>
+  <span class="sep">//</span>
+  <span>20 pages · linked HTML · no backend</span>
+</div>
+
+<div class="hero-wrap">
+  <div class="eyebrow">A platform for serialized immersive fiction</div>
+  <div class="giant">STIT<span class="k">C</span>H</div>
+  <div class="kicker">A reader spends their evening inside a novel-themed enclosure. An author composes in paragraphs, scores them with normal-distribution audio envelopes, and publishes to a spoiler-aware forum. This is the prototype shell.</div>
+
+  <div class="meta-strip">
+    <div><span>Reader tier</span><b>Mobile-first</b></div>
+    <div><span>Author tier</span><b>Desktop-first</b></div>
+    <div><span>Backend</span><b>Spring Boot + PostgreSQL</b></div>
+    <div><span>Frontend</span><b>Next.js / React (final)</b></div>
+  </div>
+</div>
+
+<div class="sections">
+
+  <div class="section-head">
+    <div class="idx">01</div>
+    <div class="title">Auth flow</div>
+    <div class="ticker">3 screens · mobile-first</div>
+  </div>
+  <div class="section-desc">Google OAuth followed by a 6-digit email OTP. Persistent sessions mean readers rarely see this after the first setup, so it has to be sharp and short.</div>
+  <div class="page-grid">
+    <a href="login.html" class="page-card">
+      <div class="pc-num">001 / AUTH</div>
+      <div class="pc-title">Login</div>
+      <span class="pc-tag">ENTRY</span>
+      <div class="pc-desc">Google OAuth · keep-me-logged-in checkbox · brand statement.</div>
+    </a>
+    <a href="otp.html" class="page-card">
+      <div class="pc-num">002 / AUTH</div>
+      <div class="pc-title">OTP verification</div>
+      <span class="pc-tag">2FA</span>
+      <div class="pc-desc">Six-digit code, auto-advance inputs, resend timer.</div>
+    </a>
+    <a href="join-code.html" class="page-card">
+      <div class="pc-num">003 / AUTH</div>
+      <div class="pc-title">Join by private code</div>
+      <span class="pc-tag">MODAL</span>
+      <div class="pc-desc">Six-character protocol code for private novels. End-to-end encrypted badge.</div>
+    </a>
+  </div>
+
+  <div class="section-head">
+    <div class="idx">02</div>
+    <div class="title">NovelSite</div>
+    <div class="ticker">5 screens · mobile-first</div>
+  </div>
+  <div class="section-desc">The cross-novel shell. Persistent dark navbar. Readers live here between chapters — library, release schedule, global feeds, discover.</div>
+  <div class="page-grid">
+    <a href="home.html" class="page-card">
+      <div class="pc-num">004 / HUB</div>
+      <div class="pc-title">Home dashboard</div>
+      <span class="pc-tag">LIBRARY</span>
+      <div class="pc-desc">Live countdown to next chapters. Your library grid. Quick-add.</div>
+    </a>
+    <a href="discover.html" class="page-card">
+      <div class="pc-num">005 / HUB</div>
+      <div class="pc-title">Discover</div>
+      <span class="pc-tag">CATALOG</span>
+      <div class="pc-desc">Searchable, tag-filtered. Trending carousel. Curated editorial grid.</div>
+    </a>
+    <a href="global-discussions.html" class="page-card">
+      <div class="pc-num">006 / HUB</div>
+      <div class="pc-title">Global discussions</div>
+      <span class="pc-tag">FEED</span>
+      <div class="pc-desc">All followed novels in one feed. Filterable. Spoilers respect your chapter depth.</div>
+    </a>
+    <a href="global-media.html" class="page-card">
+      <div class="pc-num">007 / HUB</div>
+      <div class="pc-title">Global media</div>
+      <span class="pc-tag">GALLERY</span>
+      <div class="pc-desc">Fan art · memes · all. Masonry layout. Per-novel filter.</div>
+    </a>
+    <a href="profile.html" class="page-card">
+      <div class="pc-num">008 / HUB</div>
+      <div class="pc-title">User profile</div>
+      <span class="pc-tag">IDENTITY</span>
+      <div class="pc-desc">Streak ring. Archived honors. Editable bio. Locked milestones.</div>
+    </a>
+  </div>
+
+  <div class="section-head">
+    <div class="idx">03</div>
+    <div class="title">Inside a novel</div>
+    <div class="ticker">6 screens · dark theme for STITCH_ENGINE · mobile-first</div>
+  </div>
+  <div class="section-desc">The Deep Dive. Global nav fades away. A hidden novel-themed nav slides down when you touch the top edge. Each novel sets its own palette through the CMS.</div>
+  <div class="page-grid">
+    <a href="novel-home.html?id=stitch-engine" class="page-card new-build">
+      <div class="pc-num">009 / NOVEL</div>
+      <div class="pc-title">Novel home</div>
+      <span class="pc-tag">CMS-DRIVEN</span>
+      <div class="pc-desc">Full-bleed landing. Author-customizable. Pulsing top-edge hints at the hidden navbar.</div>
+    </a>
+    <a href="chapters.html?id=stitch-engine" class="page-card">
+      <div class="pc-num">010 / NOVEL</div>
+      <div class="pc-title">Chapters list</div>
+      <span class="pc-tag">DIRECTORY</span>
+      <div class="pc-desc">Acts, cleared state, locked sequences, resume CTA on current chapter.</div>
+    </a>
+    <a href="read.html?id=stitch-engine&ch=5" class="page-card">
+      <div class="pc-num">011 / NOVEL</div>
+      <div class="pc-title">Immersive reader</div>
+      <span class="pc-tag">SCROLLYTELLING</span>
+      <div class="pc-desc">Paragraph blocks, splash art, progress bar, chapter title bar.</div>
+    </a>
+    <a href="novel-discussions.html?id=stitch-engine" class="page-card">
+      <div class="pc-num">012 / NOVEL</div>
+      <div class="pc-title">Novel discussions</div>
+      <span class="pc-tag">FORUM</span>
+      <div class="pc-desc">Chapter-tagged posts. Spoiler blur. Create post. Theory / question / review filters.</div>
+    </a>
+    <a href="novel-media.html?id=stitch-engine" class="page-card">
+      <div class="pc-num">013 / NOVEL</div>
+      <div class="pc-title">Novel media</div>
+      <span class="pc-tag">GALLERY</span>
+      <div class="pc-desc">Official art · fan art · memes. Chapter-gated spoiler blur.</div>
+    </a>
+    <a href="novel-community.html?id=stitch-engine" class="page-card">
+      <div class="pc-num">014 / NOVEL</div>
+      <div class="pc-title">Novel community</div>
+      <span class="pc-tag">CMS-DRIVEN</span>
+      <div class="pc-desc">Lore archive, video logs, schematics, intercepted transmissions. Static & author-curated.</div>
+    </a>
+  </div>
+
+  <div class="section-head">
+    <div class="idx">04</div>
+    <div class="title">Director's Suite</div>
+    <div class="ticker">5 screens · desktop-first · author-only</div>
+  </div>
+  <div class="section-desc">Where authors live. Metrics, CMS editors for the static pages, the Jupyter-style chapter editor with its Inspector panel, the Story Bible.</div>
+  <div class="page-grid">
+    <a href="author-dashboard.html" class="page-card">
+      <div class="pc-num">015 / AUTHOR</div>
+      <div class="pc-title">Author dashboard</div>
+      <span class="pc-tag">OVERVIEW</span>
+      <div class="pc-desc">Readers, engagement, writing streak. Direct actions to editors and CMS.</div>
+    </a>
+    <a href="author-editor.html" class="page-card">
+      <div class="pc-num">016 / AUTHOR</div>
+      <div class="pc-title">Chapter editor</div>
+      <span class="pc-tag">WORKSPACE</span>
+      <div class="pc-desc">Block editor. Audio envelope graph. Splash art z-index. Live inspector.</div>
+    </a>
+    <a href="author-cms-home.html" class="page-card new-build">
+      <div class="pc-num">017 / AUTHOR</div>
+      <div class="pc-title">Novel home CMS</div>
+      <span class="pc-tag">PAGE BUILDER</span>
+      <div class="pc-desc">Block palette. Drag to reorder. Live preview. Publishes to the novel landing.</div>
+    </a>
+    <a href="author-cms-community.html" class="page-card new-build">
+      <div class="pc-num">018 / AUTHOR</div>
+      <div class="pc-title">Community page CMS</div>
+      <span class="pc-tag">PAGE BUILDER</span>
+      <div class="pc-desc">Archive · video log · schematics · transmission blocks. Same shell as home CMS.</div>
+    </a>
+    <a href="author-story-bible.html" class="page-card new-build">
+      <div class="pc-num">019 / AUTHOR</div>
+      <div class="pc-title">Story Bible & Assets</div>
+      <span class="pc-tag">LIBRARY</span>
+      <div class="pc-desc">Wiki-style entries for @mentions. Asset library of images and audio tracks.</div>
+    </a>
+  </div>
+
+  <div class="section-head">
+    <div class="idx">05</div>
+    <div class="title">Edge states</div>
+    <div class="ticker">1 screen</div>
+  </div>
+  <div class="page-grid">
+    <a href="locked.html" class="page-card new-build">
+      <div class="pc-num">020 / STATE</div>
+      <div class="pc-title">Locked / 404</div>
+      <span class="pc-tag">FALLBACK</span>
+      <div class="pc-desc">Reader hit a chapter above their read cap, or an unreleased act.</div>
+    </a>
+  </div>
+
+</div>
+
+<script src="js/state.js"></script>
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STITCH — Discussions</title>
+<link rel="stylesheet" href="css/core.css">
+<style>
+  .wrap { max-width: 520px; margin: 0 auto; padding: 0 0 80px; }
+
+  .crown { padding: 28px 22px 16px; border-bottom: 1.5px solid var(--ink); }
+  .crown h1 { font-size: 48px; letter-spacing: -0.04em; line-height: 0.92; }
+  .crown p {
+    font-family: var(--font-editorial); font-style: italic;
+    color: var(--muted); font-size: 15px; margin-top: 8px;
+  }
+
+  /* filter bar: novels row + settings */
+  .filter-bar {
+    position: sticky; top: var(--nav-h); z-index: 40;
+    background: var(--paper);
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .novel-row {
+    display: flex; gap: 10px;
+    padding: 14px 22px 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .novel-row::-webkit-scrollbar { display: none; }
+  .novel-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 6px 6px 6px;
+    border: 1.5px solid var(--line-strong);
+    cursor: pointer;
+    white-space: nowrap;
+    background: var(--paper);
+    transition: all 0.15s;
+  }
+  .novel-chip:first-child { padding: 6px 12px; }
+  .novel-chip:first-child .avatar { display: none; }
+  .novel-chip .avatar {
+    width: 28px; height: 28px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .novel-chip .avatar svg { width: 100%; height: 100%; }
+  .novel-chip .label {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding-right: 8px;
+  }
+  .novel-chip.active { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+  .novel-chip .add {
+    width: 28px; height: 28px;
+    background: var(--paper-2);
+    display: grid; place-items: center;
+  }
+
+  .settings-strip {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 22px 14px;
+    border-top: 1px solid var(--line);
+  }
+  .settings-strip .lbl {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .cap-control {
+    display: flex; align-items: center; gap: 8px;
+    flex: 1;
+  }
+  .cap-control input[type=range] {
+    flex: 1;
+    -webkit-appearance: none; appearance: none;
+    height: 2px; background: var(--ink); outline: none;
+  }
+  .cap-control input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 16px; height: 16px;
+    background: var(--accent); border: 1.5px solid var(--ink);
+  }
+  .cap-val {
+    font-family: var(--font-mono); font-size: 12px;
+    font-weight: 700;
+    min-width: 36px;
+  }
+  .sort-toggle {
+    padding: 6px 10px;
+    border: 1px solid var(--ink);
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer;
+    background: var(--paper);
+  }
+  .sort-toggle:hover { background: var(--ink); color: var(--paper); }
+
+  /* post card */
+  .feed { padding: 16px 0; }
+  .post-card {
+    padding: 20px 22px;
+    border-bottom: 1.5px solid var(--ink);
+    background: var(--paper);
+  }
+  .post-card:last-child { border-bottom: none; }
+
+  .post-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .post-author {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .avatar-init {
+    width: 36px; height: 36px;
+    background: var(--ink); color: var(--paper);
+    display: grid; place-items: center;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 12px;
+  }
+  .post-author .who {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 14px;
+  }
+  .post-author .where {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .post-age { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+
+  .post-title {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 18px; letter-spacing: -0.02em; line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .post-body {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .post-image {
+    width: 100%; aspect-ratio: 4/3;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .post-image svg { width: 100%; height: 100%; display: block; }
+
+  .post-foot {
+    display: flex; align-items: center; gap: 18px;
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--muted); letter-spacing: 0.04em;
+  }
+  .post-foot .action { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+  .post-foot .action:hover { color: var(--accent); }
+  .post-foot .bookmark { margin-left: auto; }
+
+  .post-ch-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px;
+    border: 1px solid var(--ink);
+    font-family: var(--font-mono); font-size: 10px;
+    font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .post-ch-tag.spoiler { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+  .spoiler-wrap { position: relative; margin-bottom: 12px; }
+  .spoiler-wrap.spoiler { cursor: pointer; }
+  .spoiler-wrap .post-body { margin-bottom: 0; }
+  .spoiler-wrap .spoiler-overlay {
+    position: absolute; inset: 0;
+    background: rgba(10,10,10,0.85);
+    color: var(--paper);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 4px;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    transition: opacity 0.3s;
+  }
+  .spoiler-wrap.spoiler .post-body { filter: blur(6px); pointer-events: none; }
+  .spoiler-wrap.revealed .post-body { filter: none; pointer-events: auto; }
+  .spoiler-wrap.revealed .spoiler-overlay { opacity: 0; pointer-events: none; }
+
+  .empty {
+    padding: 60px 22px;
+    text-align: center;
+    font-family: var(--font-editorial); font-style: italic;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<nav class="global-nav" data-global-nav></nav>
+
+<div class="wrap">
+
+  <section class="crown">
+    <h1 class="display">All feeds.</h1>
+    <p>Posts from every novel you follow. Filter by book, dial your chapter depth to avoid spoilers.</p>
+  </section>
+
+  <div class="filter-bar">
+    <div class="novel-row" id="novel-filter"></div>
+    <div class="settings-strip">
+      <span class="lbl">Max chapter depth</span>
+      <div class="cap-control">
+        <input type="range" id="cap" min="1" max="48" value="24">
+        <span class="cap-val" id="cap-val">24</span>
+      </div>
+      <button class="sort-toggle" id="sort">New</button>
+    </div>
+  </div>
+
+  <div class="feed" id="feed"></div>
+
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  renderGlobalNav('discussions');
+
+  const FOLLOWED_IDS = STITCH.getUser().followed;
+  // novel filter bar: "All" + followed
+  const filterEl = document.getElementById('novel-filter');
+  let selectedNovels = new Set(['all']);
+
+  function renderFilter() {
+    filterEl.innerHTML = `
+      <button class="novel-chip ${selectedNovels.has('all')?'active':''}" data-n="all">
+        <span class="label">All feeds</span>
+      </button>
+      ${FOLLOWED_IDS.map(id => {
+        const n = STITCH.getNovel(id);
+        return `<button class="novel-chip ${selectedNovels.has(id)?'active':''}" data-n="${id}" title="${n.title}">
+          <span class="avatar">${coverSvg(n.cover)}</span>
+          <span class="label">${n.title.split(' ').slice(0,2).join(' ')}</span>
+        </button>`;
+      }).join('')}
+      <button class="novel-chip" title="Add filter">
+        <span class="add"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+      </button>
+    `;
+  }
+  renderFilter();
+
+  filterEl.addEventListener('click', e => {
+    const b = e.target.closest('[data-n]'); if (!b) return;
+    const n = b.dataset.n;
+    if (n === 'all') {
+      selectedNovels = new Set(['all']);
+    } else {
+      if (selectedNovels.has('all')) selectedNovels = new Set();
+      if (selectedNovels.has(n)) selectedNovels.delete(n);
+      else selectedNovels.add(n);
+      if (!selectedNovels.size) selectedNovels.add('all');
+    }
+    renderFilter();
+    renderFeed();
+  });
+
+  // chapter depth
+  const capInput = document.getElementById('cap');
+  const capVal = document.getElementById('cap-val');
+  let cap = 24;
+  capInput.addEventListener('input', e => {
+    cap = parseInt(e.target.value);
+    capVal.textContent = cap;
+    renderFeed();
+  });
+
+  // sort
+  let sortKey = 'new';
+  document.getElementById('sort').addEventListener('click', e => {
+    const arr = ['new', 'top', 'trending'];
+    sortKey = arr[(arr.indexOf(sortKey) + 1) % arr.length];
+    e.target.textContent = sortKey.charAt(0).toUpperCase() + sortKey.slice(1);
+    renderFeed();
+  });
+
+  function renderFeed() {
+    const feed = document.getElementById('feed');
+    let posts = STITCH.POSTS.filter(p => FOLLOWED_IDS.includes(p.novel));
+    if (!selectedNovels.has('all')) {
+      posts = posts.filter(p => selectedNovels.has(p.novel));
+    }
+    // spoiler blur: any post w/ chapter > cap OR marked spoiler
+    const withFlags = posts.map(p => ({
+      ...p,
+      isBlurred: p.spoiler || (p.chapter && p.chapter > cap),
+    }));
+
+    // sort
+    if (sortKey === 'top') withFlags.sort((a,b) => b.likes - a.likes);
+    else if (sortKey === 'trending') withFlags.sort((a,b) => b.comments - a.comments);
+
+    if (!withFlags.length) {
+      feed.innerHTML = `<div class="empty">No posts match these filters.</div>`;
+      return;
+    }
+
+    feed.innerHTML = withFlags.map(p => {
+      const n = STITCH.getNovel(p.novel);
+      const chTag = p.chapter ? `<span class="post-ch-tag ${p.isBlurred?'spoiler':''}">Ch. ${p.chapter}${p.isBlurred?' · Spoiler':''}</span>` : '';
+      const imgBlock = p.hasImage ? `<div class="post-image">${artSvg(p.artStyle)}</div>` : '';
+      const bodyBlock = p.body ? `<div class="post-body">${p.body}</div>` : '';
+
+      const content = `
+        <div class="post-title">${p.title}</div>
+        ${bodyBlock}
+        ${imgBlock}
+      `;
+
+      const contentWrap = p.isBlurred
+        ? `<div class="spoiler-wrap spoiler">${content}<div class="spoiler-overlay"><span>Contains spoilers</span><span style="font-weight:400;opacity:0.7;letter-spacing:0.1em;">Tap to reveal</span></div></div>`
+        : content;
+
+      return `
+        <article class="post-card" data-id="${p.id}">
+          <div class="post-head">
+            <div class="post-author">
+              <div class="avatar-init">${p.initials}</div>
+              <div>
+                <div class="who">${p.handle}</div>
+                <div class="where">${n.title} ${chTag ? '· Ch. '+p.chapter : ''}</div>
+              </div>
+            </div>
+            <div class="post-age">${p.age} ago</div>
+          </div>
+          ${contentWrap}
+          <div class="post-foot">
+            <div class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H7V10l4.66-9.58A1 1 0 0 1 12.56.57a3.94 3.94 0 0 1 2.44 3.31 4 4 0 0 1 0 2"/></svg> ${fmtNum(p.likes)}</div>
+            <div class="action"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> ${fmtNum(p.comments)}</div>
+            <div class="action bookmark"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>
+          </div>
+        </article>
+      `;
+    }).join('');
+  }
+
+  // spoiler click
+  document.getElementById('feed').addEventListener('click', e => {
+    const w = e.target.closest('.spoiler-wrap.spoiler');
+    if (w && !w.classList.contains('revealed')) {
+      w.classList.add('revealed');
+      e.stopPropagation();
+    }
+  });
+
+  renderFeed();
+</script>
+</body>
+</html>

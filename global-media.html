@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STITCH — Media</title>
+<link rel="stylesheet" href="css/core.css">
+<style>
+  .wrap { max-width: 520px; margin: 0 auto; padding: 0 0 80px; }
+
+  .crown { padding: 28px 22px 16px; border-bottom: 1.5px solid var(--ink); }
+  .crown h1 { font-size: 48px; letter-spacing: -0.04em; line-height: 0.92; }
+  .crown p {
+    font-family: var(--font-editorial); font-style: italic;
+    color: var(--muted); font-size: 15px; margin-top: 8px;
+  }
+
+  .tools {
+    position: sticky; top: var(--nav-h); z-index: 40;
+    background: var(--paper);
+    border-bottom: 1.5px solid var(--ink);
+    padding: 16px 22px 14px;
+    display: flex; gap: 10px; align-items: center;
+    flex-wrap: wrap;
+  }
+  .tabs {
+    display: flex;
+    border: 1.5px solid var(--ink);
+  }
+  .tabs button {
+    padding: 8px 14px;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer;
+    border-right: 1px solid var(--ink);
+    background: var(--paper);
+  }
+  .tabs button:last-child { border-right: none; }
+  .tabs button.active { background: var(--ink); color: var(--paper); }
+
+  .book-filter {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 12px;
+    border: 1.5px solid var(--ink);
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    cursor: pointer;
+    background: var(--paper);
+  }
+  .book-filter:hover { background: var(--ink); color: var(--paper); }
+
+  .spoiler-toggle {
+    margin-left: auto;
+    width: 38px; height: 38px;
+    border: 1.5px solid var(--ink);
+    display: grid; place-items: center;
+    cursor: pointer;
+    background: var(--paper);
+  }
+  .spoiler-toggle.active { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+  /* masonry using CSS columns */
+  .masonry { padding: 16px 22px; column-count: 2; column-gap: 10px; }
+  .m-item {
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 10px;
+    border: 1.5px solid var(--ink);
+    overflow: hidden;
+    background: var(--paper);
+    position: relative;
+  }
+  .m-item .art { width: 100%; aspect-ratio: auto; overflow: hidden; background: var(--paper-2); }
+  .m-item .art svg { width: 100%; display: block; }
+  .m-item .meta {
+    padding: 8px 10px 10px;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .m-item .meta .type { display: inline-block; font-weight: 700; color: var(--accent); letter-spacing: 0.14em; }
+  .m-item .meta .ti { font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: -0.01em; margin-top: 2px; text-transform: none; color: var(--ink); }
+  .m-item .meta .nv { color: var(--muted); text-transform: uppercase; margin-top: 4px; }
+
+  /* quote card */
+  .m-item.quote {
+    display: flex; flex-direction: column;
+    min-height: 240px;
+    padding: 16px;
+  }
+  .m-item.quote .q {
+    font-family: var(--font-editorial); font-style: italic;
+    font-weight: 700; font-size: 18px; line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .m-item.quote .q-meta {
+    margin-top: auto;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+  }
+  .m-item.quote .q-meta b { color: var(--accent); font-weight: 700; }
+
+  /* spoiler overlay */
+  .m-item .spoiler-cover {
+    position: absolute; inset: 0;
+    background: rgba(10,10,10,0.88);
+    color: var(--paper);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+  .m-item.revealed .spoiler-cover { opacity: 0; pointer-events: none; }
+  .spoiler-cover .sub { font-weight: 400; font-size: 10px; opacity: 0.7; letter-spacing: 0.1em; }
+
+  /* join-discord card */
+  .m-item.promo {
+    min-height: 200px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 20px;
+    background: var(--ink); color: var(--paper);
+    border-color: var(--ink);
+  }
+  .m-item.promo .lbl {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 22px; letter-spacing: -0.02em; line-height: 1;
+    text-align: center;
+  }
+  .m-item.promo .cta {
+    margin-top: 12px;
+    padding: 6px 12px; border: 1px solid currentColor;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<nav class="global-nav" data-global-nav></nav>
+
+<div class="wrap">
+
+  <section class="crown">
+    <h1 class="display">Media.</h1>
+    <p>Fan art, memes, and splash visuals from every novel you follow. Novels you haven't caught up on stay safely blurred.</p>
+  </section>
+
+  <div class="tools">
+    <div class="tabs" id="tabs">
+      <button data-tab="fanart" class="active">Fan Art</button>
+      <button data-tab="meme">Memes</button>
+      <button data-tab="official">Official</button>
+      <button data-tab="all">All</button>
+    </div>
+    <button class="book-filter" id="book-btn">
+      Books <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <button class="spoiler-toggle" id="spoil" title="Toggle spoilers">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+    </button>
+  </div>
+
+  <div class="masonry" id="gallery"></div>
+
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  renderGlobalNav('media');
+
+  let tab = 'fanart';
+  let showSpoilers = false;
+  let bookFilter = null; // null = all
+
+  document.getElementById('tabs').addEventListener('click', e => {
+    const b = e.target.closest('[data-tab]'); if (!b) return;
+    tab = b.dataset.tab;
+    document.querySelectorAll('#tabs button').forEach(x => x.classList.toggle('active', x.dataset.tab === tab));
+    render();
+  });
+
+  document.getElementById('spoil').addEventListener('click', e => {
+    showSpoilers = !showSpoilers;
+    document.getElementById('spoil').classList.toggle('active', showSpoilers);
+    render();
+  });
+
+  document.getElementById('book-btn').addEventListener('click', () => {
+    const u = STITCH.getUser();
+    const opts = ['All', ...u.followed.map(id => STITCH.getNovel(id).title)];
+    const curIdx = bookFilter ? opts.indexOf(STITCH.getNovel(bookFilter).title) : 0;
+    const next = (curIdx + 1) % opts.length;
+    bookFilter = next === 0 ? null : u.followed[next - 1];
+    document.getElementById('book-btn').innerHTML = `${opts[next]} <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>`;
+    render();
+  });
+
+  function render() {
+    let items = STITCH.MEDIA.filter(m => STITCH.getUser().followed.includes(m.novel));
+    if (tab !== 'all') items = items.filter(m => m.type === tab);
+    if (bookFilter) items = items.filter(m => m.novel === bookFilter);
+
+    const gallery = document.getElementById('gallery');
+    gallery.innerHTML = items.map(m => {
+      const novel = STITCH.getNovel(m.novel);
+      const blurred = !showSpoilers && (m.spoiler || m.chapter > (STITCH.getUser().readCaps[m.novel] ?? 0));
+
+      // quote memes render as pull-quotes
+      if (m.art === 'quote-meme') {
+        return `<div class="m-item quote ${blurred?'':'revealed'}">
+          <div class="q">"When they tell you the walls are meant to protect you, ask who built them."</div>
+          <div class="q-meta"><b>QUOTE MEME</b><br>@TRUTH_SEEKER · ${novel.title}</div>
+          ${blurred ? `<div class="spoiler-cover" onclick="this.parentNode.classList.add('revealed')">Spoiler<span class="sub">Tap to reveal</span></div>` : ''}
+        </div>`;
+      }
+
+      return `<div class="m-item ${blurred?'':'revealed'}">
+        <div class="art">${artSvg(m.art)}</div>
+        <div class="meta">
+          <span class="type">${m.type.toUpperCase()}</span>
+          <div class="ti">${m.title}</div>
+          <div class="nv">${novel.title} · Ch.${m.chapter}</div>
+        </div>
+        ${blurred ? `<div class="spoiler-cover" onclick="this.parentNode.classList.add('revealed')">Spoiler · Ch. ${m.chapter}<span class="sub">Tap to reveal</span></div>` : ''}
+      </div>`;
+    }).join('') + `<div class="m-item promo">
+      <div class="lbl">Join the STITCH Discord</div>
+      <div class="cta">Open ↗</div>
+    </div>`;
+  }
+  render();
+</script>
+</body>
+</html>

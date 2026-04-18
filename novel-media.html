@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STITCH_ENGINE — Media</title>
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/novel-nav.css">
+<style>
+  body { background: #0a0a0c; color: #ededed; }
+  body::before { opacity: 0.08; }
+  .wrap { max-width: 520px; margin: 0 auto; background: #0a0a0c; min-height: 100vh; padding-bottom: 60px; }
+
+  .back-mirror {
+    position: fixed; top: 16px; left: 16px; z-index: 150;
+    width: 38px; height: 38px;
+    display: grid; place-items: center;
+    background: rgba(10,10,10,0.65);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(237,237,237,0.25);
+    color: #ededed;
+  }
+
+  .header {
+    padding: 60px 22px 24px;
+    border-bottom: 1px solid rgba(237,237,237,0.1);
+  }
+  .crumbs {
+    font-family: var(--font-mono); font-size: 11px;
+    color: rgba(237,237,237,0.5); letter-spacing: 0.14em;
+    text-transform: uppercase; margin-bottom: 14px;
+  }
+  .crumbs .sep { color: #d14829; padding: 0 5px; }
+  .header h1 {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: 48px; letter-spacing: -0.04em; line-height: 0.92;
+    color: #ededed;
+  }
+
+  .tabs {
+    display: flex;
+    border-top: 1px solid rgba(237,237,237,0.1);
+    border-bottom: 1px solid rgba(237,237,237,0.1);
+    position: sticky; top: 0; z-index: 40;
+    background: rgba(10,10,12,0.92);
+    backdrop-filter: blur(8px);
+  }
+  .tabs button {
+    flex: 1;
+    padding: 14px 6px;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(237,237,237,0.5);
+    border-right: 1px solid rgba(237,237,237,0.1);
+    background: transparent; cursor: pointer;
+    position: relative;
+  }
+  .tabs button:last-child { border-right: none; }
+  .tabs button.active { color: #ededed; }
+  .tabs button.active::after {
+    content: ''; position: absolute;
+    left: 20%; right: 20%; bottom: -1px; height: 2px;
+    background: #d14829;
+  }
+
+  .gallery {
+    padding: 20px 22px;
+    display: grid; gap: 18px;
+  }
+  .m-item {
+    border: 1px solid rgba(237,237,237,0.12);
+    overflow: hidden;
+    background: #12121a;
+    position: relative;
+  }
+  .m-item .art { width: 100%; aspect-ratio: 4/3; overflow: hidden; }
+  .m-item .art svg { width: 100%; height: 100%; display: block; }
+  .m-item .info {
+    padding: 14px 16px;
+    display: flex; justify-content: space-between; align-items: start;
+    gap: 10px;
+  }
+  .m-item .type {
+    font-family: var(--font-mono); font-size: 10px;
+    color: #d14829;
+    letter-spacing: 0.14em; font-weight: 700;
+  }
+  .m-item .t { font-family: var(--font-display); font-weight: 800; font-size: 16px; letter-spacing: -0.01em; margin-top: 4px; color: #ededed; }
+  .m-item .ch { font-family: var(--font-mono); font-size: 10px; color: rgba(237,237,237,0.5); letter-spacing: 0.1em; }
+  .m-item .by { font-family: var(--font-mono); font-size: 11px; color: rgba(237,237,237,0.55); margin-top: 2px; }
+
+  .m-item .spoiler-cover {
+    position: absolute; inset: 0;
+    background: rgba(10,10,10,0.9);
+    color: #ededed;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+    cursor: pointer; transition: opacity 0.3s;
+  }
+  .m-item .spoiler-cover svg { width: 24px; height: 24px; color: #d14829; }
+  .m-item .spoiler-cover .sub { font-weight: 400; font-size: 10px; opacity: 0.7; letter-spacing: 0.1em; }
+  .m-item.revealed .spoiler-cover { opacity: 0; pointer-events: none; }
+
+  .empty { text-align: center; padding: 60px 20px; color: rgba(237,237,237,0.4); font-family: var(--font-editorial); font-style: italic; }
+</style>
+</head>
+<body>
+
+<a class="back-mirror" href="novel-home.html?id=stitch-engine" title="Back">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+</a>
+
+<div class="wrap">
+
+  <section class="header">
+    <div class="crumbs">STITCH_ENGINE <span class="sep">/</span> CHAPTER_04 <span class="sep">/</span> Gallery</div>
+    <h1>Gallery Visuals.</h1>
+  </section>
+
+  <div class="tabs" id="tabs">
+    <button data-t="official" class="active">Official Art</button>
+    <button data-t="fanart">Fan Art</button>
+    <button data-t="meme">Memes</button>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  mountNovelNav({ novelId: 'stitch-engine', active: 'media' });
+
+  let tab = 'official';
+  document.getElementById('tabs').addEventListener('click', e => {
+    const b = e.target.closest('[data-t]'); if (!b) return;
+    tab = b.dataset.t;
+    document.querySelectorAll('#tabs button').forEach(x => x.classList.toggle('active', x.dataset.t === tab));
+    render();
+  });
+
+  function render() {
+    const items = STITCH.MEDIA.filter(m => m.novel === 'stitch-engine' && m.type === tab);
+    const cap = STITCH.getUser().readCaps['stitch-engine'] ?? 5;
+    const gal = document.getElementById('gallery');
+    if (!items.length) {
+      gal.innerHTML = `<div class="empty">No ${tab} items yet for this novel.</div>`;
+      return;
+    }
+    gal.innerHTML = items.map(m => {
+      const blurred = m.spoiler || m.chapter > cap;
+      return `<div class="m-item ${blurred?'':'revealed'}">
+        <div class="art">${artSvg(m.art)}</div>
+        <div class="info">
+          <div>
+            <span class="type">${m.type.toUpperCase()}</span>
+            <div class="t">${m.title}</div>
+            <div class="by">${m.type === 'official' ? 'BY SYSTEM ARCHITECT' : 'BY @FANUSER_' + String(m.id).slice(-2).toUpperCase()}</div>
+          </div>
+          <span class="ch">CH. ${m.chapter}${blurred ? ' · SPOILER' : ''}</span>
+        </div>
+        ${blurred ? `<div class="spoiler-cover" onclick="this.parentNode.classList.add('revealed')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          <span>SPOILER · CH. ${m.chapter}</span>
+          <span class="sub">Tap to reveal</span>
+        </div>` : ''}
+      </div>`;
+    }).join('');
+  }
+  render();
+</script>
+</body>
+</html>

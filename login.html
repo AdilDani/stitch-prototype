@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STITCH — Login</title>
+<link rel="stylesheet" href="css/core.css">
+<style>
+  body { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 820px) { body { grid-template-columns: 1fr; } .aside { display: none; } }
+
+  .aside {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .aside-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .aside-big {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(60px, 9vw, 120px);
+    line-height: 0.82;
+    letter-spacing: -0.05em;
+    position: relative;
+    z-index: 1;
+  }
+  .aside-big .k { color: var(--accent); }
+  .aside-sub {
+    font-family: var(--font-editorial);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 20px;
+    margin-top: 24px;
+    max-width: 380px;
+    line-height: 1.35;
+    position: relative; z-index: 1;
+  }
+  .aside-pitch {
+    position: relative; z-index: 1;
+    display: grid; gap: 14px;
+  }
+  .pitch-row {
+    display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: start;
+    padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .pitch-row .n { font-family: var(--font-mono); font-size: 12px; color: var(--accent); letter-spacing: 0.1em; }
+  .pitch-row .t { font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: 0.02em; }
+  .pitch-row .d { font-size: 13px; color: rgba(244,242,236,0.65); margin-top: 2px; }
+  .aside-foot {
+    position: relative; z-index: 1;
+    display: flex; justify-content: space-between;
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.1em; color: rgba(244,242,236,0.5);
+    text-transform: uppercase;
+  }
+
+  .main {
+    padding: 60px 48px;
+    display: flex; flex-direction: column; justify-content: center;
+    max-width: 560px; width: 100%; margin: 0 auto;
+  }
+  @media (max-width: 820px) { .main { padding: 60px 24px; } }
+
+  .brand-stamp {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-bottom: 40px;
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .brand-stamp .bar { width: 28px; height: 2px; background: var(--accent); }
+
+  .form-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 48px;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    margin-bottom: 12px;
+  }
+  .form-sub {
+    font-family: var(--font-editorial);
+    font-style: italic;
+    color: var(--muted);
+    font-size: 18px;
+    margin-bottom: 40px;
+    max-width: 440px;
+  }
+
+  .auth-btn {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    width: 100%;
+    padding: 18px 22px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 14px;
+    background: var(--ink); color: var(--paper);
+  }
+  .auth-btn:hover { box-shadow: 6px 6px 0 var(--accent); transform: translate(-2px, -2px); }
+  .auth-btn.secondary { background: transparent; color: var(--ink); border-color: var(--ink); }
+  .auth-btn.secondary:hover { background: var(--paper-2); }
+  .auth-btn .g-icon { width: 20px; height: 20px; }
+
+  .divider-or {
+    display: flex; align-items: center; gap: 12px;
+    margin: 20px 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted-2);
+  }
+  .divider-or::before, .divider-or::after {
+    content: ''; flex: 1; height: 1px; background: var(--line);
+  }
+
+  .remember-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-top: 28px;
+    font-size: 14px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .remember-row input { display: none; }
+  .remember-box {
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--ink);
+    display: grid; place-items: center;
+  }
+  .remember-row input:checked + .remember-box::after {
+    content: '';
+    width: 10px; height: 10px;
+    background: var(--accent);
+  }
+
+  .finefoot {
+    margin-top: 60px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .finefoot a { border-bottom: 1px solid var(--ink); }
+</style>
+</head>
+<body>
+
+<aside class="aside">
+  <div class="aside-grid"></div>
+  <div>
+    <div class="eyebrow" style="color: rgba(244,242,236,0.6); margin-bottom: 20px;">// Serialized fiction, assembled</div>
+    <div class="aside-big">STIT<span class="k">C</span>H</div>
+    <div class="aside-sub">A digital enclosure for serialized fiction, scored, illustrated, and argued about in public.</div>
+  </div>
+
+  <div class="aside-pitch">
+    <div class="pitch-row">
+      <div class="n">01</div>
+      <div>
+        <div class="t">Immersive reader</div>
+        <div class="d">Paragraph blocks flow into splash art. Audio fades in on a normal distribution across the page.</div>
+      </div>
+    </div>
+    <div class="pitch-row">
+      <div class="n">02</div>
+      <div>
+        <div class="t">Spoiler-safe forum</div>
+        <div class="d">Every post is chapter-tagged. Anything above your read cap is blurred before you see it.</div>
+      </div>
+    </div>
+    <div class="pitch-row">
+      <div class="n">03</div>
+      <div>
+        <div class="t">Author-owned theming</div>
+        <div class="d">Each novel is a themed enclosure. Global nav fades. The author's world takes over.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="aside-foot">
+    <span>v 0.1.0</span>
+    <span>est. 2026</span>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="brand-stamp">
+    <span class="bar"></span>
+    <span>Access protocol</span>
+  </div>
+
+  <h1 class="form-title">Sign&nbsp;in.</h1>
+  <p class="form-sub">Two-factor authentication follows. After that, you stay signed in until you log out.</p>
+
+  <button class="auth-btn" onclick="location.href='otp.html?via=google'">
+    <svg class="g-icon" viewBox="0 0 48 48">
+      <path fill="#EA4335" d="M24 9.5c3.9 0 6.6 1.7 8.1 3.1l6-5.8C34.3 3.2 29.6 1 24 1 14.8 1 7 6.3 3.4 13.9l6.9 5.4C12.1 13 17.5 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M47 24.5c0-1.6-.1-3.1-.4-4.5H24v9h13c-.6 3-2.3 5.5-4.8 7.2l7.4 5.7C44 37.3 47 31.4 47 24.5z"/>
+      <path fill="#FBBC05" d="M10.3 28.7c-.5-1.5-.8-3.1-.8-4.7s.3-3.2.8-4.7L3.4 13.9C1.3 17 0 20.4 0 24s1.3 7 3.4 10.1l6.9-5.4z"/>
+      <path fill="#34A853" d="M24 47c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2 1.3-4.7 2.3-8.5 2.3-6.5 0-12-4.3-13.7-10.1l-6.9 5.4C7 41.7 14.8 47 24 47z"/>
+    </svg>
+    Continue with Google
+  </button>
+
+  <button class="auth-btn secondary" onclick="location.href='otp.html?via=email'">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="1"/><path d="m22 6-10 7L2 6"/></svg>
+    Continue with email
+  </button>
+
+  <label class="remember-row">
+    <input type="checkbox" checked>
+    <span class="remember-box"></span>
+    <span>Keep me signed in on this device</span>
+  </label>
+
+  <div class="finefoot">
+    By continuing you accept our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>. Authors must complete an additional review — <a href="#">apply here</a>.
+  </div>
+</main>
+
+</body>
+</html>
