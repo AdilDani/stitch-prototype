@@ -92,7 +92,9 @@ Final app stack (for reference, not prototype): Spring Boot Java + PostgreSQL + 
 | `--accent` | `#d14829` | **Coral red — single signal color.** Rubberstamps, CTAs, active states, signature shadows |
 | `--accent-2` | `#f2b705` | Amber highlight, sparingly |
 
-**Critical:** `#d14829` is used *sparingly*. It's the single voice of emphasis. Never use it for body text, never use it for large surfaces. It's for: primary CTAs, active tab underlines, hard shadows, spoiler-reveal indicators, "live" pulsing dots, rubberstamp tags.
+**Critical:** `#d14829` is used *sparingly*. It's the single voice of emphasis. Never use it for body text, never use it for large surfaces, never for decorative labels, breadcrumb separators, or status numbers. It is valid ONLY for: primary CTAs (buttons that initiate action), active tab/filter underlines, hard shadows on interactive elements, spoiler-boundary indicators, live/pulsing dots, rubberstamp tags, and semantic quote accent borders (matching `locked.html`'s `subline` treatment). On any given screen, only one or two coral elements should be visible at a time.
+
+For elements that were coral but don't meet the above criteria, replace with: `rgba(237,237,237,0.5)` for muted text/labels, `rgba(237,237,237,0.2)` for borders, `#ededed` for emphasis text, `rgba(237,237,237,0.45)` for progress fill (status bars).
 
 ### Palette — novel-scope dark (default for STITCH_ENGINE and other dark novels)
 Activate with `.novel-scope` class on a container, or inline style override.
@@ -109,7 +111,7 @@ On dark-scope pages, muted tones shift to `rgba(237,237,237, 0.x)`.
 Applied globally via `body::before` pseudo-element:
 - SVG `<filter>` with `fractalNoise`, baseFrequency 0.9
 - `mix-blend-mode: multiply` on light pages, `overlay` or higher opacity on dark pages
-- Default opacity ~0.12, heavier (0.14+) on dark/immersive pages like `locked.html`
+- Default opacity ~0.12, heavier on dark/immersive pages: novel-scope pages use 0.18 with `mix-blend-mode: overlay`. `locked.html` uses 0.14 with `contrast(170%) brightness(110%)`.
 
 ### Signature shadows — "hard shadow, no blur"
 Used on hover/interactive elements:
@@ -134,8 +136,8 @@ transition: transform .15s, box-shadow .15s;
 ### Layout constraints
 - `--nav-h: 60px` — global navbar height
 - `--max-w: 1280px` — desktop content max width
-- `--mobile-w: 440px` — mobile content max (but pages often use 520px phone-frame instead)
-- **All reader/hub pages**: wrap in a max-width 520px container with `border-left/right` for a phone-frame feel.
+- `--mobile-w: 440px` — mobile content max (legacy token, kept for reference)
+- **All reader/hub pages**: fluid single-column layout. Default max-width 720px centered, no side borders. At ≥1200px: max-width scales to 760px. `novel-home.html` and `read.html` additionally reserve side rails at ≥1200px (empty for now, content TBD).
 - **All author pages**: desktop-first, assume ≥1280px, grid-based 3-column layouts.
 
 ---
@@ -365,68 +367,63 @@ Keys: `citadel`, `subject`, `schematic`, `wastes`, `aftermath`, `protocol-error`
 ### SPECIFIC NOVEL (mobile-first, 520px phone frame, dark scope for stitch-engine)
 
 #### `novel-home.html` (BUILT FROM SCRATCH)
-- **Full-bleed hero art** (procedural SVG of the novel's world, e.g. citadel for stitch-engine)
+- **Dark novel-scope theme**. Grain opacity 0.18, `mix-blend-mode: overlay`.
+- **Responsive**: max-width 720px; at ≥1200px: outer flex container with `rail-left` / `rail-right` divs (empty stubs, 220px each, reserved for future sidebar content)
+- **Full-bleed hero art** (procedural SVG of the novel's world)
 - **Pulsing chevron at top** — hints at the hidden novel navbar. Small coral pulse, centered, 3px bar.
 - **Back-arrow top-left** (mirror style) → `home.html`
 - **Novel wordmark + tagline** over hero
-- **Sections** (scroll-revealed):
-  - SYNOPSIS (Fraunces italic)
-  - LATEST CHAPTER card — cover, title, "CONTINUE →" button (links to `read.html?id=X&ch=Y`)
-  - CHARACTER CARDS (2-3, procedural hero art + name + role)
-  - NEWS FEED (2-3 author posts, timestamp + title)
-- Uses `.novel-scope` dark theme
+- **Sections**: SYNOPSIS (Fraunces italic pull-quote, stamp uses valid coral rubberstamp), LATEST CHAPTER card (Latest tag muted border, progress fill = coral, CTA btn = `#ededed` bg → coral hover), CHARACTER CARDS (avatar initials muted, not coral), NEWS FEED (date day number = `#ededed`, not coral), STATS STRIP (numbers in `#ededed`, not coral)
+- Hairline borders: `rgba(237,237,237,0.12)` throughout
 
 #### `chapters.html`
-- **Dark novel-scope theme**
+- **Dark novel-scope theme**. Grain opacity 0.18, `mix-blend-mode: overlay`.
 - Back-arrow top-left
-- Header: "STITCH_ENGINE" supertitle + "CHAPTERS" title
-- **Act groups**:
-  - ACT 01: INITIALIZATION
-  - Badge: "4/12 CLEARED"
-  - List of chapters: number + title + published date
-  - Chapter 5 has RESUME button (coral)
-  - Chapter 6+ shown but locked (lock icon, grayed)
-  - ACT 02: EXECUTION
-  - Entire act shown grayed, "LOCKED · UNLOCKS IN X DAYS"
-  - Individual locked sequences still visible but can't be tapped
+- Header: mono kicker `// STITCH_ENGINE · CHAPTER_ARCHIVE` + Archivo 900 `CHAPTERS.` at 56–88px (`clamp`), tight letter-spacing + Fraunces italic subtitle at 22–36px
+- Overall progress bar: hairline 2px `rgba(237,237,237,0.12)`, fill `rgba(237,237,237,0.45)` (not coral)
+- **Act groups**: act index in mono muted, cleared/locked badge in `rgba(237,237,237,0.2)` border (not coral)
+- Chapter rows: cleared rows muted at 0.4; current chapter number in `#ededed`; Resume button is coral with white hard shadow
+- Locked sequences: mono uppercase at 11px, muted; lock icon in `rgba(237,237,237,0.12)` border
+- Responsive: max-width 720px, 760px at ≥1200px
 
 #### `read.html`
-- **Fully immersive** — no navbar, only a thin status bar at top
-- **Top status bar**: time "04:15 AM" · battery "82%" · novel ID
-- **Splash art block** (full-width, procedural SVG)
-- **Chapter number + title** (Archivo 900, then Fraunces italic subtitle): "CHAPTER IV — The Architecture of Silence"
-- **Paragraph text blocks** (Fraunces serif, 18px, line-height 1.7)
-- Mid-chapter splash art can appear between paragraphs
-- **Progress bar fixed at bottom**: coral bar + "CHAPTER IV — 33%" label
-- **Back-arrow top-left** (always visible, mirror style) → `chapters.html?id=X`
-- **Audio envelope** reads from scroll position (optional — fake it with CSS animations, not real audio)
+- **Fully immersive** — no navbar, only a thin status bar at top. Grain 0.14, overlay blend.
+- Responsive: max-width 720px; at ≥1200px, side rails reserved (empty stub divs `rail-left`, `rail-right`) for future marginalia/metadata
+- **Progress bar fixed at bottom**: coral fill bar + `#ededed` percentage text
 
 #### `novel-discussions.html`
-- **Dark novel-scope theme**
-- Header: "STITCH_ENGINE > NOVEL DISCUSSIONS" breadcrumb
-- Title: "The Silent Archive" (novel-specific forum name)
-- **CREATE POST** button (coral)
-- Filter tabs: ALL / THEORY / REVIEW / ANALYSIS
-- Posts filtered to `post.novel === 'stitch-engine'` from state.js
-- Spoiler blur applied per-post
+- **Dark novel-scope theme**. Grain opacity 0.18.
+- Header: mono kicker + Archivo 900 `DISCUSSIONS.` at 56–88px + Fraunces italic forum name `"The Silent Archive"` at 24–38px (secondary heading)
+- Subtitle in mono muted: read-cap notice
+- Filter chips: inactive muted at 0.65, active = coral (valid active-state use)
+- Avatar background: `rgba(237,237,237,0.12)` (not coral)
+- **CREATE POST** button = coral CTA with hard white shadow
+- Chapter pills: neutral border; spoiler pills = coral (valid spoiler-boundary use)
+- Post action hover: `#ededed` (not coral)
+- Compose FAB: coral with hard white shadow
+- Responsive: max-width 720px, 760px at ≥1200px
 
 #### `novel-media.html`
-- **Dark novel-scope theme**
-- Breadcrumb: "STITCH_ENGINE > CHAPTER_04 > Gallery Visuals"
-- Tabs: OFFICIAL ART / FAN ART / MEMES
-- **Stacked single-column layout** (not masonry — per-novel is more intentional)
-- Each item: art + title + author + chapter tag
-- Spoiler blur on items above readCap
+- **Dark novel-scope theme**. Grain opacity 0.18.
+- Header: mono kicker + Archivo 900 `GALLERY.` at 56–88px + Fraunces italic subtitle
+- Tabs: active tab uses coral underline (valid active-state); type labels in `rgba(237,237,237,0.4)` (not coral)
+- **Stacked single-column layout** (not masonry)
+- Spoiler cover icon: coral (valid spoiler-boundary signal)
+- Responsive: max-width 720px, 760px at ≥1200px
 
 #### `novel-community.html` (CMS-driven)
-- **Dark novel-scope theme**
-- Header: "STITCH_ENGINE" + "Community Lore & Protocol"
-- **Mixed block layout** (matches CMS output from `author-cms-community.html`):
-  - **ARCHIVE card**: kicker "ARCHIVE // 001" + title + italic excerpt in Fraunces + "READ FULL TEXT →" pill
-  - **VIDEO LOG**: thumbnail with play button + title + metadata
-  - **SCHEMATICS**: blueprint-style box with wireframe SVG + title + "VIEW BLUEPRINT →"
-  - **INTERCEPTED TRANSMISSION**: audio waveform (bars) + play button + "01:24 / 04:00" timer
+- **Dark novel-scope theme**. Grain opacity 0.18.
+- Header: mono kicker + Archivo 900 `COMMUNITY.` at 56–88px + Fraunces italic `Lore & Protocol.` secondary heading
+- Block kind labels (Archive · Entry, Video log, Schematic): `rgba(237,237,237,0.45)` mono (not coral)
+- Live dot in block header: coral (valid live/pulse use)
+- Archive excerpt: Fraunces italic with **coral left border** (semantic quote accent, matches `locked.html` subline)
+- "Read full text" button: ghost → coral on hover with hard shadow
+- Video play button: coral CTA
+- Schematic stamp: `rgba(237,237,237,0.35)` border, muted text (not coral)
+- Audio waveform active bars: `rgba(237,237,237,0.65)` (not coral)
+- Audio play button: coral CTA; current time text: `#ededed`
 - **Footer**: "END OF DIRECTORY · V 1.0.4" (JetBrains Mono, muted)
+- Responsive: max-width 720px, 760px at ≥1200px
 
 ### DIRECTOR'S SUITE (desktop-first, ≥1280px)
 
@@ -582,12 +579,13 @@ All author pages use this shell:
 ## Known gaps / things to push further
 
 1. **`author-editor.html` audio envelope** — the SVG curve is drawn but the drag handles could be tighter. Worth polishing since this is the signature feature.
-2. **`novel-home.html`** — built from scratch, most likely to diverge from user's mental model. Scroll-triggered reveals could be more cinematic.
+2. **Desktop side rails on `novel-home.html` and `read.html`** — `.rail-left` / `.rail-right` divs are present at ≥1200px but empty. Content to fill in a future iter: novel metadata panel, chapter selector, marginalia for the reader.
 3. **`author-cms-*` pages** — drag-drop works for adding blocks but reordering via drag isn't implemented (only via Up/Down buttons in the inspector).
 4. **Real audio playback** in reader is stubbed (the scrollytelling audio is not actually wired up).
 5. **Mobile author view** not designed — Director's Suite is explicitly desktop-first. `Mobile_Chapter_Editor.pdf` existed but wasn't implemented as a separate page.
 6. **No real backend integration** — `join-code.html` doesn't verify codes, OTP accepts any 6 digits, login doesn't call Google OAuth.
 7. **Only `stitch-engine` has rich chapter data** — other 7 novels have metadata but no full chapter lists.
+8. **Hub pages at ≥1200px** — currently just widen the column to 760px. A future iter could add an optional sidebar (reading stats, active novels, upcoming drops) at desktop widths.
 
 ---
 
@@ -595,7 +593,7 @@ All author pages use this shell:
 
 - **Push harder on editorial brutalism.** Bold Archivo black, tight letter-spacing, unapologetic size jumps (body 14px → headings 56–120px).
 - **Grain is non-negotiable.** Every page has the `body::before` grain overlay.
-- **Coral `#d14829` is a scarce resource.** Used to signal: primary action, active state, live indicator, spoiler boundary, the hard shadow on buttons. Never for decoration.
+- **Coral `#d14829` is a scarce resource.** Valid uses only: primary CTA buttons, active tab/filter underlines, hard shadows on interactive elements, spoiler-boundary indicators, live/pulse dots, rubberstamp tags, semantic quote-accent borders. On any given screen, at most one or two coral elements should be visible. Replace everything else with muted white variants (`rgba(237,237,237,0.x)`). The test: if removing the coral doesn't break comprehension, it shouldn't be there.
 - **Hard shadows, never soft.** `6px 6px 0 <color>`, no blur.
 - **Mono for labels, Fraunces italic for voice, Archivo 900 for volume.** Never mix registers within a single element.
 - **Dark novel-scope should feel sealed.** Less muted, more contrast, higher grain opacity.
