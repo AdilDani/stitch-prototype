@@ -8,9 +8,21 @@
 <link rel="stylesheet" href="css/novel-nav.css">
 <style>
   body { background: #0a0a0c; color: #ededed; }
-  body::before { opacity: 0.08; }
+  body::before { opacity: 0.18; mix-blend-mode: overlay; }
 
-  .wrap { max-width: 520px; margin: 0 auto; background: #0a0a0c; min-height: 100vh; position: relative; }
+  .outer { display: flex; justify-content: center; }
+  .wrap { max-width: 720px; width: 100%; background: #0a0a0c; min-height: 100vh; position: relative; }
+
+  @media (min-width: 1200px) {
+    .outer { gap: 0; align-items: flex-start; }
+    .wrap { max-width: 720px; }
+    /* side rails reserved but empty — content to be added in future iter */
+    .rail-left, .rail-right {
+      width: 220px; flex-shrink: 0;
+      min-height: 100vh;
+      padding-top: 80px;
+    }
+  }
 
   /* back arrow top-left — mirror of hidden nav back */
   .back-mirror {
@@ -72,7 +84,7 @@
   /* intro section */
   .intro {
     padding: 28px 22px 20px;
-    border-bottom: 1px solid rgba(237,237,237,0.1);
+    border-bottom: 1px solid rgba(237,237,237,0.12);
   }
   .intro .stamp { border-color: #d14829; color: #d14829; }
   .intro .pull {
@@ -84,7 +96,7 @@
     color: #ededed;
     margin-top: 18px;
   }
-  .intro .pull::before, .intro .pull::after { color: #d14829; }
+  .intro .pull::before, .intro .pull::after { color: rgba(237,237,237,0.4); }
 
   /* latest chapter CTA */
   .latest {
@@ -98,8 +110,8 @@
   }
   .latest .tag {
     background: transparent;
-    border-color: #d14829;
-    color: #d14829;
+    border-color: rgba(237,237,237,0.22);
+    color: rgba(237,237,237,0.55);
     align-self: start;
   }
   .latest .ch-num {
@@ -147,12 +159,12 @@
   .latest-btn:hover { background: #d14829; color: #ededed; }
 
   /* characters section */
-  .section { padding: 28px 22px; border-bottom: 1px solid rgba(237,237,237,0.1); }
+  .section { padding: 28px 22px; border-bottom: 1px solid rgba(237,237,237,0.12); }
   .section-head {
     display: flex; align-items: end; justify-content: space-between;
     margin-bottom: 18px;
     padding-bottom: 8px;
-    border-bottom: 1px solid rgba(237,237,237,0.1);
+    border-bottom: 1px solid rgba(237,237,237,0.12);
   }
   .section-head h2 {
     font-family: var(--font-display); font-weight: 900;
@@ -186,14 +198,14 @@
     display: grid; place-items: center;
     font-family: var(--font-display); font-weight: 900;
     font-size: 20px;
-    color: #d14829;
+    color: rgba(237,237,237,0.6);
     margin-bottom: 12px;
   }
   .char-card .name { font-family: var(--font-display); font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
   .char-card .role { font-family: var(--font-mono); font-size: 10px; color: rgba(237,237,237,0.5); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 4px; }
   .char-card .tag-line {
     margin-top: 10px; padding-top: 10px;
-    border-top: 1px solid rgba(237,237,237,0.1);
+    border-top: 1px solid rgba(237,237,237,0.12);
     font-family: var(--font-editorial); font-style: italic;
     font-size: 12px;
     color: rgba(237,237,237,0.7);
@@ -207,7 +219,7 @@
     grid-template-columns: 62px 1fr;
     gap: 14px;
     padding: 14px 0;
-    border-top: 1px solid rgba(237,237,237,0.1);
+    border-top: 1px solid rgba(237,237,237,0.12);
   }
   .news-item:first-child { border-top: none; padding-top: 0; }
   .news-date {
@@ -216,7 +228,7 @@
     letter-spacing: 0.08em; text-transform: uppercase;
     line-height: 1.2;
   }
-  .news-date b { color: #d14829; font-weight: 700; font-size: 22px; letter-spacing: -0.02em; display: block; font-family: var(--font-display); }
+  .news-date b { color: #ededed; font-weight: 900; font-size: 22px; letter-spacing: -0.02em; display: block; font-family: var(--font-display); }
   .news-title { font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: -0.01em; color: #ededed; line-height: 1.2; }
   .news-body { font-family: var(--font-body); font-size: 13px; color: rgba(237,237,237,0.65); margin-top: 4px; line-height: 1.5; }
 
@@ -224,11 +236,11 @@
   .stats-strip {
     display: grid; grid-template-columns: repeat(3, 1fr);
     padding: 24px 0;
-    border-bottom: 1px solid rgba(237,237,237,0.1);
+    border-bottom: 1px solid rgba(237,237,237,0.12);
   }
   .stat { text-align: center; padding: 0 10px; border-right: 1px solid rgba(237,237,237,0.1); }
   .stat:last-child { border-right: none; }
-  .stat .n { font-family: var(--font-display); font-weight: 900; font-size: 28px; letter-spacing: -0.03em; color: #d14829; }
+  .stat .n { font-family: var(--font-display); font-weight: 900; font-size: 28px; letter-spacing: -0.03em; color: #ededed; }
   .stat .l { font-family: var(--font-mono); font-size: 10px; color: rgba(237,237,237,0.55); letter-spacing: 0.14em; text-transform: uppercase; margin-top: 2px; }
 
   .footer-end {
@@ -246,6 +258,8 @@
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
 </a>
 
+<div class="outer">
+<div class="rail-left"></div>
 <div class="wrap">
 
   <section class="hero-block">
@@ -353,9 +367,11 @@
     </div>
   </section>
 
-  <div class="footer-end">END OF SURFACE · SCROLL TO TOP FOR NAV</div>
+  <div class="footer-end">END OF SURFACE &middot; SCROLL TO TOP FOR NAV</div>
 
-</div>
+</div><!-- .wrap -->
+<div class="rail-right"></div>
+</div><!-- .outer -->
 
 <script src="js/state.js"></script>
 <script src="js/ui.js"></script>
