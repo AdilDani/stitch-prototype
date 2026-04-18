@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="css/novel-nav.css">
 <style>
   body { background: #0a0a0c; color: #ededed; }
-  body::before { opacity: 0.08; }
-  .wrap { max-width: 520px; margin: 0 auto; background: #0a0a0c; min-height: 100vh; padding-bottom: 60px; }
+  body::before { opacity: 0.18; mix-blend-mode: overlay; }
+  .wrap { max-width: 720px; margin: 0 auto; background: #0a0a0c; min-height: 100vh; padding-bottom: 60px; }
+
+  @media (min-width: 1200px) {
+    .wrap { max-width: 760px; }
+  }
 
   .back-mirror {
     position: fixed; top: 16px; left: 16px; z-index: 150;
@@ -22,49 +26,61 @@
   }
 
   .header {
-    padding: 60px 22px 28px;
-    border-bottom: 1px solid rgba(237,237,237,0.1);
+    padding: 60px 28px 28px;
+    border-bottom: 1px solid rgba(237,237,237,0.12);
   }
-  .crumbs {
-    font-family: var(--font-mono); font-size: 11px;
-    color: rgba(237,237,237,0.5); letter-spacing: 0.14em;
-    text-transform: uppercase; margin-bottom: 14px;
+  .kicker {
+    font-family: var(--font-mono); font-size: 10px;
+    color: rgba(237,237,237,0.4); letter-spacing: 0.22em;
+    text-transform: uppercase; margin-bottom: 20px;
   }
-  .crumbs .sep { color: #d14829; padding: 0 5px; }
   .header h1 {
     font-family: var(--font-display); font-weight: 900;
-    font-size: 44px; letter-spacing: -0.04em; line-height: 0.92;
+    font-size: clamp(56px, 12vw, 88px);
+    letter-spacing: -0.04em; line-height: 0.88;
     color: #ededed;
+    text-transform: uppercase;
+  }
+  .header .sub-head {
+    font-family: var(--font-editorial); font-style: italic;
+    font-weight: 700;
+    font-size: clamp(22px, 4vw, 34px);
+    line-height: 1.1;
+    color: rgba(237,237,237,0.45);
+    margin-top: 8px;
+    letter-spacing: -0.01em;
   }
   .header .sub {
-    font-family: var(--font-editorial); font-style: italic;
-    color: rgba(237,237,237,0.6);
-    font-size: 15px; margin-top: 10px;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(237,237,237,0.35);
+    margin-top: 12px;
   }
 
-  .blocks { padding: 24px 22px 0; display: grid; gap: 22px; }
+  .blocks { padding: 24px 28px 0; display: grid; gap: 24px; }
 
   .block {
-    border: 1px solid rgba(237,237,237,0.15);
+    border: 1px solid rgba(237,237,237,0.12);
     background: #12121a;
     overflow: hidden;
   }
   .block .head {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 18px;
+    padding: 12px 18px;
     border-bottom: 1px solid rgba(237,237,237,0.08);
   }
   .block .kind {
     font-family: var(--font-mono); font-size: 10px;
     letter-spacing: 0.2em; text-transform: uppercase;
-    color: #d14829; font-weight: 700;
+    color: rgba(237,237,237,0.45); font-weight: 700;
   }
   .block .asst {
     display: flex; align-items: center; gap: 8px;
     font-family: var(--font-mono); font-size: 10px;
-    color: rgba(237,237,237,0.4);
+    color: rgba(237,237,237,0.35);
   }
-  .block .asst .dot { width: 6px; height: 6px; border-radius: 50%; background: #d14829; }
+  /* live dot — valid coral use */
+  .block .asst .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 
   /* ARCHIVE block */
   .block.archive .body { padding: 22px 20px; }
@@ -77,22 +93,28 @@
   .block.archive .excerpt {
     font-family: var(--font-editorial); font-style: italic;
     font-size: 15px; line-height: 1.5;
-    color: rgba(237,237,237,0.75);
+    color: rgba(237,237,237,0.72);
     padding-left: 14px;
-    border-left: 2px solid #d14829;
+    /* semantic quote accent — kept as coral, matches locked.html subline treatment */
+    border-left: 2px solid var(--accent);
     margin-bottom: 16px;
   }
   .block.archive .read-btn {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 10px 14px;
-    border: 1px solid rgba(237,237,237,0.25);
+    border: 1px solid rgba(237,237,237,0.22);
     color: #ededed;
     font-family: var(--font-display); font-weight: 700;
     font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
     cursor: pointer;
     background: transparent;
+    transition: background .15s, border-color .15s, box-shadow .15s, transform .15s;
   }
-  .block.archive .read-btn:hover { background: #d14829; border-color: #d14829; }
+  .block.archive .read-btn:hover {
+    background: var(--accent); border-color: var(--accent);
+    box-shadow: 3px 3px 0 #ededed;
+    transform: translate(-1px,-1px);
+  }
 
   /* VIDEO LOG */
   .block.video .thumb {
@@ -102,17 +124,19 @@
     background: #0a0a0c;
   }
   .block.video .thumb svg { width: 100%; height: 100%; display: block; }
+  /* video play button — primary action CTA, valid coral */
   .block.video .play {
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     width: 60px; height: 60px;
-    background: #d14829;
+    background: var(--accent);
     display: grid; place-items: center;
     color: #ededed;
     cursor: pointer;
-    transition: transform 0.15s;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 4px 4px 0 rgba(237,237,237,0.3);
   }
-  .block.video .play:hover { transform: translate(-50%, -50%) scale(1.06); }
+  .block.video .play:hover { transform: translate(-53%, -53%); box-shadow: 6px 6px 0 rgba(237,237,237,0.5); }
   .block.video .play svg { width: 24px; height: 24px; margin-left: 3px; }
   .block.video .caption {
     padding: 14px 18px 16px;
@@ -125,8 +149,8 @@
     margin-top: 6px;
     display: flex; gap: 12px;
     font-family: var(--font-mono); font-size: 10px;
-    color: rgba(237,237,237,0.5);
-    letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(237,237,237,0.4);
+    letter-spacing: 0.14em; text-transform: uppercase;
   }
 
   /* SCHEMATICS */
@@ -141,28 +165,30 @@
   .block.schem .preview .stamp {
     position: absolute; top: 14px; right: 14px;
     transform: rotate(-3deg);
-    border: 1.5px solid #d14829;
-    color: #d14829;
+    border: 1px solid rgba(237,237,237,0.35);
+    color: rgba(237,237,237,0.55);
     font-family: var(--font-display); font-weight: 800;
-    font-size: 10px; letter-spacing: 0.14em;
+    font-size: 10px; letter-spacing: 0.18em;
     padding: 4px 10px;
     background: rgba(10,10,10,0.65);
+    text-transform: uppercase;
   }
   .block.schem .body { padding: 14px 18px 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
   .block.schem h3 { font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: -0.01em; color: #ededed; }
   .block.schem .btn-view {
     padding: 8px 12px;
-    border: 1px solid rgba(237,237,237,0.25);
+    border: 1px solid rgba(237,237,237,0.22);
     color: #ededed;
     font-family: var(--font-display); font-weight: 700;
-    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
     background: transparent; cursor: pointer;
     white-space: nowrap;
+    transition: background .15s, border-color .15s;
   }
-  .block.schem .btn-view:hover { background: #d14829; border-color: #d14829; }
+  .block.schem .btn-view:hover { background: rgba(237,237,237,0.08); border-color: rgba(237,237,237,0.5); }
   .block.schem .meta {
     font-family: var(--font-mono); font-size: 10px;
-    color: rgba(237,237,237,0.5); letter-spacing: 0.1em;
+    color: rgba(237,237,237,0.4); letter-spacing: 0.14em;
     text-transform: uppercase;
     margin-top: 4px;
   }
@@ -177,8 +203,8 @@
   }
   .block.audio .meta {
     font-family: var(--font-mono); font-size: 10px;
-    color: rgba(237,237,237,0.5);
-    letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(237,237,237,0.4);
+    letter-spacing: 0.14em; text-transform: uppercase;
     margin-bottom: 18px;
   }
   .wave {
@@ -189,33 +215,39 @@
   }
   .wave span {
     flex: 1;
-    background: rgba(237,237,237,0.35);
+    background: rgba(237,237,237,0.2);
     min-height: 2px;
     transition: background 0.15s;
   }
-  .wave span.active { background: #d14829; }
+  /* waveform progress — state indicator, muted white */
+  .wave span.active { background: rgba(237,237,237,0.65); }
   .player-row {
     display: flex; align-items: center; gap: 12px;
     font-family: var(--font-mono); font-size: 12px;
-    color: rgba(237,237,237,0.7);
+    color: rgba(237,237,237,0.6);
   }
+  /* play button — primary action CTA, valid coral */
   .player-row .play-audio {
     width: 40px; height: 40px;
-    background: #d14829; color: #ededed;
+    background: var(--accent); color: #ededed;
     display: grid; place-items: center;
     cursor: pointer;
     border: none;
+    box-shadow: 3px 3px 0 rgba(237,237,237,0.3);
+    transition: box-shadow .15s, transform .15s;
   }
+  .player-row .play-audio:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 rgba(237,237,237,0.5); }
   .player-row .play-audio svg { width: 14px; height: 14px; margin-left: 2px; }
   .player-row .play-audio.playing svg { margin-left: 0; }
-  .player-row .time .cur { color: #d14829; font-weight: 700; }
+  /* current time — plain text, not coral */
+  .player-row .time .cur { color: #ededed; font-weight: 700; }
 
   .footer-end {
-    padding: 40px 22px 0;
+    padding: 40px 28px 0;
     text-align: center;
     font-family: var(--font-mono); font-size: 10px;
-    color: rgba(237,237,237,0.35);
-    letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(237,237,237,0.3);
+    letter-spacing: 0.22em; text-transform: uppercase;
   }
 </style>
 </head>
@@ -228,16 +260,17 @@
 <div class="wrap">
 
   <section class="header">
-    <div class="crumbs">STITCH_ENGINE <span class="sep">/</span> Community</div>
-    <h1>Community Lore &amp; Protocol.</h1>
-    <p class="sub">Curated materials from the author. Archives, video logs, schematics, and intercepted transmissions.</p>
+    <div class="kicker">// STITCH_ENGINE &middot; AUTHOR_DISPATCH</div>
+    <h1>Community.</h1>
+    <p class="sub-head">Lore &amp; Protocol.</p>
+    <p class="sub">Curated materials · Archives · Video logs · Schematics · Transmissions</p>
   </section>
 
   <div class="blocks">
 
     <article class="block archive">
       <div class="head">
-        <span class="kind">Archive · Entry 04</span>
+        <span class="kind">Archive &middot; Entry 04</span>
         <span class="asst"><span class="dot"></span>AUTHOR PUBLISHED</span>
       </div>
       <div class="body">
@@ -249,11 +282,10 @@
 
     <article class="block video">
       <div class="head">
-        <span class="kind">Video log · 04:12</span>
+        <span class="kind">Video log &middot; 04:12</span>
         <span class="asst"><span class="dot"></span>RECORDED 02·APR</span>
       </div>
       <div class="thumb">
-        ${''}
         <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
           <defs><linearGradient id="vg" x2="1"><stop stop-color="#1a1a2a"/><stop offset="1" stop-color="#0a0a0c"/></linearGradient></defs>
           <rect width="800" height="450" fill="url(#vg)"/>
@@ -273,11 +305,10 @@
 
     <article class="block schem">
       <div class="head">
-        <span class="kind">Schematic · v2.0</span>
+        <span class="kind">Schematic &middot; v2.0</span>
         <span class="asst"><span class="dot"></span>ANNOTATED</span>
       </div>
       <div class="preview">
-        ${''}
         <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
           <rect width="400" height="300" fill="#0a1828"/>
           <g fill="none" stroke="#5ad" stroke-width="1.2">
@@ -300,7 +331,7 @@
           <h3>Engine Schematics V2</h3>
           <div class="meta">LAYER 3 · REVISED MAR·2026</div>
         </div>
-        <button class="btn-view">View →</button>
+        <button class="btn-view">View &rarr;</button>
       </div>
     </article>
 
@@ -326,7 +357,7 @@
 
   </div>
 
-  <div class="footer-end">END OF DIRECTORY · V 1.0.4</div>
+  <div class="footer-end">END OF DIRECTORY &middot; V 1.0.4</div>
 
 </div>
 
@@ -342,7 +373,6 @@
     return `<span style="height:${h}px" ${i < 17 ? 'class="active"' : ''}></span>`;
   }).join('');
 
-  // toggle play + animate bars when playing
   const btn = document.getElementById('playa');
   let playing = false, tick = 17;
   let interval;
