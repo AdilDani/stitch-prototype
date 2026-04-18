@@ -359,17 +359,17 @@ p { margin: 0; }
 }
 
 /* ============================================================ */
-/*  MOBILE FRAME — wraps reader-facing pages so they feel       */
-/*  phone-sized on desktop but fill on real mobile.             */
+/*  CONTENT COLUMN — fluid centered column for mobile-first     */
+/*  pages. No side borders — layout breathes on desktop.        */
+/*  Default max-width 720px; pages can override or add          */
+/*  @media (min-width: 1200px) { max-width: 760px } as needed. */
 /* ============================================================ */
 .phone-frame {
-  max-width: var(--mobile-w);
+  max-width: 720px;
   margin: 0 auto;
   min-height: 100vh;
   background: var(--paper);
   position: relative;
-  border-left: 1px solid var(--line);
-  border-right: 1px solid var(--line);
 }
 
 /* ============================================================ */
