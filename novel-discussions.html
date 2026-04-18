@@ -8,8 +8,12 @@
 <link rel="stylesheet" href="css/novel-nav.css">
 <style>
   body { background: #0a0a0c; color: #ededed; }
-  body::before { opacity: 0.08; }
-  .wrap { max-width: 520px; margin: 0 auto; background: #0a0a0c; min-height: 100vh; padding-bottom: 100px; }
+  body::before { opacity: 0.18; mix-blend-mode: overlay; }
+  .wrap { max-width: 720px; margin: 0 auto; background: #0a0a0c; min-height: 100vh; padding-bottom: 100px; }
+
+  @media (min-width: 1200px) {
+    .wrap { max-width: 760px; }
+  }
 
   .back-mirror {
     position: fixed; top: 16px; left: 16px; z-index: 150;
@@ -22,30 +26,41 @@
   }
 
   .header {
-    padding: 60px 22px 24px;
-    border-bottom: 1px solid rgba(237,237,237,0.1);
+    padding: 60px 28px 28px;
+    border-bottom: 1px solid rgba(237,237,237,0.12);
   }
-  .crumbs {
-    font-family: var(--font-mono); font-size: 11px;
-    color: rgba(237,237,237,0.5); letter-spacing: 0.14em;
-    text-transform: uppercase; margin-bottom: 14px;
+  .kicker {
+    font-family: var(--font-mono); font-size: 10px;
+    color: rgba(237,237,237,0.4); letter-spacing: 0.22em;
+    text-transform: uppercase; margin-bottom: 20px;
   }
-  .crumbs .sep { color: #d14829; padding: 0 5px; }
   .header h1 {
     font-family: var(--font-display); font-weight: 900;
-    font-size: 48px; letter-spacing: -0.04em; line-height: 0.92;
+    font-size: clamp(56px, 12vw, 88px);
+    letter-spacing: -0.04em; line-height: 0.88;
     color: #ededed;
+    text-transform: uppercase;
+  }
+  .header .forum-name {
+    font-family: var(--font-editorial); font-style: italic;
+    font-weight: 700;
+    font-size: clamp(24px, 5vw, 38px);
+    line-height: 1.1;
+    color: rgba(237,237,237,0.55);
+    margin-top: 10px;
+    letter-spacing: -0.01em;
   }
   .header .sub {
-    font-family: var(--font-editorial); font-style: italic;
-    font-size: 15px; color: rgba(237,237,237,0.55);
-    margin-top: 10px;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(237,237,237,0.35);
+    margin-top: 14px;
   }
 
   .filters {
-    display: flex; gap: 8px; padding: 16px 22px 14px;
+    display: flex; gap: 8px; padding: 14px 28px 12px;
     overflow-x: auto;
-    border-bottom: 1px solid rgba(237,237,237,0.1);
+    border-bottom: 1px solid rgba(237,237,237,0.12);
     background: rgba(10,10,12,0.9);
     position: sticky; top: 0; z-index: 40;
     backdrop-filter: blur(8px);
@@ -53,50 +68,55 @@
   .filters::-webkit-scrollbar { display: none; }
   .fchip {
     padding: 6px 12px;
-    border: 1px solid rgba(237,237,237,0.2);
+    border: 1px solid rgba(237,237,237,0.18);
     font-family: var(--font-display); font-weight: 700;
     font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
     cursor: pointer;
     white-space: nowrap;
-    background: transparent; color: #ededed;
+    background: transparent; color: rgba(237,237,237,0.65);
+    transition: border-color .15s, color .15s, background .15s;
   }
-  .fchip.active { background: #d14829; color: #ededed; border-color: #d14829; }
+  .fchip:hover { color: #ededed; border-color: rgba(237,237,237,0.4); }
+  .fchip.active { background: var(--accent); color: #ededed; border-color: var(--accent); }
 
   .create-strip {
-    padding: 18px 22px;
-    border-bottom: 1px solid rgba(237,237,237,0.1);
+    padding: 18px 28px;
+    border-bottom: 1px solid rgba(237,237,237,0.12);
     display: flex; align-items: center; gap: 12px;
   }
   .create-strip .avatar {
     width: 36px; height: 36px;
-    background: #d14829; color: #ededed;
+    background: rgba(237,237,237,0.12); color: #ededed;
     display: grid; place-items: center;
     font-family: var(--font-display); font-weight: 700;
     font-size: 13px;
+    border: 1px solid rgba(237,237,237,0.2);
   }
   .create-strip .composer {
     flex: 1;
     padding: 10px 14px;
-    border: 1px solid rgba(237,237,237,0.2);
+    border: 1px solid rgba(237,237,237,0.18);
     background: #12121a;
     font-family: var(--font-editorial); font-style: italic;
-    color: rgba(237,237,237,0.5);
+    color: rgba(237,237,237,0.4);
     font-size: 14px;
     cursor: pointer;
   }
   .create-btn {
     padding: 10px 14px;
-    background: #d14829; color: #ededed;
+    background: var(--accent); color: #ededed;
     font-family: var(--font-display); font-weight: 800;
     font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
     cursor: pointer;
     border: none;
+    box-shadow: 3px 3px 0 #ededed;
+    transition: transform .15s, box-shadow .15s;
   }
-  .create-btn:hover { background: #ededed; color: #0a0a0c; }
+  .create-btn:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 #ededed; }
 
   .feed { padding: 0; }
   .post {
-    padding: 22px 22px;
+    padding: 24px 28px;
     border-bottom: 1px solid rgba(237,237,237,0.08);
   }
   .post-top {
@@ -108,25 +128,26 @@
   }
   .post-who .av {
     width: 32px; height: 32px;
-    background: rgba(237,237,237,0.15); color: #ededed;
+    background: rgba(237,237,237,0.1); color: #ededed;
     display: grid; place-items: center;
     font-family: var(--font-display); font-weight: 700;
     font-size: 11px;
+    border: 1px solid rgba(237,237,237,0.15);
   }
   .post-who .nm { font-family: var(--font-display); font-weight: 700; font-size: 13px; }
-  .post-who .w { font-family: var(--font-mono); font-size: 10px; color: rgba(237,237,237,0.45); letter-spacing: 0.1em; }
-  .post-age { font-family: var(--font-mono); font-size: 10px; color: rgba(237,237,237,0.4); letter-spacing: 0.08em; }
+  .post-who .w { font-family: var(--font-mono); font-size: 10px; color: rgba(237,237,237,0.4); letter-spacing: 0.1em; }
+  .post-age { font-family: var(--font-mono); font-size: 10px; color: rgba(237,237,237,0.35); letter-spacing: 0.1em; }
 
   .ch-pill {
     display: inline-flex; align-items: center;
     padding: 3px 8px;
     font-family: var(--font-mono); font-size: 9px;
-    font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-    border: 1px solid rgba(237,237,237,0.25);
-    color: rgba(237,237,237,0.7);
+    font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    border: 1px solid rgba(237,237,237,0.2);
+    color: rgba(237,237,237,0.55);
     margin-bottom: 10px;
   }
-  .ch-pill.spoil { background: #d14829; border-color: #d14829; color: #ededed; }
+  .ch-pill.spoil { background: var(--accent); border-color: var(--accent); color: #ededed; }
 
   .post h3 {
     font-family: var(--font-display); font-weight: 800;
@@ -136,7 +157,7 @@
   }
   .post p.body {
     font-family: var(--font-body); font-size: 14px; line-height: 1.55;
-    color: rgba(237,237,237,0.8);
+    color: rgba(237,237,237,0.75);
     margin-bottom: 14px;
   }
   .post .tag-line {
@@ -145,21 +166,21 @@
   .tag-line .tg {
     padding: 3px 8px;
     font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    border: 1px solid rgba(237,237,237,0.2);
-    color: rgba(237,237,237,0.6);
+    letter-spacing: 0.14em; text-transform: uppercase;
+    border: 1px solid rgba(237,237,237,0.18);
+    color: rgba(237,237,237,0.5);
   }
-  .tag-line .tg.theory { color: #f2b705; border-color: rgba(242, 183, 5, 0.5); }
-  .tag-line .tg.review { color: #5ad; border-color: rgba(90, 170, 221, 0.5); }
-  .tag-line .tg.question { color: #a07dff; border-color: rgba(160, 125, 255, 0.5); }
+  .tag-line .tg.theory { color: #f2b705; border-color: rgba(242, 183, 5, 0.4); }
+  .tag-line .tg.review { color: #5ad; border-color: rgba(90, 170, 221, 0.4); }
+  .tag-line .tg.question { color: #a07dff; border-color: rgba(160, 125, 255, 0.4); }
 
   .post-foot {
     display: flex; align-items: center; gap: 16px;
     font-family: var(--font-mono); font-size: 11px;
-    color: rgba(237,237,237,0.5);
+    color: rgba(237,237,237,0.4);
   }
-  .post-foot .action { display: flex; align-items: center; gap: 5px; cursor: pointer; }
-  .post-foot .action:hover { color: #d14829; }
+  .post-foot .action { display: flex; align-items: center; gap: 5px; cursor: pointer; transition: color .15s; }
+  .post-foot .action:hover { color: #ededed; }
   .post-foot .spacer { flex: 1; }
 
   .sp-wrap { position: relative; margin-bottom: 14px; }
@@ -177,7 +198,7 @@
   }
   .sp-wrap .sp-cover .sub {
     font-weight: 400; font-size: 10px;
-    color: rgba(237,237,237,0.6); letter-spacing: 0.1em;
+    color: rgba(237,237,237,0.55); letter-spacing: 0.12em;
   }
   .sp-wrap.revealed .body { filter: none; pointer-events: auto; }
   .sp-wrap.revealed .sp-cover { opacity: 0; pointer-events: none; }
@@ -187,11 +208,13 @@
     bottom: 24px; right: 24px;
     z-index: 60;
     width: 56px; height: 56px;
-    background: #d14829; color: #ededed;
+    background: var(--accent); color: #ededed;
     display: grid; place-items: center;
     cursor: pointer;
     box-shadow: 4px 4px 0 #ededed;
+    transition: transform .15s, box-shadow .15s;
   }
+  .compose-fab:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 #ededed; }
 </style>
 </head>
 <body>
@@ -203,9 +226,10 @@
 <div class="wrap">
 
   <section class="header">
-    <div class="crumbs">STITCH_ENGINE <span class="sep">/</span> Discussions</div>
-    <h1>The Silent Archive.</h1>
-    <p class="sub">Community threads, theories, and reviews. Posts above your read cap (Ch. 05) are blurred.</p>
+    <div class="kicker">// STITCH_ENGINE &middot; COMMUNITY_FORUM</div>
+    <h1>Discussions.</h1>
+    <p class="forum-name">"The Silent Archive"</p>
+    <p class="sub">Posts above your read cap (Ch. 05) are blurred.</p>
   </section>
 
   <div class="filters">
@@ -213,7 +237,7 @@
     <button class="fchip" data-f="theory">Theories</button>
     <button class="fchip" data-f="review">Reviews</button>
     <button class="fchip" data-f="question">Questions</button>
-    <button class="fchip" data-f="ch1">CH. 01-05</button>
+    <button class="fchip" data-f="ch1">CH. 01–05</button>
     <button class="fchip" data-f="chhi">CH. 06+</button>
   </div>
 
@@ -238,7 +262,6 @@
 
   let filter = 'all';
 
-  // local posts for stitch-engine + enrich
   const posts = [
     { id:'e1', ch:12, spoiler:true, who:'CipherReader', init:'CR', age:'2h', title:"The revelation about the Architect's motives.", body:"The revelation about the Architect's true motives completely changes the context of the first three chapters. Did anyone else catch the subtle foreshadowing in the dialogue during the train sequence? Specifically when he mentioned 'the architects who came before'.", tag:'theory', likes:142, comments:24, cat:'theory' },
     { id:'e2', ch:24, spoiler:true, who:'Archivist_99', init:'A9', age:'5h', title:'Chapter 24 — the glass shatter scene.', body:"I can't believe they actually killed off the main antagonist this early. The power vacuum it leaves in the city is going to completely derail the protagonist's original plan. The glass shatter was visceral — I had to read it twice.", tag:'review', likes:512, comments:88, cat:'review' },
