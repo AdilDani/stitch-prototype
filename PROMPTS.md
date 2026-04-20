@@ -74,3 +74,28 @@ Five changes: (1) dark/light toggle on all 5 novel-scope pages, persisted to `lo
 **Related prompts:** 001
 
 ---
+
+### 003 — Center novel navbar; clean chapters header
+
+**Date:** 2026-04-20
+**Branch:** iter/001-brutalist-novel-responsive
+**Files touched:** css/novel-nav.css, chapters.html
+
+**Request (verbatim):**
+> in the novel pages, the navbar should be centered, currently all its elements are to the right, fix it. and remove the text in the chapters page that says "// STITCH_ENGINE · CHAPTER_ARCHIVE", as well as "Act by act. Read in sequence."
+
+**Interpretation:**
+Two small fixes. (1) The `.nnav-links` are `justify-content: flex-end` inside a 3-column grid, making them flush right. Fix by switching `.nnav` to flex with `justify-content: center`, positioning `.nnav-back` absolutely on the left, and hiding `.nnav-title`. (2) Remove the kicker and subtitle from the chapters header — the `h1` alone is sufficient.
+
+**Alternatives considered but not taken:**
+- Keeping the novel title in the navbar alongside centered links — rejected; user wants clean centered links, title adds clutter
+
+**Changes made:**
+- css/novel-nav.css — flex layout, back button absolute left, links centered, title hidden
+- chapters.html — removed kicker div and sub paragraph from header markup and CSS
+
+**Spec updates:** none
+
+**Related prompts:** 001, 002
+
+---

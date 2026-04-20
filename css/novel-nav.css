@@ -34,11 +34,11 @@
   background: rgba(10, 10, 10, 0.96);
   backdrop-filter: blur(8px);
   color: #ededed;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 12px 20px;
+  justify-content: center;
+  position: relative;
+  padding: 10px 64px;
   border-bottom: 1px solid rgba(255,255,255,0.1);
   transform: translateY(-100%);
   transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -46,6 +46,7 @@
 }
 .nnav.open { transform: translateY(0); }
 .nnav-back {
+  position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
   width: 32px; height: 32px;
   display: grid; place-items: center;
   border: 1px solid rgba(255,255,255,0.25);
@@ -53,14 +54,9 @@
   transition: background 0.15s;
 }
 .nnav-back:hover { background: var(--novel-accent, #d14829); border-color: var(--novel-accent, #d14829); }
-.nnav-title {
-  font-weight: 800;
-  font-size: 14px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
+.nnav-title { display: none; }
 .nnav-links {
-  display: flex; gap: 4px; justify-content: flex-end;
+  display: flex; gap: 4px; justify-content: center;
   flex-wrap: wrap;
 }
 .nnav-link {
@@ -80,7 +76,6 @@
 }
 
 @media (max-width: 600px) {
-  .nnav { grid-template-columns: auto auto; grid-template-rows: auto auto; }
-  .nnav-links { grid-column: 1 / -1; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
-  .nnav-title { font-size: 12px; }
+  .nnav { padding: 10px 48px; }
+  .nnav-links { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
 }
