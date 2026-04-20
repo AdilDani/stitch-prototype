@@ -125,3 +125,28 @@ Remove all kicker and subtitle text from three novel pages. Each page keeps its 
 **Related prompts:** 001, 003
 
 ---
+
+### 005 — Hub pages: dark mode toggle + center global navbar
+
+**Date:** 2026-04-20
+**Branch:** iter/001-brutalist-novel-responsive
+**Files touched:** css/core.css, home.html, discover.html, global-discussions.html, global-media.html, profile.html
+
+**Request (verbatim):**
+> all the GeneralSite pages should also get a darkmode button, and their navbar should also get centered, they are now all on the left, fix that
+
+**Interpretation:**
+Two changes across the 5 hub pages. (1) The global nav items (`BRAND · nav-items · profile`) are left-aligned; center the nav-items between the brand and profile button. (2) Add a sun/moon toggle button to each hub page that switches between the default paper/ink light theme and a dark theme, persisted to `localStorage` key `hub_theme`.
+
+**Alternatives considered but not taken:**
+- Sharing one `hub_theme` key with `novel_theme` — rejected; hub and novel themes should be independently controllable
+
+**Changes made:**
+- css/core.css — center global nav items; add hub dark-mode CSS class
+- home.html, discover.html, global-discussions.html, global-media.html, profile.html — theme toggle button + JS
+
+**Spec updates:** none
+
+**Related prompts:** 001, 002
+
+---
