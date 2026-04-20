@@ -24,6 +24,7 @@ const STITCH = (function () {
       'concrete-echoes': 8,
     },
     bookmarks: { 'stitch-engine': 5 },
+    clearedChapters: { 'stitch-engine': [1, 2, 3, 4] },
   };
 
   // ----- novels -----
