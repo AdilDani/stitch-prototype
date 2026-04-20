@@ -42,3 +42,35 @@ Apply a three-axis pass to novel-scope pages: coral audit (remove decorative sig
 **Related prompts:** none
 
 ---
+
+### 002 — Theme toggle + chapters behaviour overhaul
+
+**Date:** 2026-04-20
+**Branch:** iter/001-brutalist-novel-responsive
+**Files touched:** CLAUDE.md, js/state.js, chapters.html, novel-home.html, novel-discussions.html, novel-media.html, novel-community.html
+
+**Request (verbatim):**
+> for all of the SpecificNovel sites, give them a button to swap from dark mode to light mode and vice versa. in the chapters page, there shouldnt be a necessity to "clear" an act to be able to read the rest. in the chapters page, there shouldnt be a length of the chapter like "22min", but instead there should be a word count, written as X.Xk words, like 3.2k words. acts should be collapsable elements, they are all collapsed by default, except for the one you are currently one, meaning that all unread acts are collapsed, and all read ones are also collapsed, only halfway-read acts should be open, or any ones that were explicitly opened. add the folowing behaviour : if a chapter is pressed, it is "read", which updates the total progress for the act, this should be saved in local storage for now i guess. if total act progress is 100% or X/X, it should be collapsed. remove the "active"/"sealed" next to chapter names.
+
+**Interpretation:**
+Five changes: (1) dark/light toggle on all 5 novel-scope pages, persisted to `localStorage`. (2) Remove act-gate logic from chapters.html — all published chapters are freely accessible. (3) Duration replaced with word count formatted as X.Xk. (4) Acts are collapsible — collapsed by default, auto-open for in-progress acts (some cleared, not all), auto-collapse when act reaches 100%. (5) Clicking any accessible chapter marks it as read in localStorage via STITCH state. Also: update CLAUDE.md iteration protocol and add `clearedChapters` to DEFAULT_USER in state.js.
+
+**Alternatives considered but not taken:**
+- Using CSS `prefers-color-scheme` instead of manual toggle — rejected; the novel dark theme is intentional by default regardless of OS setting
+- Persisting act open/closed state to localStorage — rejected; toggled-open state is ephemeral (session only), only chapter-read state persists
+
+**Changes made:**
+- CLAUDE.md — iteration protocol updated with one-file-at-a-time rule
+- js/state.js — added `clearedChapters` to DEFAULT_USER
+- chapters.html — collapsible acts, word counts, click-to-read, no act gates, theme toggle
+- novel-home.html — theme toggle button + light-mode CSS overrides
+- novel-discussions.html — theme toggle button + light-mode CSS overrides
+- novel-media.html — theme toggle button + light-mode CSS overrides
+- novel-community.html — theme toggle button + light-mode CSS overrides
+
+**Spec updates:**
+- Iteration protocol section updated in CLAUDE.md
+
+**Related prompts:** 001
+
+---

@@ -680,7 +680,7 @@ Each entry in `PROMPTS.md` follows this structure:
 
 1. Read the user's message.
 2. Append a new entry to `PROMPTS.md` with the request, interpretation, and alternatives.
-3. Only then begin code changes.
+3. Only then begin code changes — **one file at a time**. Read a file, edit it, commit, then move to the next. Do not read all affected files upfront before editing any of them.
 4. After changes are complete, update the **Files touched**, **Changes made**, and **Spec updates** fields.
 
 ### What counts as a prompt
