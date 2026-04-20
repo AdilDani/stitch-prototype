@@ -141,10 +141,12 @@ p { margin: 0; }
   margin-right: 8px;
 }
 .global-nav .nav-items {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: 2px;
   align-items: center;
-  flex: 1;
 }
 .global-nav a.nav-item {
   padding: 8px 14px;
@@ -170,7 +172,48 @@ p { margin: 0; }
   place-items: center;
   font-weight: 700;
   font-size: 13px;
+  margin-left: auto;
 }
+
+/* theme toggle inside global nav */
+.theme-btn-hub {
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  color: rgba(244,242,236,0.55);
+  background: none; border: none;
+  cursor: pointer;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.theme-btn-hub:hover { color: #f4f2ec; }
+
+/* ── hub dark mode: flip CSS variables so all var() references adapt ── */
+body.dark {
+  --paper: #0f0f0f;
+  --paper-2: #1a1a1a;
+  --paper-3: #252525;
+  --ink: #ededed;
+  --ink-2: #d0d0d0;
+  --ink-3: #aaaaaa;
+  --line: rgba(237,237,237,0.12);
+  --line-strong: rgba(237,237,237,0.28);
+  --muted: rgba(237,237,237,0.56);
+  --muted-2: rgba(237,237,237,0.38);
+  background: #0f0f0f;
+  color: #ededed;
+}
+body.dark::before { opacity: 0.15; mix-blend-mode: overlay; }
+/* nav was ink-bg/paper-text; with flipped vars that would invert — pin it dark */
+body.dark .global-nav {
+  background: #1a1a1a;
+  color: #ededed;
+  border-color: rgba(237,237,237,0.06);
+}
+body.dark .global-nav a.nav-item { color: rgba(237,237,237,0.5); }
+body.dark .global-nav a.nav-item:hover { color: #ededed; }
+body.dark .global-nav .profile-btn { background: rgba(237,237,237,0.85); color: #0a0a0a; }
+body.dark ::-webkit-scrollbar-track { background: #1a1a1a; }
+body.dark ::-webkit-scrollbar-thumb { background: rgba(237,237,237,0.3); }
 
 /* fade-in / fade-out wrapper for the Deep Dive transition */
 .global-nav.fade-away {
