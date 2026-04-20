@@ -11,19 +11,56 @@
   body::before { opacity: 0.18; mix-blend-mode: overlay; }
   .wrap { max-width: 720px; margin: 0 auto; background: #0a0a0c; min-height: 100vh; padding-bottom: 100px; }
 
+  body.light { background: #f4f2ec; color: #0a0a0a; }
+  body.light::before { opacity: 0.12; mix-blend-mode: multiply; }
+  body.light .wrap { background: #f4f2ec; }
+  body.light .back-mirror,
+  body.light .theme-btn { background: rgba(244,242,236,0.85); border-color: rgba(10,10,10,0.22); color: #0a0a0a; }
+  body.light .header { border-color: rgba(10,10,10,0.1); }
+  body.light .kicker { color: rgba(10,10,10,0.4); }
+  body.light .header h1 { color: #0a0a0a; }
+  body.light .header .forum-name { color: rgba(10,10,10,0.5); }
+  body.light .header .sub { color: rgba(10,10,10,0.38); }
+  body.light .filters { background: rgba(244,242,236,0.92); border-color: rgba(10,10,10,0.1); }
+  body.light .fchip { border-color: rgba(10,10,10,0.18); color: rgba(10,10,10,0.6); }
+  body.light .fchip:hover { color: #0a0a0a; border-color: rgba(10,10,10,0.4); }
+  body.light .create-strip { border-color: rgba(10,10,10,0.1); }
+  body.light .create-strip .avatar { background: rgba(10,10,10,0.08); color: #0a0a0a; border-color: rgba(10,10,10,0.18); }
+  body.light .create-strip .composer { background: #eae7dd; border-color: rgba(10,10,10,0.15); color: rgba(10,10,10,0.4); }
+  body.light .post { border-color: rgba(10,10,10,0.08); }
+  body.light .post-who .av { background: rgba(10,10,10,0.08); color: #0a0a0a; border-color: rgba(10,10,10,0.14); }
+  body.light .post-who .nm { color: #0a0a0a; }
+  body.light .post-who .w { color: rgba(10,10,10,0.4); }
+  body.light .post-age { color: rgba(10,10,10,0.35); }
+  body.light .ch-pill { border-color: rgba(10,10,10,0.2); color: rgba(10,10,10,0.5); }
+  body.light .post h3 { color: #0a0a0a; }
+  body.light .post p.body { color: rgba(10,10,10,0.7); }
+  body.light .tag-line .tg { border-color: rgba(10,10,10,0.15); color: rgba(10,10,10,0.5); }
+  body.light .post-foot { color: rgba(10,10,10,0.4); }
+  body.light .post-foot .action:hover { color: #0a0a0a; }
+  body.light .sp-wrap .sp-cover { background: rgba(244,242,236,0.9); color: #0a0a0a; }
+  body.light .sp-wrap .sp-cover .sub { color: rgba(10,10,10,0.5); }
+  body.light .compose-fab { box-shadow: 4px 4px 0 #0a0a0a; }
+  body.light .compose-fab:hover { box-shadow: 6px 6px 0 #0a0a0a; }
+
   @media (min-width: 1200px) {
     .wrap { max-width: 760px; }
   }
 
-  .back-mirror {
-    position: fixed; top: 16px; left: 16px; z-index: 150;
+  .back-mirror, .theme-btn {
+    position: fixed; z-index: 150;
     width: 38px; height: 38px;
     display: grid; place-items: center;
     background: rgba(10,10,10,0.65);
     backdrop-filter: blur(6px);
     border: 1px solid rgba(237,237,237,0.25);
     color: #ededed;
+    cursor: pointer;
   }
+  .back-mirror { top: 16px; left: 16px; }
+  .theme-btn { top: 16px; right: 16px; border: none; }
+  .theme-btn:hover { border: 1px solid rgba(237,237,237,0.5); }
+  body.light .theme-btn:hover { border: 1px solid rgba(10,10,10,0.4); }
 
   .header {
     padding: 60px 28px 28px;
@@ -222,6 +259,7 @@
 <a class="back-mirror" href="novel-home.html?id=stitch-engine" title="Back">
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
 </a>
+<button class="theme-btn" id="theme-btn" aria-label="Toggle theme"></button>
 
 <div class="wrap">
 
@@ -259,6 +297,24 @@
 <script src="js/ui.js"></script>
 <script>
   mountNovelNav({ novelId: 'stitch-engine', active: 'discussions' });
+  (function() {
+    const T = 'novel_theme';
+    if (localStorage.getItem(T) === 'light') document.body.classList.add('light');
+    const btn = document.getElementById('theme-btn');
+    function updateBtn() {
+      const light = document.body.classList.contains('light');
+      btn.innerHTML = light
+        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>';
+      btn.title = light ? 'Switch to dark mode' : 'Switch to light mode';
+    }
+    btn.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      localStorage.setItem(T, document.body.classList.contains('light') ? 'light' : 'dark');
+      updateBtn();
+    });
+    updateBtn();
+  })();
 
   let filter = 'all';
 
