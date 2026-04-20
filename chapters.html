@@ -20,9 +20,7 @@
   body.light .back-mirror { background: rgba(244,242,236,0.85); border-color: rgba(10,10,10,0.22); color: #0a0a0a; }
   body.light .theme-btn { background: rgba(244,242,236,0.85); border-color: rgba(10,10,10,0.22); color: #0a0a0a; }
   body.light .header { border-color: rgba(10,10,10,0.1); }
-  body.light .header .kicker { color: rgba(10,10,10,0.4); }
   body.light .header h1 { color: #0a0a0a; }
-  body.light .header .sub { color: rgba(10,10,10,0.5); }
   body.light .overall { border-color: rgba(10,10,10,0.1); color: rgba(10,10,10,0.5); }
   body.light .overall .bar { background: rgba(10,10,10,0.1); }
   body.light .overall .bar-fill { background: rgba(10,10,10,0.4); }
@@ -70,27 +68,12 @@
     padding: 60px 28px 28px;
     border-bottom: 1px solid rgba(237,237,237,0.12);
   }
-  .header .kicker {
-    font-family: var(--font-mono); font-size: 10px;
-    letter-spacing: 0.22em; text-transform: uppercase;
-    color: rgba(237,237,237,0.4);
-    margin-bottom: 20px;
-  }
   .header h1 {
     font-family: var(--font-display); font-weight: 900;
     font-size: clamp(56px, 12vw, 88px);
     letter-spacing: -0.04em; line-height: 0.88;
     color: #ededed; text-transform: uppercase;
   }
-  .header .sub {
-    font-family: var(--font-editorial); font-style: italic;
-    font-weight: 700;
-    font-size: clamp(22px, 5vw, 36px);
-    line-height: 1.1;
-    color: rgba(237,237,237,0.55);
-    margin-top: 10px; letter-spacing: -0.01em;
-  }
-
   /* ── overall progress ── */
   .overall {
     display: flex; gap: 14px; align-items: center;
@@ -227,9 +210,7 @@
 <div class="wrap">
 
   <section class="header">
-    <div class="kicker">// STITCH_ENGINE &middot; CHAPTER_ARCHIVE</div>
     <h1>Chapters.</h1>
-    <p class="sub">Act by act. Read in sequence.</p>
   </section>
 
   <div class="overall">
