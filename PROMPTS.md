@@ -99,3 +99,29 @@ Two small fixes. (1) The `.nnav-links` are `justify-content: flex-end` inside a 
 **Related prompts:** 001, 002
 
 ---
+
+### 004 — Strip kickers and subtitles from novel content pages
+
+**Date:** 2026-04-20
+**Branch:** iter/001-brutalist-novel-responsive
+**Files touched:** novel-community.html, novel-media.html, novel-discussions.html
+
+**Request (verbatim):**
+> from the novel pages, remove the following lines Lore & Protocol. / Curated materials · Archives · Video logs · Schematics · Transmissions / // STITCH_ENGINE · AUTHOR_DISPATCH / // STITCH_ENGINE · VISUAL_ARCHIVE / // STITCH_ENGINE · COMMUNITY_FORUM / "The Silent Archive"
+
+**Interpretation:**
+Remove all kicker and subtitle text from three novel pages. Each page keeps its `h1` but loses the mono kicker above it and the Fraunces italic secondary heading below it. Same pattern as the chapters.html cleanup in prompt 003.
+
+**Alternatives considered but not taken:**
+- Keeping kickers as data attributes for SEO — rejected; prototype only
+
+**Changes made:**
+- novel-community.html — removed kicker, sub-head, sub lines
+- novel-media.html — removed kicker and sub lines
+- novel-discussions.html — removed kicker, forum-name, and sub lines
+
+**Spec updates:** none
+
+**Related prompts:** 001, 003
+
+---
