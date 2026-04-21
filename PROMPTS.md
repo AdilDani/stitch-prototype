@@ -150,3 +150,29 @@ Two changes across the 5 hub pages. (1) The global nav items (`BRAND · nav-item
 **Related prompts:** 001, 002
 
 ---
+
+### 006 — Hub Discussions & Media: replace book chips with Feed modal
+
+**Date:** 2026-04-21
+**Branch:** iter/001-brutalist-novel-responsive
+**Files touched:** global-discussions.html, global-media.html
+
+**Request (verbatim):**
+> go to the generalNovelSite pages. specifically the Discussions and Media pages. i want to rework how books are chosen, i dont want there to be a list of books you can press, i want there to be a "feed" button, that when pressed, opens up a modal, that has a list of all the followed books, and you can press them to toggle them on and off. for the Pressing of a book, and for the way a book looks in this modal, i want you to copy the way it is done in the Discussions page, since i think its really well done there. in the modal, i also want a "select all" button, that when pressed, becomes a "deselect all" button, its purpose is obvious. have the functionality working.
+
+**Interpretation:**
+Remove the horizontal novel-chip scrolling row from discussions and the cycling book-filter button from media. Replace both with a "FEED" button that opens a modal containing the followed-book list as full-width novel-chips (same avatar+label+active style as the existing chips in discussions). Modal includes a SELECT ALL / DESELECT ALL toggle button. Media moves from single-book cycle to multi-select Set. Both pages update filtering live as books are toggled in the modal.
+
+**Alternatives considered but not taken:**
+- Keeping chips inline and adding the modal alongside — rejected; user explicitly wants to remove the inline list
+- Dropdown instead of modal — rejected; user said modal
+
+**Changes made:**
+- global-discussions.html — remove novel-row + all chip CSS, add feed-btn + modal overlay, update JS to use empty-set = all
+- global-media.html — remove book-filter cycling button, add same feed-btn + modal, change bookFilter from single ID to Set
+
+**Spec updates:** none
+
+**Related prompts:** 005
+
+---
