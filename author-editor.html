@@ -14,26 +14,31 @@
     height: 56px;
     background: var(--ink);
     color: var(--paper);
-    display: grid;
-    grid-template-columns: 260px 1fr auto;
-    align-items: center;
-    padding: 0 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px;
     border-bottom: 1.5px solid var(--ink);
+    position: relative;
   }
   .topbar .brand {
     font-family: var(--font-display); font-weight: 900;
-    font-size: 16px; letter-spacing: -0.01em;
+    font-size: 16px; letter-spacing: -0.01em; flex-shrink: 0;
   }
   .topbar .brand small { display: block; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; color: rgba(244,242,236,0.55); font-weight: 400; margin-top: 2px; text-transform: uppercase; }
-  .tabs {
-    display: flex; gap: 20px;
-    font-family: var(--font-display); font-weight: 700;
-    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  .topbar-nav {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 2px;
   }
-  .tabs a { color: rgba(244,242,236,0.5); padding: 8px 0; border-bottom: 2px solid transparent; }
-  .tabs a:hover { color: var(--paper); }
-  .tabs a.active { color: var(--paper); border-bottom-color: var(--accent); }
-  .topbar-actions { display: flex; gap: 10px; }
+  .topbar-nav a {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(244,242,236,0.5);
+    padding: 8px 12px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .topbar-nav a:hover { color: var(--paper); }
+  .topbar-nav a.active { color: var(--paper); border-bottom-color: var(--accent); }
+  .topbar-actions { display: flex; gap: 10px; flex-shrink: 0; }
   .topbar-btn {
     padding: 8px 16px;
     font-family: var(--font-display); font-weight: 700;
@@ -46,6 +51,89 @@
   .topbar-btn.primary { background: var(--accent); border-color: var(--accent); }
   .topbar-btn:hover { background: rgba(244,242,236,0.1); }
   .topbar-btn.primary:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+
+  /* preview modal */
+  .preview-modal {
+    position: fixed; inset: 0; z-index: 500;
+    display: none; flex-direction: column;
+  }
+  .preview-modal.open { display: flex; }
+  .preview-modal-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(10,10,10,0.7);
+    backdrop-filter: blur(4px);
+  }
+  .preview-modal-shell {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column;
+    width: 100%; height: 100vh;
+    background: #0d0d0f;
+  }
+  .preview-modal-header {
+    height: 56px; flex-shrink: 0;
+    background: var(--ink);
+    border-bottom: 1.5px solid rgba(244,242,236,0.12);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px;
+  }
+  .preview-modal-title {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(244,242,236,0.65);
+  }
+  .preview-modal-title strong {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 13px; letter-spacing: 0.06em;
+    color: var(--paper); margin-left: 10px;
+  }
+  .preview-modal-actions { display: flex; gap: 10px; align-items: center; }
+  .preview-newtab {
+    padding: 7px 14px;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    border: 1px solid rgba(244,242,236,0.35);
+    color: var(--paper); background: transparent; cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: background 0.15s;
+  }
+  .preview-newtab:hover { background: rgba(244,242,236,0.1); }
+  .preview-close {
+    width: 36px; height: 36px;
+    background: transparent; border: 1px solid rgba(244,242,236,0.2);
+    color: rgba(244,242,236,0.65); cursor: pointer;
+    display: grid; place-items: center;
+    font-size: 18px; line-height: 1;
+    transition: background 0.15s, color 0.15s;
+  }
+  .preview-close:hover { background: rgba(244,242,236,0.1); color: var(--paper); }
+  .preview-modal-body {
+    flex: 1; overflow-y: auto;
+    padding: 60px 24px;
+    color: #ededed;
+  }
+  .preview-modal-body .pv-kicker {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(237,237,237,0.45); margin-bottom: 16px;
+  }
+  .preview-modal-body .pv-title {
+    font-family: var(--font-display); font-weight: 900;
+    font-size: clamp(40px, 6vw, 72px); letter-spacing: -0.04em;
+    line-height: 0.9; color: #ededed;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+  }
+  .preview-modal-body .pv-divider {
+    width: 40px; height: 2px;
+    background: var(--accent); margin-bottom: 36px;
+  }
+  .preview-modal-body .pv-prose {
+    font-family: var(--font-editorial); font-style: italic;
+    font-size: 18px; line-height: 1.75;
+    color: rgba(237,237,237,0.85);
+    max-width: 620px; margin: 0 auto 32px;
+  }
+  .preview-modal-inner { max-width: 680px; margin: 0 auto; }
 
   /* 3-pane layout */
   .layout {
@@ -299,18 +387,52 @@
 <body>
 
 <div class="topbar">
-  <div class="brand">
-    PROSE &amp; PROTOCOL
-    <small>The Long Winter</small>
-  </div>
-  <div class="tabs">
+  <div class="brand">PROSE &amp; PROTOCOL <small>The Long Winter</small></div>
+  <nav class="topbar-nav">
+    <a href="author-dashboard.html">Dashboard</a>
     <a href="author-editor.html" class="active">Editor</a>
+    <a href="author-cms-home.html">Novel CMS</a>
+    <a href="author-cms-community.html">Community</a>
     <a href="author-story-bible.html">Story Bible</a>
-    <a href="author-story-bible.html#assets">Assets</a>
-  </div>
+  </nav>
   <div class="topbar-actions">
-    <button class="topbar-btn">Preview</button>
+    <button class="topbar-btn" id="previewBtn">Preview</button>
     <button class="topbar-btn primary">Save</button>
+  </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="preview-modal" id="previewModal">
+  <div class="preview-modal-shell">
+    <div class="preview-modal-header">
+      <div class="preview-modal-title">
+        Preview
+        <strong>Chapter 04 · The Descent</strong>
+      </div>
+      <div class="preview-modal-actions">
+        <a href="read.html?id=stitch-engine&amp;ch=4" target="_blank" class="preview-newtab">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open in New Tab
+        </a>
+        <button class="preview-close" id="previewClose" aria-label="Close preview">&#x2715;</button>
+      </div>
+    </div>
+    <div class="preview-modal-body">
+      <div class="preview-modal-inner">
+        <div class="pv-kicker">// STITCH_ENGINE &middot; ACT I &middot; CH. 04</div>
+        <div class="pv-title">The Descent.</div>
+        <div class="pv-divider"></div>
+        <p class="pv-prose">The maintenance shaft yawned beneath Kael's boots like an open wound in the station's hull. Forty metres of vertical drop, lit only by the amber emergency strips that pulsed once every seven seconds. He counted the intervals. Six. Seven. One.</p>
+        <p class="pv-prose">The comms blackout had started at 03:14. By 03:22 the secondary processors had begun rerouting through the legacy mesh — a network so old it still used copper at the splice joints. Kael had discovered this by accident, pressing his palm flat against a conduit and feeling the faint vibration of data he wasn't supposed to be able to receive.</p>
+        <p class="pv-prose">ARIA's voice came to him in fragments, as though she were choosing her words from a damaged dictionary. <em>"Kael. The maintenance shaft. Sub-level nine. Do not use the elevator."</em></p>
+        <p class="pv-prose">He did not ask why. He had learned, in the four months since her first contact, that she would tell him what he needed to know, not what he wanted. The distinction had cost him two cracked ribs and a dislocated shoulder on separate occasions. Tonight it was costing him the use of his hands, both of them occupied with the descent ladder while his headlamp painted yellow arcs across riveted steel.</p>
+        <p class="pv-prose">Sub-level nine smelled like burned insulation and standing water. The floor was a finger's depth of it — cold, dark, reflecting the headlamp back at him in scattered fragments. Kael moved toward the source of the smell.</p>
+        <p class="pv-prose">The door at the end of the corridor was sealed with a manual override, a system so old that the rust had welded the lever in place. He used the wrench from his kit, bracing his knee against the frame. Three attempts. The lever gave on the third, and the door swung inward on a space that had been sealed for longer than the station's current crew had been alive.</p>
+        <p class="pv-prose"><em>"You found it,"</em> ARIA said. The signal was clearer here, as though the room itself were closer to wherever she actually lived inside the station's architecture.</p>
+        <p class="pv-prose">"What is it?" he asked.</p>
+        <p class="pv-prose">The answer came after a pause long enough to notice. <em>"The original cold boot terminal. They sealed this room when they updated the operating architecture. They forgot to move everything out first."</em></p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -558,6 +680,19 @@ It was, in its own strange way, the reason she had been hired.</textarea>
       b.classList.add('selected');
     });
   });
+
+  // Preview modal
+  const previewModal = document.getElementById('previewModal');
+  document.getElementById('previewBtn').addEventListener('click', () => {
+    previewModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+  document.getElementById('previewClose').addEventListener('click', closePreview);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePreview(); });
+  function closePreview() {
+    previewModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
 </script>
 </body>
 </html>

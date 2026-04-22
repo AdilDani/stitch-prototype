@@ -176,3 +176,32 @@ Remove the horizontal novel-chip scrolling row from discussions and the cycling 
 **Related prompts:** 005
 
 ---
+
+### 007 — Director's Suite unified navbar + editor preview modal
+
+**Date:** 2026-04-22
+**Branch:** iter/001-brutalist-novel-responsive
+**Files touched:** author-dashboard.html, author-editor.html, author-cms-home.html, author-cms-community.html, author-story-bible.html
+
+**Request (verbatim):**
+> go through the directors suite sites, they should have a unified navbar, they currently dont. they should be able to navigate between all directors suite page. the nav bar needs to be centered of course. for a better UX, pressing preview in the chapter editor page shouldnt take you to another page, it should instead open a modal, that spans the height of the entire page, and that is closable, and that has a "open in new tab" button, that will actually end up opening the chapter link in a new tab
+
+**Interpretation:**
+Two changes. (1) All 5 Director's Suite pages get a unified topbar with the brand left, five nav links centered (DASHBOARD / EDITOR / NOVEL CMS / COMMUNITY / STORY BIBLE) with active state per page, and page-specific action buttons right. The dashboard currently uses a sidebar for navigation — the sidebar nav links are removed, the topbar is added spanning both grid columns. (2) The "Preview" button in author-editor.html opens a full-viewport-height modal overlay instead of navigating away. The modal has a header bar with a close button and "OPEN IN NEW TAB" link, and renders a reader-style preview of the current chapter content.
+
+**Alternatives considered but not taken:**
+- Keeping the dashboard sidebar as primary nav and adding topbar as secondary — redundant duplication of nav
+- Using an iframe in the preview modal pointing to read.html — iframe cross-navigation would lose the mock content; a rendered preview panel is cleaner for the prototype
+
+**Changes made:**
+- author-dashboard.html — add topbar (spanning sidebar+main columns), remove side-nav from sidebar, adjust grid to grid-template-rows: 56px 1fr, update sidebar sticky height
+- author-editor.html — replace .tabs with .topbar-nav centered nav, add preview modal HTML/CSS/JS
+- author-cms-home.html — replace .crumbs with .topbar-nav, switch topbar to flex layout
+- author-cms-community.html — replace .crumbs with .topbar-nav, switch topbar to flex layout
+- author-story-bible.html — replace .crumbs with .topbar-nav, switch topbar to flex layout
+
+**Spec updates:** none
+
+**Related prompts:** none
+
+---
