@@ -147,33 +147,102 @@
     background: var(--paper-2);
     border-right: 1.5px solid var(--ink);
     overflow-y: auto;
+    display: flex; flex-direction: column;
   }
-  .chap-head {
-    padding: 16px 18px;
+  .chap-list-head {
+    padding: 14px 16px;
     font-family: var(--font-display); font-weight: 900;
-    font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase;
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
     border-bottom: 1.5px solid var(--ink);
-    display: flex; justify-content: space-between; align-items: center;
     background: var(--paper);
+    flex-shrink: 0;
+    color: var(--muted);
   }
-  .chap-head .add {
-    width: 24px; height: 24px;
-    background: var(--ink); color: var(--paper);
-    display: grid; place-items: center;
+
+  /* act groups */
+  .act-group { border-bottom: 1px solid var(--line-strong); }
+  .act-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 12px 9px 10px;
     cursor: pointer;
+    background: var(--paper);
+    user-select: none;
+    transition: background 0.12s;
   }
+  .act-header:hover { background: var(--paper-2); }
+  .act-left { display: flex; align-items: center; gap: 7px; min-width: 0; }
+  .act-chevron {
+    flex-shrink: 0;
+    width: 14px; height: 14px;
+    display: grid; place-items: center;
+    color: var(--muted-2);
+    transition: transform 0.15s;
+  }
+  .act-chevron svg { display: block; }
+  .act-group.open .act-chevron { transform: rotate(90deg); }
+  .act-label { min-width: 0; }
+  .act-num {
+    display: block;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted-2);
+  }
+  .act-name {
+    display: block;
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--ink); line-height: 1.1; margin-top: 1px;
+  }
+  .act-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .act-count {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.1em; color: var(--muted-2);
+    text-transform: uppercase;
+  }
+  .act-add-ch {
+    width: 20px; height: 20px;
+    background: transparent; border: 1px solid var(--line-strong);
+    color: var(--muted); font-size: 15px; line-height: 1;
+    cursor: pointer; display: grid; place-items: center;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+    flex-shrink: 0;
+  }
+  .act-add-ch:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .act-chapters {
+    display: none;
+    border-top: 1px solid var(--line);
+  }
+  .act-group.open .act-chapters { display: block; }
+
+  /* chapter items */
   .chap-item {
-    padding: 14px 18px;
+    padding: 11px 14px 11px 22px;
     border-bottom: 1px solid var(--line);
     cursor: pointer;
+    transition: background 0.1s;
   }
+  .chap-item:last-child { border-bottom: none; }
   .chap-item:hover { background: var(--paper); }
-  .chap-item.active { background: var(--ink); color: var(--paper); border-left: 3px solid var(--accent); padding-left: 15px; }
+  .chap-item.active { background: var(--ink); color: var(--paper); border-left: 3px solid var(--accent); padding-left: 19px; }
   .chap-item .n { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--muted); }
   .chap-item.active .n { color: rgba(244,242,236,0.55); }
-  .chap-item .t { font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: -0.01em; line-height: 1.2; margin-top: 2px; }
+  .chap-item .t { font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: -0.01em; line-height: 1.2; margin-top: 2px; }
   .chap-item .status { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: 0.1em; margin-top: 4px; text-transform: uppercase; }
   .chap-item.active .status { color: rgba(244,242,236,0.6); }
+
+  /* add act footer */
+  .chap-list-foot { padding: 10px 12px; flex-shrink: 0; }
+  .add-act-btn {
+    width: 100%; padding: 8px 12px;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    border: 1px dashed var(--line-strong);
+    background: transparent; color: var(--muted);
+    cursor: pointer; text-align: left;
+    display: flex; align-items: center; gap: 6px;
+    transition: background 0.12s, color 0.12s;
+  }
+  .add-act-btn:hover { background: var(--paper); color: var(--ink); border-style: solid; }
 
   /* center: editor */
   .editor {
@@ -438,35 +507,75 @@
 
 <div class="layout">
 
-  <aside class="chap-list">
-    <div class="chap-head">
-      <span>Chapters</span>
-      <div class="add"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+  <aside class="chap-list" id="chapList">
+    <div class="chap-list-head">Acts &amp; Chapters</div>
+
+    <div class="act-group" data-act="1">
+      <div class="act-header">
+        <div class="act-left">
+          <div class="act-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+          <div class="act-label">
+            <span class="act-num">Act I</span>
+            <span class="act-name">Frost</span>
+          </div>
+        </div>
+        <div class="act-right">
+          <span class="act-count">3 CH</span>
+          <button class="act-add-ch" title="Add chapter to Act I">+</button>
+        </div>
+      </div>
+      <div class="act-chapters">
+        <div class="chap-item">
+          <div class="n">CH. 01</div>
+          <div class="t">First Frost</div>
+          <div class="status">Published · 2 weeks ago</div>
+        </div>
+        <div class="chap-item">
+          <div class="n">CH. 02</div>
+          <div class="t">Cold Lattice</div>
+          <div class="status">Published · 12 days ago</div>
+        </div>
+        <div class="chap-item">
+          <div class="n">CH. 03</div>
+          <div class="t">The Tower Replies</div>
+          <div class="status">Published · 9 days ago</div>
+        </div>
+      </div>
     </div>
-    <div class="chap-item">
-      <div class="n">CH. 01</div>
-      <div class="t">First Frost</div>
-      <div class="status">Published · 2 weeks ago</div>
+
+    <div class="act-group open" data-act="2">
+      <div class="act-header">
+        <div class="act-left">
+          <div class="act-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+          <div class="act-label">
+            <span class="act-num">Act II</span>
+            <span class="act-name">Descent</span>
+          </div>
+        </div>
+        <div class="act-right">
+          <span class="act-count">2 CH</span>
+          <button class="act-add-ch" title="Add chapter to Act II">+</button>
+        </div>
+      </div>
+      <div class="act-chapters">
+        <div class="chap-item active">
+          <div class="n">CH. 04</div>
+          <div class="t">The Descent</div>
+          <div class="status">Editing · 3 blocks</div>
+        </div>
+        <div class="chap-item">
+          <div class="n">CH. 05</div>
+          <div class="t">Untitled</div>
+          <div class="status">Draft · 0 blocks</div>
+        </div>
+      </div>
     </div>
-    <div class="chap-item">
-      <div class="n">CH. 02</div>
-      <div class="t">Cold Lattice</div>
-      <div class="status">Published · 12 days ago</div>
-    </div>
-    <div class="chap-item">
-      <div class="n">CH. 03</div>
-      <div class="t">The Tower Replies</div>
-      <div class="status">Published · 9 days ago</div>
-    </div>
-    <div class="chap-item active">
-      <div class="n">CH. 04</div>
-      <div class="t">The Descent</div>
-      <div class="status">Editing · 3 blocks</div>
-    </div>
-    <div class="chap-item">
-      <div class="n">CH. 05</div>
-      <div class="t">Untitled</div>
-      <div class="status">Draft · 0 blocks</div>
+
+    <div class="chap-list-foot">
+      <button class="add-act-btn" id="addActBtn">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Act
+      </button>
     </div>
   </aside>
 
@@ -693,6 +802,68 @@ It was, in its own strange way, the reason she had been hired.</textarea>
     previewModal.classList.remove('open');
     document.body.style.overflow = '';
   }
+
+  // Act/chapter panel
+  const chapList = document.getElementById('chapList');
+  let nextChNum = 6;
+  let nextActNum = 3;
+  const actNames = ['Convergence', 'Fracture', 'Reckoning', 'Silence', 'Epilogue'];
+
+  // Toggle act collapse/expand — ignore clicks on the + button
+  chapList.addEventListener('click', function(e) {
+    const addBtn = e.target.closest('.act-add-ch');
+    const header = e.target.closest('.act-header');
+    if (addBtn) {
+      e.stopPropagation();
+      addChapterToAct(addBtn.closest('.act-group'));
+      return;
+    }
+    if (header) {
+      header.closest('.act-group').classList.toggle('open');
+    }
+  });
+
+  function updateActCount(actGroup) {
+    const count = actGroup.querySelectorAll('.chap-item').length;
+    actGroup.querySelector('.act-count').textContent = count + ' CH';
+  }
+
+  function addChapterToAct(actGroup) {
+    const chapters = actGroup.querySelector('.act-chapters');
+    const item = document.createElement('div');
+    item.className = 'chap-item';
+    item.innerHTML = `<div class="n">CH. ${String(nextChNum++).padStart(2,'0')}</div><div class="t">Untitled</div><div class="status">Draft · 0 blocks</div>`;
+    chapters.appendChild(item);
+    updateActCount(actGroup);
+    actGroup.classList.add('open');
+  }
+
+  document.getElementById('addActBtn').addEventListener('click', function() {
+    const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X'];
+    const actNum = nextActNum++;
+    const name = actNames[(actNum - 1) % actNames.length];
+    const roman = romanNumerals[(actNum - 1) % romanNumerals.length] || actNum;
+    const foot = chapList.querySelector('.chap-list-foot');
+    const group = document.createElement('div');
+    group.className = 'act-group';
+    group.dataset.act = actNum;
+    group.innerHTML = `
+      <div class="act-header">
+        <div class="act-left">
+          <div class="act-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+          <div class="act-label">
+            <span class="act-num">Act ${roman}</span>
+            <span class="act-name">${name}</span>
+          </div>
+        </div>
+        <div class="act-right">
+          <span class="act-count">0 CH</span>
+          <button class="act-add-ch" title="Add chapter">+</button>
+        </div>
+      </div>
+      <div class="act-chapters"></div>`;
+    chapList.insertBefore(group, foot);
+  });
 </script>
 </body>
 </html>

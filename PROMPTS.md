@@ -205,3 +205,27 @@ Two changes. (1) All 5 Director's Suite pages get a unified topbar with the bran
 **Related prompts:** none
 
 ---
+
+### 008 — Editor chapters panel: act-grouped collapsible list
+
+**Date:** 2026-04-22
+**Branch:** iter/001-brutalist-novel-responsive
+**Files touched:** author-editor.html
+
+**Request (verbatim):**
+> the author editor page, in the leftmost column, the chapters should be grouped in acts, that are all collapsed by default, and that can be pressed so that all the chapters in it are shown, each act has a + button to add a chapter, and the total list of acts has a + button to add an act
+
+**Interpretation:**
+Replace the flat chapter list with collapsible act groups. Two acts for The Long Winter: Act I (Frost, CH. 01–03 published) and Act II (Descent, CH. 04–05 — the active chapter's act opens by default). Each act header is clickable to collapse/expand its chapters, has a chapter count label, and a + button to append a new draft chapter. A footer + button adds a new act. All acts start collapsed except the one containing the active chapter.
+
+**Alternatives considered but not taken:**
+- All acts open by default — rejected; user asked for collapsed by default
+
+**Changes made:**
+- author-editor.html — new act-group CSS, replaced flat .chap-item list with two .act-group containers, added JS for toggle/add-chapter/add-act
+
+**Spec updates:** none
+
+**Related prompts:** 007
+
+---
