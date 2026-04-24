@@ -472,6 +472,7 @@
 
 <!-- Preview Modal -->
 <div class="preview-modal" id="previewModal">
+  <div class="preview-modal-backdrop" id="previewBackdrop"></div>
   <div class="preview-modal-shell">
     <div class="preview-modal-header">
       <div class="preview-modal-title">
@@ -797,6 +798,7 @@ It was, in its own strange way, the reason she had been hired.</textarea>
     document.body.style.overflow = 'hidden';
   });
   document.getElementById('previewClose').addEventListener('click', closePreview);
+  document.getElementById('previewBackdrop').addEventListener('click', closePreview);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closePreview(); });
   function closePreview() {
     previewModal.classList.remove('open');
