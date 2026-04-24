@@ -254,3 +254,28 @@ The preview modal shell currently spans 100% width with a solid `#0d0d0f` backgr
 **Related prompts:** 007
 
 ---
+
+### 010 — Editor blocks: clean borders, markdown toolbar, X delete
+
+**Date:** 2026-04-24
+**Branch:** main
+**Files touched:** author-editor.html
+
+**Request (verbatim):**
+> in the author editor page, the blocks in the middle of the page, should be fully displayed, meaning there should not be a scrollbar. they should also have the "block X text block/image block" and any text in its border should get removed, so the split merge delete, as well as the replace for images should get removed. the text blocks should have the markdown mode styling options, and all blocks should have small x on the top right of the block, the x will be on the block, and not a on a border of the block, meaning the block's border should be just a line, and not have a large width that contains elements
+
+**Interpretation:**
+Remove the `block-head` bar entirely from all blocks — no label, no tools (Split/Merge/Delete/Replace). The block border becomes a simple thin line. Add a small, lightweight markdown formatting toolbar inside each text block (B, I, H1, H2, quote, code). Add a small absolute-positioned X button on the top-right of every block (visible on hover). Auto-resize textareas so they expand to their content with no internal scrollbar.
+
+**Alternatives considered but not taken:**
+- Keeping block-head but making it thinner — user specifically said the border should just be a line, no thick header containing elements
+- Putting the X on the border itself — user explicitly said the X should be on the block content, not the border
+
+**Changes made:**
+- author-editor.html — remove .block-head CSS and HTML; add .block-close absolute button; add .block-toolbar markdown formatting row for text blocks; auto-resize textareas via JS; add delete block handler
+
+**Spec updates:** none
+
+**Related prompts:** none
+
+---

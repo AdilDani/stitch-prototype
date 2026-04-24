@@ -279,38 +279,66 @@
   }
   .block:hover { border-color: var(--ink); }
   .block.selected { border-color: var(--ink); box-shadow: 4px 4px 0 var(--accent); }
-  .block-head {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 14px;
+
+  /* X delete button — absolute, visible on hover */
+  .block-close {
+    position: absolute;
+    top: 7px; right: 8px;
+    width: 18px; height: 18px;
+    background: var(--paper-2);
+    border: 1px solid var(--line-strong);
+    color: var(--muted-2);
+    cursor: pointer;
+    display: grid; place-items: center;
+    font-size: 11px; line-height: 1;
+    opacity: 0;
+    transition: opacity 0.1s, color 0.1s, background 0.1s, border-color 0.1s;
+    z-index: 2;
+  }
+  .block:hover .block-close,
+  .block.selected .block-close { opacity: 1; }
+  .block-close:hover { color: var(--accent); border-color: var(--accent); background: var(--paper); }
+
+  /* markdown toolbar for text blocks */
+  .block-toolbar {
+    display: flex; align-items: center; gap: 1px;
+    padding: 5px 32px 5px 10px;
     border-bottom: 1px solid var(--line);
     background: var(--paper-2);
+  }
+  .block-toolbar button {
+    padding: 2px 7px;
     font-family: var(--font-mono); font-size: 10px;
-    letter-spacing: 0.14em; text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border: 1px solid transparent;
+    background: transparent;
     color: var(--muted);
-  }
-  .block-head .btag {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-weight: 700; color: var(--ink);
-  }
-  .block-head .btag .dot { width: 8px; height: 8px; background: var(--accent); }
-  .block-head .tools { display: flex; gap: 4px; }
-  .block-head .tools button {
-    padding: 3px 8px;
-    font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    border: 1px solid var(--line-strong);
-    background: var(--paper);
     cursor: pointer;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+    line-height: 1.4;
   }
-  .block-head .tools button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-  .block-body { padding: 16px 18px; }
+  .block-toolbar button:hover {
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--line-strong);
+  }
+  .block-toolbar .tb-sep {
+    width: 1px; height: 14px;
+    background: var(--line-strong);
+    margin: 0 4px;
+    flex-shrink: 0;
+  }
+
+  .block-body { padding: 14px 16px; }
   .block-body textarea {
     width: 100%;
     border: none; outline: none; background: transparent;
     font-family: var(--font-editorial);
     font-size: 17px; line-height: 1.6; color: var(--ink);
-    resize: vertical;
-    min-height: 80px;
+    resize: none;
+    overflow: hidden;
+    min-height: 60px;
+    display: block;
   }
 
   .block.splash .block-body { padding: 0; }
@@ -593,13 +621,18 @@
     </div>
 
     <div class="block selected" data-block="1">
-      <div class="block-head">
-        <span class="btag"><span class="dot"></span>BLOCK 1 · TEXT</span>
-        <div class="tools">
-          <button>Split</button>
-          <button>Merge</button>
-          <button>Delete</button>
-        </div>
+      <button class="block-close" title="Delete block">&#x2715;</button>
+      <div class="block-toolbar">
+        <button data-cmd="bold"><b>B</b></button>
+        <button data-cmd="italic"><em>I</em></button>
+        <div class="tb-sep"></div>
+        <button data-cmd="h1">H1</button>
+        <button data-cmd="h2">H2</button>
+        <div class="tb-sep"></div>
+        <button data-cmd="quote">&ldquo;</button>
+        <button data-cmd="code">&#96;&#96;</button>
+        <div class="tb-sep"></div>
+        <button data-cmd="hr">&#8212;</button>
       </div>
       <div class="block-body">
         <textarea>Iris stood at the edge of the platform, listening. The Citadel was quieter than it had any right to be — she had grown up with the drone of the trans-sector rail, the pumps, the vents. Here, four thousand meters above the grid, there was nothing. Not even wind.
@@ -609,13 +642,7 @@ She walked, each footstep producing a sound that seemed to exist only in her own
     </div>
 
     <div class="block splash" data-block="2">
-      <div class="block-head">
-        <span class="btag"><span class="dot"></span>BLOCK 2 · SPLASH ART</span>
-        <div class="tools">
-          <button>Replace</button>
-          <button>Delete</button>
-        </div>
-      </div>
+      <button class="block-close" title="Delete block">&#x2715;</button>
       <div class="block-body">
         <div class="preview">
           <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
@@ -630,13 +657,18 @@ She walked, each footstep producing a sound that seemed to exist only in her own
     </div>
 
     <div class="block" data-block="3">
-      <div class="block-head">
-        <span class="btag"><span class="dot"></span>BLOCK 3 · TEXT</span>
-        <div class="tools">
-          <button>Split</button>
-          <button>Merge</button>
-          <button>Delete</button>
-        </div>
+      <button class="block-close" title="Delete block">&#x2715;</button>
+      <div class="block-toolbar">
+        <button data-cmd="bold"><b>B</b></button>
+        <button data-cmd="italic"><em>I</em></button>
+        <div class="tb-sep"></div>
+        <button data-cmd="h1">H1</button>
+        <button data-cmd="h2">H2</button>
+        <div class="tb-sep"></div>
+        <button data-cmd="quote">&ldquo;</button>
+        <button data-cmd="code">&#96;&#96;</button>
+        <div class="tb-sep"></div>
+        <button data-cmd="hr">&#8212;</button>
       </div>
       <div class="block-body">
         <textarea>She stopped at the rail. The city below was a quilt of lights, seamed and re-seamed, patched where the old infrastructure had refused to speak to the new. She could see the seams from here. She could always see the seams.
@@ -645,7 +677,7 @@ It was, in its own strange way, the reason she had been hired.</textarea>
       </div>
     </div>
 
-    <button class="add-block">+ Add new block</button>
+    <button class="add-block" id="addBlockBtn">+ Add new block</button>
 
   </main>
 
@@ -783,12 +815,66 @@ It was, in its own strange way, the reason she had been hired.</textarea>
   drawEnvelope();
   [peakInput, spreadInput, piInput].forEach(el => el.addEventListener('input', drawEnvelope));
 
+  // auto-resize textareas
+  function autoResize(ta) {
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+  }
+  document.querySelectorAll('.block-body textarea').forEach(ta => {
+    autoResize(ta);
+    ta.addEventListener('input', () => autoResize(ta));
+  });
+
+  // markdown toolbar insertion
+  const MD = {
+    bold:  { wrap: ['**', '**'],       fallback: '**bold text**' },
+    italic:{ wrap: ['*', '*'],          fallback: '*italic text*' },
+    h1:    { prefix: '# ',             fallback: '# Heading' },
+    h2:    { prefix: '## ',            fallback: '## Heading' },
+    quote: { prefix: '> ',             fallback: '> Quoted text' },
+    code:  { wrap: ['`', '`'],         fallback: '`code`' },
+    hr:    { insert: '\n\n---\n\n',    fallback: null },
+  };
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.block-toolbar [data-cmd]');
+    if (!btn) return;
+    const cmd = btn.dataset.cmd;
+    const ta = btn.closest('.block').querySelector('textarea');
+    if (!ta) return;
+    const rule = MD[cmd];
+    const start = ta.selectionStart, end = ta.selectionEnd;
+    const sel = ta.value.slice(start, end);
+    let replacement;
+    if (rule.insert) {
+      replacement = rule.insert;
+      ta.value = ta.value.slice(0, start) + replacement + ta.value.slice(end);
+    } else if (rule.wrap) {
+      replacement = sel ? rule.wrap[0] + sel + rule.wrap[1] : rule.fallback;
+      ta.value = ta.value.slice(0, start) + replacement + ta.value.slice(end);
+    } else if (rule.prefix) {
+      const lineStart = ta.value.lastIndexOf('\n', start - 1) + 1;
+      ta.value = ta.value.slice(0, lineStart) + rule.prefix + ta.value.slice(lineStart);
+    }
+    autoResize(ta);
+    ta.focus();
+  });
+
+  // delete block via X button
+  document.addEventListener('click', e => {
+    const closeBtn = e.target.closest('.block-close');
+    if (!closeBtn) return;
+    e.stopPropagation();
+    const block = closeBtn.closest('.block');
+    if (block) block.remove();
+  });
+
   // block selection
-  document.querySelectorAll('.block').forEach(b => {
-    b.addEventListener('click', () => {
-      document.querySelectorAll('.block').forEach(x => x.classList.remove('selected'));
-      b.classList.add('selected');
-    });
+  document.addEventListener('click', e => {
+    const block = e.target.closest('.block');
+    if (!block) return;
+    if (e.target.closest('.block-close') || e.target.closest('.block-toolbar')) return;
+    document.querySelectorAll('.block').forEach(x => x.classList.remove('selected'));
+    block.classList.add('selected');
   });
 
   // Preview modal
@@ -839,6 +925,38 @@ It was, in its own strange way, the reason she had been hired.</textarea>
     updateActCount(actGroup);
     actGroup.classList.add('open');
   }
+
+  // add new text block
+  let nextBlockNum = 4;
+  document.getElementById('addBlockBtn').addEventListener('click', function() {
+    const toolbarHTML = `
+      <div class="block-toolbar">
+        <button data-cmd="bold"><b>B</b></button>
+        <button data-cmd="italic"><em>I</em></button>
+        <div class="tb-sep"></div>
+        <button data-cmd="h1">H1</button>
+        <button data-cmd="h2">H2</button>
+        <div class="tb-sep"></div>
+        <button data-cmd="quote">&ldquo;</button>
+        <button data-cmd="code">&#96;&#96;</button>
+        <div class="tb-sep"></div>
+        <button data-cmd="hr">&#8212;</button>
+      </div>`;
+    const block = document.createElement('div');
+    block.className = 'block';
+    block.dataset.block = nextBlockNum++;
+    block.innerHTML = `
+      <button class="block-close" title="Delete block">&#x2715;</button>
+      ${toolbarHTML}
+      <div class="block-body"><textarea placeholder="Start writing..."></textarea></div>`;
+    this.before(block);
+    const ta = block.querySelector('textarea');
+    autoResize(ta);
+    ta.addEventListener('input', () => autoResize(ta));
+    ta.focus();
+    document.querySelectorAll('.block').forEach(x => x.classList.remove('selected'));
+    block.classList.add('selected');
+  });
 
   document.getElementById('addActBtn').addEventListener('click', function() {
     const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X'];
