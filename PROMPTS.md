@@ -304,3 +304,28 @@ Replace the old "+ Add new block" button with hoverable insert zones that appear
 **Related prompts:** 010
 
 ---
+
+### 012 — Audio maps list in properties, act inline naming
+
+**Date:** 2026-04-24
+**Branch:** main
+**Files touched:** author-editor.html
+
+**Request (verbatim):**
+> when no blocks are selected, the properties panel should show the "audio maps" as a list, you can press an "add audio map" button. each map, when pressed, drops down its own thingies that are modifiable. so that would be the audio curve, start component, end component. and the "music file" property, it has a pencil button on the right, that when pressed, has you choose an audio file from your file system, the adding of a file checks the validity of the extension. if no music file is chosen, an audio map defaults to showing the pen in the middle, with the text "Add a song". the Acts list in the same page, each act should be nameable, even the word "act 1" should be editable, meaning that by default an act's name is the name, if the author wants the display for the act to be "Act 1 : Beginnings" then they can name it that themselves. quickly double clicking an act name makes the name editable (make sure that double clicking doesnt just open and close the act though). the act name now is no longer "act 1" and "the long winter" in 2 different levels, but it is now a full name. you can keep the grey name above each act name, but it should just show the number now.
+
+**Interpretation:**
+Move the static AUDIO MAP section from the inspector into a dynamic audio maps list rendered in the properties panel's no-selection state. Each map collapses/expands on click. File picker with audio extension validation (.mp3, .wav, .ogg, .flac, .aac, .m4a); empty state shows pencil + "Add a song". Acts get a single editable full name (e.g. "Act I — Frost"); the grey label above shows just the roman numeral. Double-click-to-edit uses a 220ms click timer to distinguish single-click (toggle) from double-click (edit inline).
+
+**Alternatives considered but not taken:**
+- Using native dblclick event — two preceding clicks both fire the toggle handler; timer approach is cleaner
+- Keeping audio maps in a fixed position below block properties — makes no-selection state feel dead/empty
+
+**Changes made:**
+- author-editor.html — drawEnvelope refactored to drawMapEnvelope(id, peak, spread, peakPar); audioMaps data array; renderAudioMapsPanel(); act label structure simplified to full name + numeral; act inline edit via double-click timer
+
+**Spec updates:** none
+
+**Related prompts:** 010, 011
+
+---

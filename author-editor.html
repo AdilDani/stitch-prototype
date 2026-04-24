@@ -192,6 +192,16 @@
     font-family: var(--font-display); font-weight: 800;
     font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
     color: var(--ink); line-height: 1.1; margin-top: 1px;
+    cursor: text;
+  }
+  .act-name-input {
+    display: block; width: 100%;
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--ink); line-height: 1.1; margin-top: 1px;
+    border: 1px solid var(--accent);
+    background: rgba(209,72,41,0.05);
+    outline: none; padding: 0 3px;
   }
   .act-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
   .act-count {
@@ -451,6 +461,134 @@
   }
   .iz-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
+  /* audio maps panel */
+  .maps-panel-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .maps-panel-head h4 { margin-bottom: 0 !important; }
+  .add-map-btn {
+    padding: 4px 10px;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    border: 1px solid var(--line-strong);
+    background: var(--paper); color: var(--muted);
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+  }
+  .add-map-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  .map-item { border-bottom: 1px solid var(--line); }
+  .map-item-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 14px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.1s;
+  }
+  .map-item-head:hover { background: var(--paper-3); }
+  .map-item-label { display: flex; align-items: center; gap: 7px; min-width: 0; }
+  .map-dot { width: 6px; height: 6px; background: var(--accent); flex-shrink: 0; }
+  .map-name {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .map-item-right { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+  .map-file-badge {
+    font-family: var(--font-mono); font-size: 9px;
+    color: var(--muted-2); letter-spacing: 0.04em;
+    max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .map-chevron {
+    background: transparent; border: none; padding: 0;
+    color: var(--muted-2); cursor: pointer;
+    font-size: 10px; line-height: 1;
+    transition: transform 0.15s, color 0.12s;
+    display: grid; place-items: center; width: 16px; height: 16px;
+  }
+  .map-item.open .map-chevron { transform: rotate(180deg); color: var(--ink); }
+  .map-del-btn {
+    background: transparent; border: none; padding: 0;
+    color: var(--muted-2); cursor: pointer; font-size: 14px; line-height: 1;
+    display: grid; place-items: center; width: 16px; height: 16px;
+    transition: color 0.1s;
+  }
+  .map-del-btn:hover { color: var(--accent); }
+
+  .map-body { display: none; padding: 10px 14px 14px; background: var(--paper-2); }
+  .map-item.open .map-body { display: block; }
+
+  .map-file-area {
+    position: relative;
+    background: var(--ink);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 9px;
+    padding: 9px 38px 9px 10px;
+    min-height: 42px;
+  }
+  .map-file-area.empty {
+    justify-content: center; flex-direction: column;
+    min-height: 60px; padding: 12px 38px;
+    gap: 5px;
+  }
+  .map-no-track {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    pointer-events: none;
+  }
+  .map-no-track svg { color: rgba(244,242,236,0.2); }
+  .map-no-track span {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(244,242,236,0.28);
+  }
+  .map-track-icon { flex-shrink: 0; color: rgba(244,242,236,0.45); }
+  .map-track-name {
+    flex: 1; min-width: 0;
+    font-family: var(--font-mono); font-size: 10px;
+    color: rgba(244,242,236,0.8); letter-spacing: 0.05em;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .map-file-pencil {
+    position: absolute; right: 7px; top: 50%; transform: translateY(-50%);
+    width: 22px; height: 22px;
+    background: transparent; border: 1px solid rgba(244,242,236,0.18);
+    color: rgba(244,242,236,0.45); cursor: pointer;
+    display: grid; place-items: center;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+  }
+  .map-file-pencil:hover { background: rgba(244,242,236,0.08); color: rgba(244,242,236,0.9); border-color: rgba(244,242,236,0.4); }
+  .map-file-error {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent); padding: 4px 0 0;
+  }
+
+  .map-range-row {
+    display: flex; align-items: flex-end; gap: 8px;
+    margin-bottom: 12px;
+  }
+  .map-range-field { flex: 1; }
+  .map-range-field label {
+    display: block;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 4px;
+  }
+  .map-range-sep {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--muted-2); padding-bottom: 7px;
+  }
+  .field-num {
+    width: 100%;
+    padding: 5px 8px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    font-family: var(--font-mono); font-size: 12px;
+    outline: none; text-align: center;
+  }
+
   /* inspector dynamic states */
   .insp-empty-state {
     padding: 28px 18px;
@@ -650,8 +788,8 @@
         <div class="act-left">
           <div class="act-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
           <div class="act-label">
-            <span class="act-num">Act I</span>
-            <span class="act-name">Frost</span>
+            <span class="act-num">I</span>
+            <span class="act-name">Act I — Frost</span>
           </div>
         </div>
         <div class="act-right">
@@ -683,8 +821,8 @@
         <div class="act-left">
           <div class="act-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
           <div class="act-label">
-            <span class="act-num">Act II</span>
-            <span class="act-name">Descent</span>
+            <span class="act-num">II</span>
+            <span class="act-name">Act II — Descent</span>
           </div>
         </div>
         <div class="act-right">
@@ -796,108 +934,213 @@ It was, in its own strange way, the reason she had been hired.</textarea>
       <div class="insp-empty-state">No block selected</div>
     </div>
 
-    <section class="insp-sec">
-      <h4>AUDIO MAP · CHAPTER 04</h4>
-      <div class="asset-row">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
-        <div class="name">winter-drone-v2.wav</div>
-        <button class="change-btn">Change</button>
-      </div>
-
-      <div class="envelope">
-        <svg id="env" viewBox="0 0 300 120" preserveAspectRatio="none"></svg>
-        <div class="readout">ARRAY · <b id="arr">[0.2, 0.6, 1.0, 0.6, 0.2]</b></div>
-      </div>
-
-      <div class="slider-row">
-        <span class="lbl">Peak vol</span>
-        <input type="range" id="peak" min="0" max="1" step="0.01" value="0.85">
-        <span class="val" id="peak-v">0.85</span>
-      </div>
-      <div class="slider-row">
-        <span class="lbl">Peak ¶</span>
-        <input type="number" id="pi" min="1" max="52" value="14">
-      </div>
-      <div class="slider-row">
-        <span class="lbl">Spread</span>
-        <input type="range" id="spread" min="2" max="30" step="1" value="12">
-        <span class="val" id="spread-v">12</span>
-      </div>
-      <div class="spread-label"><span>Tight focus</span><span>Slow build</span></div>
-    </section>
   </aside>
 </div>
 
 <script src="js/state.js"></script>
 <script src="js/ui.js"></script>
 <script>
-  // Interactive audio envelope — normal distribution curve
-  const envSvg = document.getElementById('env');
-  const peakInput = document.getElementById('peak');
-  const spreadInput = document.getElementById('spread');
-  const piInput = document.getElementById('pi');
-  const peakV = document.getElementById('peak-v');
-  const spreadV = document.getElementById('spread-v');
-  const arrOut = document.getElementById('arr');
+  // ── Audio envelope (per-map, standalone) ─────────────────────────────────
+  const ENV_TOTAL = 52, ENV_W = 300, ENV_H = 120, ENV_PAD = 8;
 
-  const TOTAL_PAR = 52;
-  const W = 300, H = 120, PAD = 8;
-
-  function gaussian(x, mu, sigma) {
+  function gauss(x, mu, sigma) {
     return Math.exp(-((x - mu) ** 2) / (2 * sigma * sigma));
   }
 
-  function drawEnvelope() {
-    const peak = parseFloat(peakInput.value);
-    const spread = parseFloat(spreadInput.value);
-    const peakPar = parseFloat(piInput.value);
-
-    peakV.textContent = peak.toFixed(2);
-    spreadV.textContent = spread;
-
-    // build curve across paragraphs
+  function drawMapEnvelope(mapId, peak, spread, peakPar) {
+    const svg = document.getElementById(`menv-${mapId}`);
+    const arrEl = document.getElementById(`marr-${mapId}`);
+    if (!svg) return;
+    const W = ENV_W, H = ENV_H, PAD = ENV_PAD, N = ENV_TOTAL;
     const pts = [];
-    const vals = [];
-    for (let i = 0; i < TOTAL_PAR; i++) {
-      const v = gaussian(i, peakPar - 1, spread) * peak;
-      const x = PAD + (i / (TOTAL_PAR - 1)) * (W - PAD * 2);
-      const y = H - PAD - v * (H - PAD * 2);
-      pts.push(`${x},${y}`);
-      vals.push(v);
+    for (let i = 0; i < N; i++) {
+      const v = gauss(i, peakPar - 1, spread) * peak;
+      pts.push(`${PAD + (i/(N-1))*(W-PAD*2)},${H-PAD - v*(H-PAD*2)}`);
     }
-    const path = `M${PAD},${H - PAD} L${pts.join(' L')} L${W - PAD},${H - PAD} Z`;
-    const linePath = `M${pts.join(' L')}`;
-
-    // compact array readout (5 key points around peak)
-    const keyIdx = [peakPar - 3, peakPar - 1, peakPar, peakPar + 1, peakPar + 3].map(i => Math.max(0, Math.min(TOTAL_PAR-1, i - 1)));
-    const keyVals = keyIdx.map(i => gaussian(i, peakPar - 1, spread) * peak);
-    arrOut.textContent = '[' + keyVals.map(v => v.toFixed(2)).join(', ') + ']';
-
-    // grid ticks
+    const fill = `M${PAD},${H-PAD} L${pts.join(' L')} L${W-PAD},${H-PAD} Z`;
+    const line = `M${pts.join(' L')}`;
+    const ki = [peakPar-3,peakPar-1,peakPar,peakPar+1,peakPar+3].map(i=>Math.max(0,Math.min(N-1,i-1)));
+    if (arrEl) arrEl.textContent = '['+ki.map(i=>gauss(i,peakPar-1,spread)*peak).map(v=>v.toFixed(2)).join(', ')+']';
     const ticks = [];
-    for (let x = 0; x <= TOTAL_PAR; x += 10) {
-      const px = PAD + (x / (TOTAL_PAR - 1)) * (W - PAD * 2);
+    for (let x=0; x<=N; x+=10) {
+      const px = PAD+(x/(N-1))*(W-PAD*2);
       ticks.push(`<line x1="${px}" x2="${px}" y1="${H-PAD}" y2="${H-PAD+3}" stroke="rgba(244,242,236,0.3)" stroke-width="0.5"/>`);
       ticks.push(`<text x="${px}" y="${H-PAD+12}" text-anchor="middle" fill="rgba(244,242,236,0.4)" font-family="JetBrains Mono" font-size="7">${x}</text>`);
     }
-
-    // peak marker
-    const peakX = PAD + ((peakPar - 1) / (TOTAL_PAR - 1)) * (W - PAD * 2);
-    const peakY = H - PAD - peak * (H - PAD * 2);
-
-    envSvg.innerHTML = `
-      <rect x="0" y="0" width="${W}" height="${H}" fill="#0a0a0a"/>
+    const px = PAD+((peakPar-1)/(N-1))*(W-PAD*2), py = H-PAD-peak*(H-PAD*2);
+    svg.innerHTML = `<rect width="${W}" height="${H}" fill="#0a0a0a"/>
       <line x1="${PAD}" y1="${H-PAD}" x2="${W-PAD}" y2="${H-PAD}" stroke="rgba(244,242,236,0.15)" stroke-width="0.5"/>
       ${ticks.join('')}
-      <path d="${path}" fill="rgba(209,72,41,0.3)"/>
-      <path d="${linePath}" fill="none" stroke="#d14829" stroke-width="1.5"/>
-      <line x1="${peakX}" x2="${peakX}" y1="${PAD}" y2="${H-PAD}" stroke="rgba(242,183,5,0.5)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <circle cx="${peakX}" cy="${peakY}" r="4" fill="#f2b705"/>
-      <text x="${peakX + 8}" y="${peakY + 2}" fill="#f2b705" font-family="JetBrains Mono" font-size="8">peak ¶${peakPar}</text>
-    `;
+      <path d="${fill}" fill="rgba(209,72,41,0.3)"/>
+      <path d="${line}" fill="none" stroke="#d14829" stroke-width="1.5"/>
+      <line x1="${px}" x2="${px}" y1="${PAD}" y2="${H-PAD}" stroke="rgba(242,183,5,0.5)" stroke-width="0.5" stroke-dasharray="2,3"/>
+      <circle cx="${px}" cy="${py}" r="4" fill="#f2b705"/>
+      <text x="${px+8}" y="${py+2}" fill="#f2b705" font-family="JetBrains Mono" font-size="8">peak ¶${peakPar}</text>`;
   }
-  drawEnvelope();
-  [peakInput, spreadInput, piInput].forEach(el => el.addEventListener('input', drawEnvelope));
+
+  // ── Audio maps data + panel ────────────────────────────────────────────────
+  const VALID_AUDIO = ['.mp3','.wav','.ogg','.flac','.aac','.m4a','.opus','.weba'];
+  let audioMaps = [
+    { id: 1, name: 'Map 1', filename: 'winter-drone-v2.wav', peak: 0.85, spread: 12, peakPar: 14, start: 1, end: 52, open: true }
+  ];
+  let nextMapId = 2;
+
+  function mapFileAreaHTML(m) {
+    if (!m.filename) return `
+      <div class="map-file-area empty">
+        <div class="map-no-track">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          <span>Add a song</span>
+        </div>
+        <button class="map-file-pencil" title="Choose audio file">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <input type="file" class="map-audio-input" accept=".mp3,.wav,.ogg,.flac,.aac,.m4a,.opus,.weba" style="display:none">
+      </div>`;
+    return `
+      <div class="map-file-area has-file">
+        <svg class="map-track-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        <span class="map-track-name">${m.filename}</span>
+        <button class="map-file-pencil" title="Change audio file">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+        <input type="file" class="map-audio-input" accept=".mp3,.wav,.ogg,.flac,.aac,.m4a,.opus,.weba" style="display:none">
+      </div>`;
+  }
+
+  function mapItemHTML(m) {
+    return `<div class="map-item${m.open ? ' open' : ''}" data-map-id="${m.id}">
+      <div class="map-item-head">
+        <div class="map-item-label">
+          <span class="map-dot"></span>
+          <span class="map-name">${m.name}</span>
+        </div>
+        <div class="map-item-right">
+          ${m.filename ? `<span class="map-file-badge">${m.filename}</span>` : ''}
+          <button class="map-chevron" title="Toggle">▾</button>
+          <button class="map-del-btn" title="Delete map">&#x2715;</button>
+        </div>
+      </div>
+      <div class="map-body">
+        ${mapFileAreaHTML(m)}
+        <div class="map-range-row">
+          <div class="map-range-field">
+            <label>Start ¶</label>
+            <input type="number" class="map-start field-num" min="1" max="52" value="${m.start}">
+          </div>
+          <div class="map-range-sep">→</div>
+          <div class="map-range-field">
+            <label>End ¶</label>
+            <input type="number" class="map-end field-num" min="1" max="52" value="${m.end}">
+          </div>
+        </div>
+        <div class="envelope">
+          <svg id="menv-${m.id}" viewBox="0 0 300 120" preserveAspectRatio="none" style="width:100%;height:120px;display:block"></svg>
+          <div class="readout">ARRAY · <b id="marr-${m.id}"></b></div>
+        </div>
+        <div class="slider-row">
+          <span class="lbl">Peak vol</span>
+          <input type="range" class="map-peak" min="0" max="1" step="0.01" value="${m.peak}">
+          <span class="val map-peak-v">${m.peak.toFixed(2)}</span>
+        </div>
+        <div class="slider-row">
+          <span class="lbl">Peak ¶</span>
+          <input type="number" class="map-pi field-num" min="1" max="${ENV_TOTAL}" value="${m.peakPar}">
+        </div>
+        <div class="slider-row">
+          <span class="lbl">Spread</span>
+          <input type="range" class="map-spread" min="2" max="30" step="1" value="${m.spread}">
+          <span class="val map-spread-v">${m.spread}</span>
+        </div>
+        <div class="spread-label"><span>Tight focus</span><span>Slow build</span></div>
+      </div>
+    </div>`;
+  }
+
+  function initMapItem(el, m) {
+    // draw envelope
+    drawMapEnvelope(m.id, m.peak, m.spread, m.peakPar);
+
+    // sliders
+    const peakIn = el.querySelector('.map-peak');
+    const peakVEl = el.querySelector('.map-peak-v');
+    const spreadIn = el.querySelector('.map-spread');
+    const spreadVEl = el.querySelector('.map-spread-v');
+    const piIn = el.querySelector('.map-pi');
+
+    function redraw() {
+      m.peak = parseFloat(peakIn.value);
+      m.spread = parseFloat(spreadIn.value);
+      m.peakPar = parseInt(piIn.value) || 1;
+      peakVEl.textContent = m.peak.toFixed(2);
+      spreadVEl.textContent = m.spread;
+      drawMapEnvelope(m.id, m.peak, m.spread, m.peakPar);
+    }
+    [peakIn, spreadIn, piIn].forEach(i => i.addEventListener('input', redraw));
+
+    // start/end
+    el.querySelector('.map-start').addEventListener('input', e => { m.start = parseInt(e.target.value)||1; });
+    el.querySelector('.map-end').addEventListener('input', e => { m.end = parseInt(e.target.value)||52; });
+
+    // file picker pencil
+    el.querySelector('.map-file-pencil').addEventListener('click', e => {
+      e.stopPropagation();
+      el.querySelector('.map-audio-input').click();
+    });
+    el.querySelector('.map-audio-input').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+      if (!VALID_AUDIO.includes(ext)) {
+        // show error
+        let err = el.querySelector('.map-file-error');
+        if (!err) { err = document.createElement('div'); err.className = 'map-file-error'; el.querySelector('.map-body').insertBefore(err, el.querySelector('.map-range-row')); }
+        err.textContent = `Invalid file type: ${ext} — use ${VALID_AUDIO.join(' ')}`;
+        setTimeout(() => err && err.remove(), 3000);
+        return;
+      }
+      m.filename = file.name;
+      // re-render just this map item
+      const newEl = document.createElement('div');
+      newEl.innerHTML = mapItemHTML(m);
+      const itemEl = newEl.firstElementChild;
+      el.replaceWith(itemEl);
+      initMapItem(itemEl, m);
+    });
+
+    // toggle open/close on head click
+    el.querySelector('.map-item-head').addEventListener('click', e => {
+      if (e.target.closest('.map-del-btn') || e.target.closest('.map-file-pencil')) return;
+      m.open = !m.open;
+      el.classList.toggle('open', m.open);
+      if (m.open) drawMapEnvelope(m.id, m.peak, m.spread, m.peakPar);
+    });
+
+    // delete
+    el.querySelector('.map-del-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      audioMaps = audioMaps.filter(x => x.id !== m.id);
+      renderAudioMapsPanel();
+    });
+  }
+
+  function renderAudioMapsPanel() {
+    inspDynamic.innerHTML = `
+      <div class="maps-panel-head">
+        <h4 style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0">Audio Maps</h4>
+        <button class="add-map-btn" id="addMapBtn">+ Add Map</button>
+      </div>
+      <div id="mapsList">${audioMaps.map(m => mapItemHTML(m)).join('')}</div>`;
+    audioMaps.forEach(m => {
+      const el = inspDynamic.querySelector(`[data-map-id="${m.id}"]`);
+      initMapItem(el, m);
+    });
+    document.getElementById('addMapBtn').addEventListener('click', () => {
+      const id = nextMapId++;
+      audioMaps.push({ id, name: `Map ${id}`, filename: null, peak: 0.85, spread: 12, peakPar: 14, start: 1, end: 52, open: true });
+      renderAudioMapsPanel();
+    });
+  }
 
   // ── Textarea auto-resize ──────────────────────────────────────────────────
   function autoResize(ta) {
@@ -1096,7 +1339,7 @@ It was, in its own strange way, the reason she had been hired.</textarea>
 
   function renderInspector(block) {
     if (!block) {
-      inspDynamic.innerHTML = '<div class="insp-empty-state">No block selected</div>';
+      renderAudioMapsPanel();
       return;
     }
     if (block.classList.contains('img-block')) {
@@ -1261,15 +1504,59 @@ It was, in its own strange way, the reason she had been hired.</textarea>
   let nextActNum = 3;
   const actNames = ['Convergence', 'Fracture', 'Reckoning', 'Silence', 'Epilogue'];
 
-  // Toggle act collapse/expand — ignore clicks on the + button
+  // Act collapse/expand + double-click-to-edit name
+  // Single click on .act-name: schedule toggle (220ms), cancel if second click arrives
+  let _actNameTimer = null;
+
+  function startActNameEdit(nameEl) {
+    const prev = nameEl.textContent;
+    const input = document.createElement('input');
+    input.type = 'text'; input.className = 'act-name-input'; input.value = prev;
+    nameEl.replaceWith(input);
+    input.focus(); input.select();
+    function commit() {
+      const val = input.value.trim() || prev;
+      const span = document.createElement('span');
+      span.className = 'act-name'; span.textContent = val;
+      input.replaceWith(span);
+    }
+    input.addEventListener('blur', commit);
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+      if (e.key === 'Escape') { input.value = prev; input.blur(); }
+    });
+    // prevent the blur-triggered chapList click from doing anything
+    input.addEventListener('click', e => e.stopPropagation());
+  }
+
   chapList.addEventListener('click', function(e) {
     const addBtn = e.target.closest('.act-add-ch');
+    const actName = e.target.closest('.act-name');
     const header = e.target.closest('.act-header');
+
     if (addBtn) {
       e.stopPropagation();
       addChapterToAct(addBtn.closest('.act-group'));
       return;
     }
+
+    if (actName && header) {
+      if (_actNameTimer) {
+        // second click within 220ms = double-click: edit
+        clearTimeout(_actNameTimer);
+        _actNameTimer = null;
+        startActNameEdit(actName);
+      } else {
+        // first click: schedule toggle
+        const group = header.closest('.act-group');
+        _actNameTimer = setTimeout(() => {
+          _actNameTimer = null;
+          group.classList.toggle('open');
+        }, 220);
+      }
+      return;
+    }
+
     if (header) {
       header.closest('.act-group').classList.toggle('open');
     }
@@ -1304,8 +1591,8 @@ It was, in its own strange way, the reason she had been hired.</textarea>
         <div class="act-left">
           <div class="act-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
           <div class="act-label">
-            <span class="act-num">Act ${roman}</span>
-            <span class="act-name">${name}</span>
+            <span class="act-num">${roman}</span>
+            <span class="act-name">Act ${roman} — ${name}</span>
           </div>
         </div>
         <div class="act-right">
