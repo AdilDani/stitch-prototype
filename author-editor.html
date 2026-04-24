@@ -341,32 +341,138 @@
     display: block;
   }
 
-  .block.splash .block-body { padding: 0; }
-  .block.splash .preview {
-    width: 100%;
-    aspect-ratio: 16/9;
-    overflow: hidden;
-    border-bottom: 1px solid var(--line);
-  }
-  .block.splash .preview svg { width: 100%; height: 100%; display: block; }
-  .block.splash .caption {
-    padding: 10px 14px;
-    font-family: var(--font-mono); font-size: 11px;
-    color: var(--muted); letter-spacing: 0.08em;
-  }
-
-  .add-block {
-    margin-top: 20px;
-    width: 100%;
-    padding: 14px;
-    background: transparent;
-    border: 1.5px dashed var(--line-strong);
-    color: var(--muted);
+  /* image block */
+  .block.img-block .block-body { padding: 0; }
+  .img-drop-zone {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 140px;
+    background: var(--paper-2);
     cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    overflow: hidden;
+  }
+  .img-drop-zone.empty {
+    border: 1.5px dashed var(--line-strong);
+    margin: 14px;
+    min-height: 160px;
+  }
+  .img-drop-zone.empty:hover,
+  .img-drop-zone.drag-over { border-color: var(--ink); background: var(--paper-3); }
+  .img-upload-prompt {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    padding: 32px 24px;
+    text-align: center;
+    pointer-events: none; user-select: none;
+  }
+  .img-upload-prompt svg { opacity: 0.3; color: var(--ink); }
+  .up-label {
     font-family: var(--font-display); font-weight: 700;
     font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted);
   }
-  .add-block:hover { border-color: var(--ink); color: var(--ink); }
+  .up-hint {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted-2);
+  }
+  .img-drop-zone.has-image {
+    display: block; min-height: unset;
+    cursor: default; margin: 0; border: none;
+  }
+  .img-drop-zone.has-image img,
+  .img-drop-zone.has-image svg { width: 100%; display: block; }
+  .img-drop-zone.drag-over::after {
+    content: 'DROP TO REPLACE';
+    position: absolute; inset: 0;
+    background: rgba(209,72,41,0.15);
+    border: 2px dashed var(--accent);
+    display: grid; place-items: center;
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.18em; color: var(--accent);
+    pointer-events: none;
+  }
+  .img-caption-bar {
+    padding: 8px 14px;
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--muted); letter-spacing: 0.08em;
+    border-top: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px;
+  }
+  .img-caption-bar .replace-btn {
+    padding: 2px 9px;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    border: 1px solid var(--line-strong);
+    background: var(--paper); cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+  }
+  .img-caption-bar .replace-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* insert zones between blocks */
+  .insert-zone {
+    position: relative;
+    height: 30px;
+    display: flex; align-items: center;
+    margin: -2px 0;
+    z-index: 3;
+  }
+  .iz-line {
+    position: absolute;
+    left: 0; right: 0; top: 50%;
+    height: 1.5px;
+    background: var(--accent);
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.12s;
+    pointer-events: none;
+  }
+  .iz-btns {
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    display: flex; gap: 4px;
+    opacity: 0;
+    transition: opacity 0.12s;
+    background: var(--paper);
+    padding: 0 8px;
+  }
+  .insert-zone:hover .iz-line,
+  .insert-zone:hover .iz-btns { opacity: 1; }
+  .iz-btn {
+    padding: 3px 12px;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    border: 1px solid var(--line-strong);
+    background: var(--paper-2); color: var(--muted);
+    cursor: pointer; white-space: nowrap;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+  }
+  .iz-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* inspector dynamic states */
+  .insp-empty-state {
+    padding: 28px 18px;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted-2); text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+  .insp-img-info {
+    background: var(--ink);
+    padding: 10px 12px;
+    margin-bottom: 14px;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+  .ii-row {
+    display: flex; justify-content: space-between;
+    margin-bottom: 4px; gap: 8px;
+  }
+  .ii-row:last-child { margin-bottom: 0; }
+  .ii-key { color: rgba(244,242,236,0.4); text-transform: uppercase; }
+  .ii-val { color: rgba(244,242,236,0.85); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   /* right: inspector */
   .inspector {
@@ -641,10 +747,11 @@ She walked, each footstep producing a sound that seemed to exist only in her own
       </div>
     </div>
 
-    <div class="block splash" data-block="2">
+    <div class="block img-block" data-block="2" data-filename="hero-winter-east.webp" data-w="1600" data-h="900">
       <button class="block-close" title="Delete block">&#x2715;</button>
       <div class="block-body">
-        <div class="preview">
+        <div class="img-drop-zone has-image">
+          <input type="file" class="img-file-input" accept="image/*" style="display:none">
           <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
             <rect width="800" height="450" fill="#c8d4da"/>
             <polygon points="0,260 90,220 160,260 240,210 320,250 400,180 480,230 560,190 640,240 720,200 800,250 800,450 0,450" fill="#8a9aa3"/>
@@ -652,7 +759,10 @@ She walked, each footstep producing a sound that seemed to exist only in her own
             <text x="60" y="420" fill="#0d0d0f" font-family="Archivo" font-weight="900" font-size="28" letter-spacing="-1">YEAR 47 · EASTERN APPROACH</text>
           </svg>
         </div>
-        <div class="caption">hero-winter-east.webp · 1600×900 · uploaded 2 days ago</div>
+        <div class="img-caption-bar">
+          <span>hero-winter-east.webp · 1600×900</span>
+          <button class="replace-btn">Replace</button>
+        </div>
       </div>
     </div>
 
@@ -677,40 +787,14 @@ It was, in its own strange way, the reason she had been hired.</textarea>
       </div>
     </div>
 
-    <button class="add-block" id="addBlockBtn">+ Add new block</button>
-
   </main>
 
   <aside class="inspector">
     <div class="insp-head">Inspector</div>
 
-    <section class="insp-sec">
-      <h4>BLOCK 2 · SPLASH SETTINGS</h4>
-      <div class="field">
-        <label>Animation</label>
-        <select>
-          <option>Parallax fade-in</option>
-          <option>Scroll-driven zoom</option>
-          <option>Static (no motion)</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Z-index</label>
-        <select>
-          <option>Layer 2 — Foreground</option>
-          <option>Layer 1 — Mid-ground</option>
-          <option>Layer 0 — Background</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Placement</label>
-        <select>
-          <option>Full-bleed between paragraphs</option>
-          <option>Inline figure (40%)</option>
-          <option>Pinned to chapter top</option>
-        </select>
-      </div>
-    </section>
+    <div id="inspDynamic">
+      <div class="insp-empty-state">No block selected</div>
+    </div>
 
     <section class="insp-sec">
       <h4>AUDIO MAP · CHAPTER 04</h4>
@@ -815,7 +899,7 @@ It was, in its own strange way, the reason she had been hired.</textarea>
   drawEnvelope();
   [peakInput, spreadInput, piInput].forEach(el => el.addEventListener('input', drawEnvelope));
 
-  // auto-resize textareas
+  // ── Textarea auto-resize ──────────────────────────────────────────────────
   function autoResize(ta) {
     ta.style.height = 'auto';
     ta.style.height = ta.scrollHeight + 'px';
@@ -825,57 +909,337 @@ It was, in its own strange way, the reason she had been hired.</textarea>
     ta.addEventListener('input', () => autoResize(ta));
   });
 
-  // markdown toolbar insertion
+  // ── Markdown toolbar ──────────────────────────────────────────────────────
   const MD = {
-    bold:  { wrap: ['**', '**'],       fallback: '**bold text**' },
-    italic:{ wrap: ['*', '*'],          fallback: '*italic text*' },
-    h1:    { prefix: '# ',             fallback: '# Heading' },
-    h2:    { prefix: '## ',            fallback: '## Heading' },
-    quote: { prefix: '> ',             fallback: '> Quoted text' },
-    code:  { wrap: ['`', '`'],         fallback: '`code`' },
-    hr:    { insert: '\n\n---\n\n',    fallback: null },
+    bold:  { wrap: ['**','**'],      fallback: '**bold text**' },
+    italic:{ wrap: ['*','*'],         fallback: '*italic text*' },
+    h1:    { prefix: '# ' },
+    h2:    { prefix: '## ' },
+    quote: { prefix: '> ' },
+    code:  { wrap: ['`','`'],         fallback: '`code`' },
+    hr:    { insert: '\n\n---\n\n' },
   };
   document.addEventListener('click', e => {
     const btn = e.target.closest('.block-toolbar [data-cmd]');
     if (!btn) return;
-    const cmd = btn.dataset.cmd;
+    const rule = MD[btn.dataset.cmd];
     const ta = btn.closest('.block').querySelector('textarea');
-    if (!ta) return;
-    const rule = MD[cmd];
-    const start = ta.selectionStart, end = ta.selectionEnd;
-    const sel = ta.value.slice(start, end);
-    let replacement;
+    if (!ta || !rule) return;
+    const s = ta.selectionStart, end = ta.selectionEnd, sel = ta.value.slice(s, end);
     if (rule.insert) {
-      replacement = rule.insert;
-      ta.value = ta.value.slice(0, start) + replacement + ta.value.slice(end);
+      ta.value = ta.value.slice(0, s) + rule.insert + ta.value.slice(end);
     } else if (rule.wrap) {
-      replacement = sel ? rule.wrap[0] + sel + rule.wrap[1] : rule.fallback;
-      ta.value = ta.value.slice(0, start) + replacement + ta.value.slice(end);
+      ta.value = ta.value.slice(0, s) + (sel ? rule.wrap[0]+sel+rule.wrap[1] : rule.fallback) + ta.value.slice(end);
     } else if (rule.prefix) {
-      const lineStart = ta.value.lastIndexOf('\n', start - 1) + 1;
-      ta.value = ta.value.slice(0, lineStart) + rule.prefix + ta.value.slice(lineStart);
+      const ls = ta.value.lastIndexOf('\n', s - 1) + 1;
+      ta.value = ta.value.slice(0, ls) + rule.prefix + ta.value.slice(ls);
     }
     autoResize(ta);
     ta.focus();
   });
 
-  // delete block via X button
-  document.addEventListener('click', e => {
-    const closeBtn = e.target.closest('.block-close');
-    if (!closeBtn) return;
-    e.stopPropagation();
-    const block = closeBtn.closest('.block');
-    if (block) block.remove();
+  // ── Block factories ───────────────────────────────────────────────────────
+  let nextBlockNum = 4;
+  const TOOLBAR_HTML = `<div class="block-toolbar">
+    <button data-cmd="bold"><b>B</b></button>
+    <button data-cmd="italic"><em>I</em></button>
+    <div class="tb-sep"></div>
+    <button data-cmd="h1">H1</button>
+    <button data-cmd="h2">H2</button>
+    <div class="tb-sep"></div>
+    <button data-cmd="quote">&ldquo;</button>
+    <button data-cmd="code">&#96;&#96;</button>
+    <div class="tb-sep"></div>
+    <button data-cmd="hr">&#8212;</button>
+  </div>`;
+
+  function makeTextBlock(content = '') {
+    const b = document.createElement('div');
+    b.className = 'block text-block';
+    b.dataset.block = nextBlockNum++;
+    b.innerHTML = `<button class="block-close" title="Delete block">&#x2715;</button>${TOOLBAR_HTML}<div class="block-body"><textarea placeholder="Start writing...">${content}</textarea></div>`;
+    const ta = b.querySelector('textarea');
+    ta.addEventListener('input', () => autoResize(ta));
+    return b;
+  }
+
+  function makeImageBlock() {
+    const b = document.createElement('div');
+    b.className = 'block img-block';
+    b.dataset.block = nextBlockNum++;
+    b.innerHTML = `
+      <button class="block-close" title="Delete block">&#x2715;</button>
+      <div class="block-body">
+        <div class="img-drop-zone empty">
+          <input type="file" class="img-file-input" accept="image/*" style="display:none">
+          <div class="img-upload-prompt">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span class="up-label">Click to upload</span>
+            <span class="up-hint">or drag &amp; drop &nbsp;·&nbsp; PNG &nbsp;JPG &nbsp;WEBP &nbsp;GIF</span>
+          </div>
+        </div>
+      </div>`;
+    wireImageBlock(b);
+    return b;
+  }
+
+  // ── Image block wiring ────────────────────────────────────────────────────
+  function wireImageBlock(block) {
+    const body = block.querySelector('.block-body');
+
+    body.addEventListener('click', e => {
+      if (e.target.closest('.replace-btn')) {
+        block.querySelector('.img-file-input').click();
+        return;
+      }
+      const zone = e.target.closest('.img-drop-zone');
+      if (!zone) return;
+      // Empty zone: select + open file dialog
+      if (zone.classList.contains('empty')) {
+        block.querySelector('.img-file-input').click();
+      }
+      // has-image zone click handled by selectBlock toggle elsewhere
+    });
+
+    body.addEventListener('change', e => {
+      const fi = e.target.closest('.img-file-input');
+      if (fi && fi.files[0]) loadImageFile(block, fi.files[0]);
+    });
+
+    body.addEventListener('dragover', e => {
+      e.preventDefault();
+      body.querySelector('.img-drop-zone').classList.add('drag-over');
+    });
+    body.addEventListener('dragleave', e => {
+      if (!body.contains(e.relatedTarget))
+        body.querySelector('.img-drop-zone').classList.remove('drag-over');
+    });
+    body.addEventListener('drop', e => {
+      e.preventDefault();
+      body.querySelector('.img-drop-zone').classList.remove('drag-over');
+      const file = Array.from(e.dataTransfer.files).find(f => f.type.startsWith('image/'));
+      if (file) loadImageFile(block, file);
+    });
+  }
+
+  // Wire pre-loaded block 2
+  document.querySelectorAll('.block.img-block').forEach(b => {
+    const body = b.querySelector('.block-body');
+    body.addEventListener('change', e => {
+      const fi = e.target.closest('.img-file-input');
+      if (fi && fi.files[0]) loadImageFile(b, fi.files[0]);
+    });
+    body.addEventListener('click', e => {
+      if (e.target.closest('.replace-btn')) b.querySelector('.img-file-input').click();
+    });
+    body.addEventListener('dragover', e => {
+      e.preventDefault();
+      body.querySelector('.img-drop-zone').classList.add('drag-over');
+    });
+    body.addEventListener('dragleave', e => {
+      if (!body.contains(e.relatedTarget))
+        body.querySelector('.img-drop-zone').classList.remove('drag-over');
+    });
+    body.addEventListener('drop', e => {
+      e.preventDefault();
+      body.querySelector('.img-drop-zone').classList.remove('drag-over');
+      const file = Array.from(e.dataTransfer.files).find(f => f.type.startsWith('image/'));
+      if (file) loadImageFile(b, file);
+    });
   });
 
-  // block selection
-  document.addEventListener('click', e => {
-    const block = e.target.closest('.block');
-    if (!block) return;
-    if (e.target.closest('.block-close') || e.target.closest('.block-toolbar')) return;
+  function loadImageFile(block, file) {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = new Image();
+      img.onload = () => setBlockImage(block, ev.target.result, file.name, img.naturalWidth, img.naturalHeight);
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function setBlockImage(block, src, filename, w, h) {
+    block.dataset.filename = filename;
+    block.dataset.w = w;
+    block.dataset.h = h;
+    const body = block.querySelector('.block-body');
+    const zone = body.querySelector('.img-drop-zone');
+    zone.className = 'img-drop-zone has-image';
+    zone.innerHTML = `<input type="file" class="img-file-input" accept="image/*" style="display:none"><img src="${src}" alt="${filename}">`;
+    // re-wire file input inside the new zone markup
+    zone.querySelector('.img-file-input').addEventListener('change', e => {
+      if (e.target.files[0]) loadImageFile(block, e.target.files[0]);
+    });
+    // caption bar
+    let bar = body.querySelector('.img-caption-bar');
+    if (!bar) { bar = document.createElement('div'); bar.className = 'img-caption-bar'; body.appendChild(bar); }
+    bar.innerHTML = `<span>${filename} · ${w}&times;${h}</span><button class="replace-btn">Replace</button>`;
+    bar.querySelector('.replace-btn').addEventListener('click', () => zone.querySelector('.img-file-input').click());
+    if (document.querySelector('.block.selected') === block) renderInspector(block);
+  }
+
+  // Paste image into selected image block
+  document.addEventListener('paste', e => {
+    const sel = document.querySelector('.block.img-block.selected');
+    if (!sel) return;
+    for (const item of e.clipboardData.items) {
+      if (item.type.startsWith('image/')) {
+        e.preventDefault();
+        loadImageFile(sel, item.getAsFile());
+        break;
+      }
+    }
+  });
+
+  // ── Inspector ──────────────────────────────────────────────────────────────
+  const inspDynamic = document.getElementById('inspDynamic');
+
+  function renderInspector(block) {
+    if (!block) {
+      inspDynamic.innerHTML = '<div class="insp-empty-state">No block selected</div>';
+      return;
+    }
+    if (block.classList.contains('img-block')) {
+      const hasImg = !!block.querySelector('.img-drop-zone.has-image');
+      const fn = block.dataset.filename || null;
+      const w = block.dataset.w, h = block.dataset.h;
+      inspDynamic.innerHTML = `<section class="insp-sec">
+        <h4>Image Block</h4>
+        <div class="insp-img-info">${hasImg
+          ? `<div class="ii-row"><span class="ii-key">File</span><span class="ii-val">${fn}</span></div>
+             <div class="ii-row"><span class="ii-key">Size</span><span class="ii-val">${w}&times;${h}px</span></div>`
+          : `<div class="ii-row" style="justify-content:center"><span class="ii-key" style="color:rgba(244,242,236,0.35)">No image loaded</span></div>`
+        }</div>
+        <div class="field"><label>Width</label><select>
+          <option>Full-bleed</option><option>Inset (70%)</option>
+          <option>Inline (45%)</option><option>Thumbnail</option>
+        </select></div>
+        <div class="field"><label>Placement</label><select>
+          <option>Between paragraphs</option><option>Pinned to chapter top</option>
+          <option>Float right</option><option>Float left</option>
+        </select></div>
+        <div class="field"><label>Animation</label><select>
+          <option>Parallax fade-in</option><option>Scroll-driven zoom</option>
+          <option>Ken Burns</option><option>Static (none)</option>
+        </select></div>
+        <div class="field"><label>Z-Index layer</label><select>
+          <option>Layer 2 — Foreground</option><option>Layer 1 — Mid-ground</option>
+          <option>Layer 0 — Background</option>
+        </select></div>
+        <div class="field"><label>Sticky on scroll</label><select>
+          <option>No</option><option>Yes — pin while reading section</option>
+        </select></div>
+        <div class="field"><label>Alt text</label>
+          <input type="text" placeholder="Describe the image…"></div>
+        <div class="field"><label>Caption</label>
+          <input type="text" placeholder="Optional caption…"${fn ? ` value="${fn}"` : ''}></div>
+      </section>`;
+    } else {
+      inspDynamic.innerHTML = `<section class="insp-sec">
+        <h4>Text Block</h4>
+        <div class="field"><label>Width</label><select>
+          <option>Standard column</option><option>Full-bleed</option><option>Narrow (60%)</option>
+        </select></div>
+        <div class="field"><label>Drop cap</label><select>
+          <option>None</option><option>First paragraph only</option>
+        </select></div>
+        <div class="field"><label>Font style</label><select>
+          <option>Prose (Fraunces italic)</option><option>UI (Archivo)</option><option>Mono (JetBrains)</option>
+        </select></div>
+      </section>`;
+    }
+  }
+
+  // ── Block selection (toggle) ───────────────────────────────────────────────
+  function selectBlock(block) {
     document.querySelectorAll('.block').forEach(x => x.classList.remove('selected'));
     block.classList.add('selected');
+    renderInspector(block);
+  }
+
+  document.addEventListener('click', e => {
+    // ignore controls handled elsewhere
+    if (e.target.closest('.block-close')) return;
+    if (e.target.closest('.block-toolbar [data-cmd]')) return;
+    if (e.target.closest('.iz-btn')) return;
+    if (e.target.closest('.img-drop-zone')) {
+      // image zone: just select the block (file dialog opened via wireImageBlock)
+      const block = e.target.closest('.block');
+      if (block) {
+        if (!block.classList.contains('selected')) selectBlock(block);
+      }
+      return;
+    }
+    const block = e.target.closest('.block');
+    if (!block) {
+      // click outside blocks — deselect
+      document.querySelectorAll('.block').forEach(x => x.classList.remove('selected'));
+      renderInspector(null);
+      return;
+    }
+    const wasSelected = block.classList.contains('selected');
+    document.querySelectorAll('.block').forEach(x => x.classList.remove('selected'));
+    if (!wasSelected) {
+      block.classList.add('selected');
+      renderInspector(block);
+    } else {
+      renderInspector(null);
+    }
   });
+
+  // ── Delete block via X ────────────────────────────────────────────────────
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.block-close');
+    if (!btn) return;
+    e.stopPropagation();
+    const block = btn.closest('.block');
+    const wasSelected = block.classList.contains('selected');
+    block.remove();
+    syncInsertZones();
+    if (wasSelected) renderInspector(null);
+  });
+
+  // ── Insert zones ───────────────────────────────────────────────────────────
+  const editorCanvas = document.querySelector('.editor');
+
+  function makeInsertZone() {
+    const z = document.createElement('div');
+    z.className = 'insert-zone';
+    z.innerHTML = `<div class="iz-line"></div><div class="iz-btns">
+      <button class="iz-btn" data-add="text">+ Text</button>
+      <button class="iz-btn" data-add="image">+ Image</button>
+    </div>`;
+    return z;
+  }
+
+  function syncInsertZones() {
+    editorCanvas.querySelectorAll('.insert-zone').forEach(z => z.remove());
+    const blocks = Array.from(editorCanvas.querySelectorAll('.block'));
+    if (!blocks.length) return;
+    blocks[0].before(makeInsertZone());
+    blocks.forEach(b => b.after(makeInsertZone()));
+  }
+
+  editorCanvas.addEventListener('click', e => {
+    const btn = e.target.closest('.iz-btn');
+    if (!btn) return;
+    e.stopPropagation();
+    const zone = btn.closest('.insert-zone');
+    const newBlock = btn.dataset.add === 'text' ? makeTextBlock() : makeImageBlock();
+    zone.replaceWith(newBlock);
+    syncInsertZones();
+    if (btn.dataset.add === 'text') {
+      const ta = newBlock.querySelector('textarea');
+      autoResize(ta);
+      ta.focus();
+    }
+    selectBlock(newBlock);
+  });
+
+  syncInsertZones();
+  // Initial state: block 1 pre-selected
+  const firstBlock = editorCanvas.querySelector('.block');
+  if (firstBlock) renderInspector(firstBlock);
 
   // Preview modal
   const previewModal = document.getElementById('previewModal');
@@ -925,38 +1289,6 @@ It was, in its own strange way, the reason she had been hired.</textarea>
     updateActCount(actGroup);
     actGroup.classList.add('open');
   }
-
-  // add new text block
-  let nextBlockNum = 4;
-  document.getElementById('addBlockBtn').addEventListener('click', function() {
-    const toolbarHTML = `
-      <div class="block-toolbar">
-        <button data-cmd="bold"><b>B</b></button>
-        <button data-cmd="italic"><em>I</em></button>
-        <div class="tb-sep"></div>
-        <button data-cmd="h1">H1</button>
-        <button data-cmd="h2">H2</button>
-        <div class="tb-sep"></div>
-        <button data-cmd="quote">&ldquo;</button>
-        <button data-cmd="code">&#96;&#96;</button>
-        <div class="tb-sep"></div>
-        <button data-cmd="hr">&#8212;</button>
-      </div>`;
-    const block = document.createElement('div');
-    block.className = 'block';
-    block.dataset.block = nextBlockNum++;
-    block.innerHTML = `
-      <button class="block-close" title="Delete block">&#x2715;</button>
-      ${toolbarHTML}
-      <div class="block-body"><textarea placeholder="Start writing..."></textarea></div>`;
-    this.before(block);
-    const ta = block.querySelector('textarea');
-    autoResize(ta);
-    ta.addEventListener('input', () => autoResize(ta));
-    ta.focus();
-    document.querySelectorAll('.block').forEach(x => x.classList.remove('selected'));
-    block.classList.add('selected');
-  });
 
   document.getElementById('addActBtn').addEventListener('click', function() {
     const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X'];

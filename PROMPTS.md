@@ -279,3 +279,28 @@ Remove the `block-head` bar entirely from all blocks — no label, no tools (Spl
 **Related prompts:** none
 
 ---
+
+### 011 — Between-block insert zones, image block upload, dynamic inspector
+
+**Date:** 2026-04-24
+**Branch:** main
+**Files touched:** author-editor.html
+
+**Request (verbatim):**
+> blocks are aligned vertically, if you press the vertical space between blocks, then a 2 options appear : add text block, add image block, image blocks start out empty, but have a thing in the middle you can press which opens up your file explorer to add an image from your computer, and you should also be able to drag and drop images directly into from either your file explorer or by copy an image from elsewhere, and pasting it while the image block is selected. pressing a block that is already selected unselects it. selecting an image block, changes the column on the right of the page that says "inspector", it should now show image information and options, where you can set the width and other things (stick or not, and any other options you think of)
+
+**Interpretation:**
+Replace the old "+ Add new block" button with hoverable insert zones that appear between every block pair (and before/after the block list). Each zone shows a thin accent line and two buttons: + Text, + Image. Image blocks start empty with a centered upload prompt; clicking the prompt opens the file dialog (first click = select + open dialog). Drag-drop and clipboard paste also work on image blocks. Clicking an already-selected block deselects it. Selecting an image block updates the inspector panel with image info (filename, dimensions) and settings (width, placement, animation, z-index, sticky, alt text, caption). Text block selection shows minimal text settings. No selection shows an empty state.
+
+**Alternatives considered but not taken:**
+- Floating "+" button that appears on hover beside a block — less discoverable for inserting at a specific position
+- Always-visible add buttons — clutters the editor canvas
+
+**Changes made:**
+- author-editor.html — full redesign: insert zones, img-block class with drop zone, wireImageBlock(), loadImageFile(), paste handler, syncInsertZones(), renderInspector(), dynamic inspector panel, block toggle selection
+
+**Spec updates:** none
+
+**Related prompts:** 010
+
+---
