@@ -790,7 +790,7 @@ It was, in its own strange way, the reason she had been hired.</textarea>
   </main>
 
   <aside class="inspector">
-    <div class="insp-head">Inspector</div>
+    <div class="insp-head">Properties</div>
 
     <div id="inspDynamic">
       <div class="insp-empty-state">No block selected</div>
@@ -1172,7 +1172,7 @@ It was, in its own strange way, the reason she had been hired.</textarea>
     }
     const block = e.target.closest('.block');
     if (!block) {
-      // click outside blocks — deselect
+      if (e.target.closest('.inspector')) return; // interacting with properties panel — keep selection
       document.querySelectorAll('.block').forEach(x => x.classList.remove('selected'));
       renderInspector(null);
       return;
