@@ -520,6 +520,39 @@
   .map-body { display: none; padding: 10px 14px 14px; background: var(--paper-2); }
   .map-item.open .map-body { display: block; }
 
+  /* audio player strip */
+  .map-player {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--ink);
+    padding: 7px 10px;
+    margin-top: -12px; margin-bottom: 12px;
+    border-top: 1px solid rgba(244,242,236,0.07);
+  }
+  .map-play-btn {
+    width: 24px; height: 24px; flex-shrink: 0;
+    background: transparent; border: 1px solid rgba(244,242,236,0.22);
+    color: rgba(244,242,236,0.8); cursor: pointer;
+    display: grid; place-items: center; font-size: 9px;
+    transition: background 0.1s, border-color 0.1s, color 0.1s;
+  }
+  .map-play-btn:hover { background: rgba(244,242,236,0.08); border-color: rgba(244,242,236,0.45); }
+  .map-play-btn.playing { color: var(--accent); border-color: var(--accent); }
+  .map-progress-track {
+    flex: 1; height: 2px;
+    background: rgba(244,242,236,0.14);
+    position: relative; cursor: pointer;
+  }
+  .map-progress-track:hover { background: rgba(244,242,236,0.22); }
+  .map-progress-fill {
+    height: 100%; width: 0%; background: var(--accent);
+    pointer-events: none;
+  }
+  .map-time {
+    font-family: var(--font-mono); font-size: 10px;
+    color: rgba(244,242,236,0.45); letter-spacing: 0.04em;
+    white-space: nowrap; flex-shrink: 0;
+  }
+
   .map-file-area {
     position: relative;
     background: var(--ink);
@@ -980,6 +1013,13 @@ It was, in its own strange way, the reason she had been hired.</textarea>
 
   // ── Audio maps data + panel ────────────────────────────────────────────────
   const VALID_AUDIO = ['.mp3','.wav','.ogg','.flac','.aac','.m4a','.opus','.weba'];
+
+  function fmtTime(secs) {
+    if (!isFinite(secs) || secs < 0) return '0:00';
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return `${m}:${String(s).padStart(2, '0')}`;
+  }
   let audioMaps = [
     { id: 1, name: 'Map 1', filename: 'winter-drone-v2.wav', peak: 0.85, spread: 12, peakPar: 14, start: 1, end: 52, open: true }
   ];
@@ -1023,6 +1063,11 @@ It was, in its own strange way, the reason she had been hired.</textarea>
       </div>
       <div class="map-body">
         ${mapFileAreaHTML(m)}
+        ${m.audioSrc ? `<div class="map-player">
+          <button class="map-play-btn" title="Play / Pause">&#9654;</button>
+          <div class="map-progress-track"><div class="map-progress-fill"></div></div>
+          <span class="map-time">0:00 / 0:00</span>
+        </div>` : ''}
         <div class="map-range-row">
           <div class="map-range-field">
             <label>Start ¶</label>
@@ -1092,21 +1137,69 @@ It was, in its own strange way, the reason she had been hired.</textarea>
       if (!file) return;
       const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
       if (!VALID_AUDIO.includes(ext)) {
-        // show error
         let err = el.querySelector('.map-file-error');
         if (!err) { err = document.createElement('div'); err.className = 'map-file-error'; el.querySelector('.map-body').insertBefore(err, el.querySelector('.map-range-row')); }
         err.textContent = `Invalid file type: ${ext} — use ${VALID_AUDIO.join(' ')}`;
         setTimeout(() => err && err.remove(), 3000);
         return;
       }
-      m.filename = file.name;
-      // re-render just this map item
-      const newEl = document.createElement('div');
-      newEl.innerHTML = mapItemHTML(m);
-      const itemEl = newEl.firstElementChild;
-      el.replaceWith(itemEl);
-      initMapItem(itemEl, m);
+      if (m.audio) { m.audio.pause(); m.audio = null; }
+      const reader = new FileReader();
+      reader.onload = ev => {
+        m.filename = file.name;
+        m.audioSrc = ev.target.result;
+        m.audio = new Audio(ev.target.result);
+        const newEl = document.createElement('div');
+        newEl.innerHTML = mapItemHTML(m);
+        const itemEl = newEl.firstElementChild;
+        el.replaceWith(itemEl);
+        initMapItem(itemEl, m);
+      };
+      reader.readAsDataURL(file);
     });
+
+    // wire player if audio is loaded
+    if (m.audio) {
+      const player = el.querySelector('.map-player');
+      const playBtn = player.querySelector('.map-play-btn');
+      const fill = player.querySelector('.map-progress-fill');
+      const timeEl = player.querySelector('.map-time');
+      const track = player.querySelector('.map-progress-track');
+
+      m.audio.addEventListener('loadedmetadata', () => {
+        timeEl.textContent = `0:00 / ${fmtTime(m.audio.duration)}`;
+      });
+      m.audio.addEventListener('timeupdate', () => {
+        const pct = m.audio.duration ? (m.audio.currentTime / m.audio.duration * 100) : 0;
+        fill.style.width = pct + '%';
+        timeEl.textContent = `${fmtTime(m.audio.currentTime)} / ${fmtTime(m.audio.duration)}`;
+      });
+      m.audio.addEventListener('ended', () => {
+        playBtn.innerHTML = '&#9654;';
+        playBtn.classList.remove('playing');
+        fill.style.width = '0%';
+        m.audio.currentTime = 0;
+      });
+
+      playBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        if (m.audio.paused) {
+          m.audio.play();
+          playBtn.innerHTML = '&#9646;&thinsp;&#9646;';
+          playBtn.classList.add('playing');
+        } else {
+          m.audio.pause();
+          playBtn.innerHTML = '&#9654;';
+          playBtn.classList.remove('playing');
+        }
+      });
+
+      track.addEventListener('click', e => {
+        if (!m.audio.duration) return;
+        const rect = track.getBoundingClientRect();
+        m.audio.currentTime = ((e.clientX - rect.left) / rect.width) * m.audio.duration;
+      });
+    }
 
     // toggle open/close on head click
     el.querySelector('.map-item-head').addEventListener('click', e => {
@@ -1116,9 +1209,10 @@ It was, in its own strange way, the reason she had been hired.</textarea>
       if (m.open) drawMapEnvelope(m.id, m.peak, m.spread, m.peakPar);
     });
 
-    // delete
+    // delete — stop audio first
     el.querySelector('.map-del-btn').addEventListener('click', e => {
       e.stopPropagation();
+      if (m.audio) { m.audio.pause(); m.audio = null; }
       audioMaps = audioMaps.filter(x => x.id !== m.id);
       renderAudioMapsPanel();
     });
