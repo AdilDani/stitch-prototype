@@ -55,18 +55,18 @@
   /* preview modal */
   .preview-modal {
     position: fixed; inset: 0; z-index: 500;
-    display: none; flex-direction: column;
+    display: none; align-items: flex-start; justify-content: center;
   }
   .preview-modal.open { display: flex; }
   .preview-modal-backdrop {
     position: absolute; inset: 0;
-    background: rgba(10,10,10,0.7);
-    backdrop-filter: blur(4px);
+    background: rgba(10,10,10,0.55);
+    backdrop-filter: blur(3px);
   }
   .preview-modal-shell {
     position: relative; z-index: 1;
     display: flex; flex-direction: column;
-    width: 100%; height: 100vh;
+    width: min(780px, 96vw); height: 100vh;
     background: #0d0d0f;
   }
   .preview-modal-header {

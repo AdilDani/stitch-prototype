@@ -229,3 +229,28 @@ Replace the flat chapter list with collapsible act groups. Two acts for The Long
 **Related prompts:** 007
 
 ---
+
+### 009 — Preview modal: narrower shell, transparent sides
+
+**Date:** 2026-04-24
+**Branch:** main
+**Files touched:** author-editor.html
+
+**Request (verbatim):**
+> in the preview modal in the author editor page, make the modal only slightly wider than the text area, while the rest of that space isnt black like it is now, but it should instead be semi transparent so it can show the background so that it is easier to understand that this just a modal.
+
+**Interpretation:**
+The preview modal shell currently spans 100% width with a solid `#0d0d0f` background, making the entire screen go black. Constrain the shell to roughly 760px (just wider than the 680px inner content + 24px padding each side), center it, and keep only the backdrop's existing semi-transparent dark overlay on the sides — no solid fill outside the shell column.
+
+**Alternatives considered but not taken:**
+- Reducing opacity of the full-width shell — still black, just lighter; doesn't communicate "modal over editor"
+- Making the backdrop more transparent — would lose focus; the shell boundary is the right signal
+
+**Changes made:**
+- author-editor.html — `.preview-modal-shell` width constrained to `min(780px, 96vw)`, centered via flex parent, solid background kept only on the shell; backdrop remains semi-transparent
+
+**Spec updates:** none
+
+**Related prompts:** 007
+
+---
