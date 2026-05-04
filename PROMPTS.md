@@ -329,3 +329,32 @@ Move the static AUDIO MAP section from the inspector into a dynamic audio maps l
 **Related prompts:** 010, 011
 
 ---
+
+### 013 — Landing page + new login + register pages
+
+**Date:** 2026-05-04
+**Branch:** main
+**Files touched:** landing.html, login.html, register.html, index.html
+
+**Request (verbatim):**
+> i want you to modify the login page and register pages, and to also create a new landing page. basically here's what i want : 1-the current login page will become the landing page, remove the "continue with google button", basically this will be a page where you have a brief about the site, and you have the option to either login or register. 2- the login page will have a n email and password form, a login button, and a "dont have ana account? register". 3-a register page wiht a form : firstname lastname dateofbirth, suername, email, password, confirm password, and put them in the order that makes the most sense. they should also have a theme button to swap themes. design them in a way that goes with the rest of the application.
+
+**Interpretation:**
+Three pages: (1) `landing.html` — adapted from current `login.html` layout, dark aside with pitch points, main side with welcome heading and two CTA buttons (SIGN IN → login.html, CREATE ACCOUNT → register.html). (2) `login.html` rewritten — email + password form, LOGIN → otp.html, link to register.html. (3) `register.html` new — fields in order: first name + last name (side by side), date of birth, username, email, password, confirm password; REGISTER → otp.html, link to login.html. All three get a theme toggle (sun/moon, persists `auth_theme` to localStorage). Index.html gets a landing.html card in the Auth section.
+
+**Alternatives considered but not taken:**
+- Single page with form toggle (login ↔ register) — user explicitly asked for separate pages
+- Keeping Google OAuth on landing — user explicitly said remove it
+- Full-page dark mode via CSS custom property swap — used class toggle on body (.dark-auth) for simplicity, matching hub/novel toggle patterns
+
+**Changes made:**
+- landing.html — new file, adapted from login.html aside, two CTA buttons, theme toggle
+- login.html — rewritten with email + password form
+- register.html — new file with full registration form, two-column name row
+- index.html — landing.html card added to Auth section
+
+**Spec updates:** none (auth flow not yet spec'd in CLAUDE.md)
+
+**Related prompts:** none
+
+---

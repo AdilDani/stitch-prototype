@@ -162,7 +162,7 @@
   <span class="sep">//</span>
   <span>V 0.1.0 — internal review</span>
   <span class="sep">//</span>
-  <span>20 pages · linked HTML · no backend</span>
+  <span>22 pages · linked HTML · no backend</span>
 </div>
 
 <div class="hero-wrap">
@@ -183,24 +183,36 @@
   <div class="section-head">
     <div class="idx">01</div>
     <div class="title">Auth flow</div>
-    <div class="ticker">3 screens · mobile-first</div>
+    <div class="ticker">5 screens · mobile-first</div>
   </div>
-  <div class="section-desc">Google OAuth followed by a 6-digit email OTP. Persistent sessions mean readers rarely see this after the first setup, so it has to be sharp and short.</div>
+  <div class="section-desc">Landing pitches the platform, then forks to sign-in or registration. Email OTP follows. Persistent sessions mean readers rarely see this after setup.</div>
   <div class="page-grid">
-    <a href="login.html" class="page-card">
+    <a href="landing.html" class="page-card new-build">
       <div class="pc-num">001 / AUTH</div>
-      <div class="pc-title">Login</div>
+      <div class="pc-title">Landing</div>
       <span class="pc-tag">ENTRY</span>
-      <div class="pc-desc">Google OAuth · keep-me-logged-in checkbox · brand statement.</div>
+      <div class="pc-desc">Platform pitch · Sign in or Create account CTAs · theme toggle.</div>
+    </a>
+    <a href="login.html" class="page-card">
+      <div class="pc-num">002 / AUTH</div>
+      <div class="pc-title">Sign in</div>
+      <span class="pc-tag">LOGIN</span>
+      <div class="pc-desc">Email + password form · link to register · theme toggle.</div>
+    </a>
+    <a href="register.html" class="page-card new-build">
+      <div class="pc-num">003 / AUTH</div>
+      <div class="pc-title">Register</div>
+      <span class="pc-tag">SIGNUP</span>
+      <div class="pc-desc">Full registration form · name, DOB, username, email, password · theme toggle.</div>
     </a>
     <a href="otp.html" class="page-card">
-      <div class="pc-num">002 / AUTH</div>
+      <div class="pc-num">004 / AUTH</div>
       <div class="pc-title">OTP verification</div>
       <span class="pc-tag">2FA</span>
       <div class="pc-desc">Six-digit code, auto-advance inputs, resend timer.</div>
     </a>
     <a href="join-code.html" class="page-card">
-      <div class="pc-num">003 / AUTH</div>
+      <div class="pc-num">005 / AUTH</div>
       <div class="pc-title">Join by private code</div>
       <span class="pc-tag">MODAL</span>
       <div class="pc-desc">Six-character protocol code for private novels. End-to-end encrypted badge.</div>
