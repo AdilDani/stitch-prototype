@@ -6,7 +6,6 @@
 <title>STITCH — Sign In</title>
 <link rel="stylesheet" href="css/core.css">
 <style>
-  /* Full-page dark grid background */
   body {
     min-height: 100vh;
     background: var(--ink);
@@ -16,10 +15,8 @@
     position: relative;
   }
 
-  /* Override grain for dark background */
   body::before { mix-blend-mode: overlay; opacity: 0.15; }
 
-  /* Grid pattern (same as the old aside) */
   body::after {
     content: '';
     position: fixed; inset: 0;
@@ -31,7 +28,6 @@
     background-size: 40px 40px;
   }
 
-  /* Centered form card — full height */
   .form-card {
     position: relative; z-index: 1;
     width: 100%; max-width: 460px;
@@ -39,17 +35,51 @@
     background: var(--ink-2);
     border-left: 1px solid rgba(255,255,255,0.1);
     border-right: 1px solid rgba(255,255,255,0.1);
-    padding: 48px;
-    display: flex; flex-direction: column; justify-content: center;
+    display: flex; flex-direction: column;
   }
-  @media (max-width: 520px) { .form-card { padding: 36px 24px; } }
+
+  /* ── TOP: back link ── */
+  .card-top {
+    padding: 36px 48px;
+    flex-shrink: 0;
+  }
+
+  /* ── MIDDLE: form, grows to fill remaining height ── */
+  .card-body {
+    flex: 1;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 48px 40px;
+  }
+
+  /* ── BOTTOM: auth link ── */
+  .card-footer {
+    flex-shrink: 0;
+    padding: 28px 48px 44px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    text-align: center;
+  }
+
+  @media (max-width: 520px) {
+    .card-top { padding: 28px 24px; }
+    .card-body { padding: 0 24px 32px; }
+    .card-footer { padding: 24px 24px 40px; }
+  }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(244,242,236,0.4);
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: rgba(244,242,236,0.85); }
 
   .brand-stamp {
     display: inline-flex; align-items: center; gap: 10px;
-    margin-bottom: 36px;
+    margin-bottom: 32px;
     font-family: var(--font-mono); font-size: 11px;
     letter-spacing: 0.18em; text-transform: uppercase;
-    color: rgba(244,242,236,0.45);
+    color: rgba(244,242,236,0.4);
   }
   .brand-stamp .bar { width: 28px; height: 2px; background: var(--accent); }
 
@@ -59,16 +89,8 @@
     font-size: clamp(44px, 8vw, 64px);
     letter-spacing: -0.04em;
     line-height: 0.9;
-    margin-bottom: 12px;
+    margin-bottom: 40px;
     color: var(--paper);
-  }
-  .form-sub {
-    font-family: var(--font-editorial);
-    font-style: italic;
-    color: rgba(244,242,236,0.55);
-    font-size: 17px;
-    margin-bottom: 36px;
-    line-height: 1.4;
   }
 
   .field-group { display: flex; flex-direction: column; gap: 20px; margin-bottom: 28px; }
@@ -110,7 +132,6 @@
     border: 1.5px solid var(--paper);
     cursor: pointer;
     transition: transform 0.15s, box-shadow 0.15s;
-    margin-bottom: 24px;
   }
   .submit-btn:hover { transform: translate(-3px,-3px); box-shadow: 9px 9px 0 var(--accent); }
   .submit-btn:active { transform: translate(0,0); box-shadow: none; }
@@ -118,7 +139,6 @@
   .auth-link {
     font-size: 13px;
     color: rgba(244,242,236,0.5);
-    text-align: center;
   }
   .auth-link a {
     color: var(--paper);
@@ -128,61 +148,45 @@
     transition: border-color 0.15s;
   }
   .auth-link a:hover { border-bottom-color: var(--paper); }
-
-  .back-link {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-family: var(--font-mono); font-size: 10px;
-    letter-spacing: 0.16em; text-transform: uppercase;
-    color: rgba(244,242,236,0.4);
-    margin-bottom: 36px;
-    transition: color 0.15s;
-  }
-  .back-link:hover { color: rgba(244,242,236,0.85); }
-
-  .finefoot {
-    margin-top: 40px;
-    font-size: 12px;
-    color: rgba(244,242,236,0.3);
-    line-height: 1.6;
-    text-align: center;
-  }
-  .finefoot a {
-    color: rgba(244,242,236,0.5);
-    border-bottom: 1px solid rgba(244,242,236,0.25);
-  }
-  .finefoot a:hover { color: var(--paper); }
 </style>
 </head>
 <body>
 
 <div class="form-card">
-  <a class="back-link" href="landing.html">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-    Back
-  </a>
 
-  <div class="brand-stamp">
-    <span class="bar"></span>
-    <span>Access protocol</span>
+  <div class="card-top">
+    <a class="back-link" href="landing.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </a>
   </div>
 
-  <h1 class="form-title">Sign in.</h1>
+  <div class="card-body">
+    <div class="brand-stamp">
+      <span class="bar"></span>
+      <span>Access protocol</span>
+    </div>
 
-  <div class="field-group">
-    <div class="field">
-      <label class="field-label" for="email">Email address</label>
-      <input class="field-input" type="email" id="email" placeholder="you@example.com" autocomplete="email">
+    <h1 class="form-title">Sign in.</h1>
+
+    <div class="field-group">
+      <div class="field">
+        <label class="field-label" for="email">Email address</label>
+        <input class="field-input" type="email" id="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label class="field-label" for="password">Password</label>
+        <input class="field-input" type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
     </div>
-    <div class="field">
-      <label class="field-label" for="password">Password</label>
-      <input class="field-input" type="password" id="password" placeholder="••••••••" autocomplete="current-password">
-    </div>
+
+    <button class="submit-btn" onclick="location.href='otp.html?via=email'">Sign in</button>
   </div>
 
-  <button class="submit-btn" onclick="location.href='otp.html?via=email'">Sign in</button>
-
-  <div class="auth-link">
-    Don't have an account? <a href="register.html">Create one</a>
+  <div class="card-footer">
+    <div class="auth-link">
+      Don't have an account? <a href="register.html">Create one</a>
+    </div>
   </div>
 
 </div>
