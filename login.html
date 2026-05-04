@@ -11,9 +11,8 @@
     min-height: 100vh;
     background: var(--ink);
     color: var(--paper);
-    display: grid;
-    place-items: center;
-    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
     position: relative;
   }
 
@@ -32,13 +31,16 @@
     background-size: 40px 40px;
   }
 
-  /* Centered form card */
+  /* Centered form card — full height */
   .form-card {
     position: relative; z-index: 1;
     width: 100%; max-width: 460px;
+    min-height: 100vh;
     background: var(--ink-2);
-    border: 1px solid rgba(255,255,255,0.1);
+    border-left: 1px solid rgba(255,255,255,0.1);
+    border-right: 1px solid rgba(255,255,255,0.1);
     padding: 48px;
+    display: flex; flex-direction: column; justify-content: center;
   }
   @media (max-width: 520px) { .form-card { padding: 36px 24px; } }
 
@@ -165,7 +167,6 @@
   </div>
 
   <h1 class="form-title">Sign in.</h1>
-  <p class="form-sub">Two-factor authentication follows. After that, you stay signed in until you log out.</p>
 
   <div class="field-group">
     <div class="field">
@@ -184,9 +185,6 @@
     Don't have an account? <a href="register.html">Create one</a>
   </div>
 
-  <div class="finefoot">
-    By continuing you accept our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
-  </div>
 </div>
 
 </body>

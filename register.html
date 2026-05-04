@@ -11,9 +11,8 @@
     min-height: 100vh;
     background: var(--ink);
     color: var(--paper);
-    display: grid;
-    place-items: start center;
-    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
     position: relative;
   }
 
@@ -32,14 +31,16 @@
     background-size: 40px 40px;
   }
 
-  /* Centered form card */
+  /* Centered form card — full height */
   .form-card {
     position: relative; z-index: 1;
     width: 100%; max-width: 500px;
+    min-height: 100vh;
     background: var(--ink-2);
-    border: 1px solid rgba(255,255,255,0.1);
+    border-left: 1px solid rgba(255,255,255,0.1);
+    border-right: 1px solid rgba(255,255,255,0.1);
     padding: 48px;
-    margin: 0 auto;
+    display: flex; flex-direction: column; justify-content: center;
   }
   @media (max-width: 560px) { .form-card { padding: 36px 24px; } }
 
@@ -180,7 +181,6 @@
   </div>
 
   <h1 class="form-title">Join<br>STITCH.</h1>
-  <p class="form-sub">One account for every novel on the platform. Two-factor verification follows.</p>
 
   <div class="field-group">
 
@@ -235,9 +235,6 @@
     Already have an account? <a href="login.html">Sign in</a>
   </div>
 
-  <div class="finefoot">
-    By creating an account you accept our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-  </div>
 </div>
 
 </body>
