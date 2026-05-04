@@ -74,23 +74,29 @@
   }
   .back-link:hover { color: rgba(244,242,236,0.85); }
 
-  .brand-stamp {
-    display: inline-flex; align-items: center; gap: 10px;
-    margin-bottom: 32px;
-    font-family: var(--font-mono); font-size: 11px;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: rgba(244,242,236,0.4);
+  .heading-row {
+    display: flex; align-items: flex-end; gap: 14px;
+    margin-bottom: 40px;
   }
-  .brand-stamp .bar { width: 28px; height: 2px; background: var(--accent); }
-
   .form-title {
     font-family: var(--font-display);
     font-weight: 900;
     font-size: clamp(44px, 8vw, 64px);
     letter-spacing: -0.04em;
     line-height: 0.9;
-    margin-bottom: 40px;
     color: var(--paper);
+  }
+  .access-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 8px;
+    white-space: nowrap;
+    margin-bottom: 6px;
+    flex-shrink: 0;
   }
 
   .field-group { display: flex; flex-direction: column; gap: 20px; margin-bottom: 28px; }
@@ -162,12 +168,10 @@
   </div>
 
   <div class="card-body">
-    <div class="brand-stamp">
-      <span class="bar"></span>
-      <span>Access protocol</span>
+    <div class="heading-row">
+      <h1 class="form-title">Sign in.</h1>
+      <span class="access-tag">Access protocol</span>
     </div>
-
-    <h1 class="form-title">Sign in.</h1>
 
     <div class="field-group">
       <div class="field">
