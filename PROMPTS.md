@@ -358,3 +358,29 @@ Three pages: (1) `landing.html` — adapted from current `login.html` layout, da
 **Related prompts:** none
 
 ---
+
+### 014 — Login + register: dark base, centered card, grid background
+
+**Date:** 2026-05-04
+**Branch:** main
+**Files touched:** login.html, register.html
+
+**Request (verbatim):**
+> okay, nevermind, the login and register pages should not have a theme button, just make the dark mode you have now the base version. that left half of the login and register pages should be removed, the one that has the stitch description. instead, the 2 pages should have their forms be in the middle, along with their form background color. however, outside of that form area, the background should look like the backgruound of that left column you just removed, the one with the grid-like shape
+
+**Interpretation:**
+Remove the aside and theme toggle from both pages. Make dark the permanent base (no toggle, no .dark-auth class). Full-page background = ink + 40px grid lines (the aside pattern). Centered form card = ink-2 surface with border. Form stays dark-styled throughout — paper text, muted labels, ink-3 inputs.
+
+**Alternatives considered but not taken:**
+- Keeping the aside but making it shorter — user explicitly said remove it
+- Light mode as base with dark card — user said "make the dark mode the base version"
+
+**Changes made:**
+- login.html — aside removed, theme toggle removed, body = full dark grid bg, form card centered
+- register.html — same
+
+**Spec updates:** none
+
+**Related prompts:** 013
+
+---
