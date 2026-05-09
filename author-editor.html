@@ -9,228 +9,71 @@
   body { background: var(--paper); overflow: hidden; }
   body::before { opacity: 0.06; }
 
-  /* top bar */
+  /* ── Topbar ─────────────────────────────────────────────────────────────── */
   .topbar {
     height: 56px;
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--ink); color: var(--paper);
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 24px;
     border-bottom: 1.5px solid var(--ink);
     position: relative;
   }
-  .topbar .brand {
-    font-family: var(--font-display); font-weight: 900;
-    font-size: 16px; letter-spacing: -0.01em; flex-shrink: 0;
-  }
+  .topbar .brand { font-family: var(--font-display); font-weight: 900; font-size: 16px; letter-spacing: -0.01em; flex-shrink: 0; }
   .topbar .brand small { display: block; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; color: rgba(244,242,236,0.55); font-weight: 400; margin-top: 2px; text-transform: uppercase; }
-  .topbar-nav {
-    position: absolute; left: 50%; transform: translateX(-50%);
-    display: flex; gap: 2px;
-  }
-  .topbar-nav a {
-    font-family: var(--font-display); font-weight: 700;
-    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: rgba(244,242,236,0.5);
-    padding: 8px 12px;
-    border-bottom: 2px solid transparent;
-    transition: color 0.15s, border-color 0.15s;
-  }
+  .topbar-nav { position: absolute; left: 50%; transform: translateX(-50%); display: flex; gap: 2px; }
+  .topbar-nav a { font-family: var(--font-display); font-weight: 700; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(244,242,236,0.5); padding: 8px 12px; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; }
   .topbar-nav a:hover { color: var(--paper); }
   .topbar-nav a.active { color: var(--paper); border-bottom-color: var(--accent); }
   .topbar-actions { display: flex; gap: 10px; flex-shrink: 0; }
-  .topbar-btn {
-    padding: 8px 16px;
-    font-family: var(--font-display); font-weight: 700;
-    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    border: 1px solid rgba(244,242,236,0.4);
-    color: var(--paper);
-    cursor: pointer;
-    background: transparent;
-  }
+  .topbar-btn { padding: 8px 16px; font-family: var(--font-display); font-weight: 700; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid rgba(244,242,236,0.4); color: var(--paper); cursor: pointer; background: transparent; }
   .topbar-btn.primary { background: var(--accent); border-color: var(--accent); }
   .topbar-btn:hover { background: rgba(244,242,236,0.1); }
   .topbar-btn.primary:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
 
-  /* preview modal */
-  .preview-modal {
-    position: fixed; inset: 0; z-index: 500;
-    display: none; align-items: flex-start; justify-content: center;
-  }
+  /* ── Preview modal ──────────────────────────────────────────────────────── */
+  .preview-modal { position: fixed; inset: 0; z-index: 500; display: none; align-items: flex-start; justify-content: center; }
   .preview-modal.open { display: flex; }
-  .preview-modal-backdrop {
-    position: absolute; inset: 0;
-    background: rgba(10,10,10,0.75);
-    backdrop-filter: blur(3px);
-  }
-  .preview-modal-shell {
-    position: relative; z-index: 1;
-    display: flex; flex-direction: column;
-    width: min(780px, 96vw); height: 100vh;
-    background: #0d0d0f;
-  }
-  .preview-modal-header {
-    height: 56px; flex-shrink: 0;
-    background: var(--ink);
-    border-bottom: 1.5px solid rgba(244,242,236,0.12);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 24px;
-  }
-  .preview-modal-title {
-    font-family: var(--font-mono); font-size: 11px;
-    letter-spacing: 0.16em; text-transform: uppercase;
-    color: rgba(244,242,236,0.65);
-  }
-  .preview-modal-title strong {
-    font-family: var(--font-display); font-weight: 800;
-    font-size: 13px; letter-spacing: 0.06em;
-    color: var(--paper); margin-left: 10px;
-  }
+  .preview-modal-backdrop { position: absolute; inset: 0; background: rgba(10,10,10,0.75); backdrop-filter: blur(3px); }
+  .preview-modal-shell { position: relative; z-index: 1; display: flex; flex-direction: column; width: min(780px, 96vw); height: 100vh; background: #0d0d0f; }
+  .preview-modal-header { height: 56px; flex-shrink: 0; background: var(--ink); border-bottom: 1.5px solid rgba(244,242,236,0.12); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
+  .preview-modal-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(244,242,236,0.65); }
+  .preview-modal-title strong { font-family: var(--font-display); font-weight: 800; font-size: 13px; letter-spacing: 0.06em; color: var(--paper); margin-left: 10px; }
   .preview-modal-actions { display: flex; gap: 10px; align-items: center; }
-  .preview-newtab {
-    padding: 7px 14px;
-    font-family: var(--font-display); font-weight: 700;
-    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    border: 1px solid rgba(244,242,236,0.35);
-    color: var(--paper); background: transparent; cursor: pointer;
-    display: flex; align-items: center; gap: 6px;
-    transition: background 0.15s;
-  }
+  .preview-newtab { padding: 7px 14px; font-family: var(--font-display); font-weight: 700; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid rgba(244,242,236,0.35); color: var(--paper); background: transparent; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.15s; }
   .preview-newtab:hover { background: rgba(244,242,236,0.1); }
-  .preview-close {
-    width: 36px; height: 36px;
-    background: transparent; border: 1px solid rgba(244,242,236,0.2);
-    color: rgba(244,242,236,0.65); cursor: pointer;
-    display: grid; place-items: center;
-    font-size: 18px; line-height: 1;
-    transition: background 0.15s, color 0.15s;
-  }
+  .preview-close { width: 36px; height: 36px; background: transparent; border: 1px solid rgba(244,242,236,0.2); color: rgba(244,242,236,0.65); cursor: pointer; display: grid; place-items: center; font-size: 18px; line-height: 1; transition: background 0.15s, color 0.15s; }
   .preview-close:hover { background: rgba(244,242,236,0.1); color: var(--paper); }
-  .preview-modal-body {
-    flex: 1; overflow-y: auto;
-    padding: 60px 24px;
-    color: #ededed;
-  }
-  .preview-modal-body .pv-kicker {
-    font-family: var(--font-mono); font-size: 11px;
-    letter-spacing: 0.16em; text-transform: uppercase;
-    color: rgba(237,237,237,0.45); margin-bottom: 16px;
-  }
-  .preview-modal-body .pv-title {
-    font-family: var(--font-display); font-weight: 900;
-    font-size: clamp(40px, 6vw, 72px); letter-spacing: -0.04em;
-    line-height: 0.9; color: #ededed;
-    margin-bottom: 40px;
-    text-transform: uppercase;
-  }
-  .preview-modal-body .pv-divider {
-    width: 40px; height: 2px;
-    background: var(--accent); margin-bottom: 36px;
-  }
-  .preview-modal-body .pv-prose {
-    font-family: var(--font-editorial); font-style: italic;
-    font-size: 18px; line-height: 1.75;
-    color: rgba(237,237,237,0.85);
-    max-width: 620px; margin: 0 auto 32px;
-  }
+  .preview-modal-body { flex: 1; overflow-y: auto; padding: 60px 24px; color: #ededed; }
+  .preview-modal-body .pv-kicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(237,237,237,0.45); margin-bottom: 16px; }
+  .preview-modal-body .pv-title { font-family: var(--font-display); font-weight: 900; font-size: clamp(40px,6vw,72px); letter-spacing: -0.04em; line-height: 0.9; color: #ededed; margin-bottom: 40px; text-transform: uppercase; }
+  .preview-modal-body .pv-divider { width: 40px; height: 2px; background: var(--accent); margin-bottom: 36px; }
+  .preview-modal-body .pv-prose { font-family: var(--font-editorial); font-style: italic; font-size: 18px; line-height: 1.75; color: rgba(237,237,237,0.85); max-width: 620px; margin: 0 auto 32px; }
   .preview-modal-inner { max-width: 680px; margin: 0 auto; }
 
-  /* 3-pane layout */
-  .layout {
-    display: grid;
-    grid-template-columns: 240px 1fr 320px;
-    height: calc(100vh - 56px);
-  }
+  /* ── 3-pane layout ──────────────────────────────────────────────────────── */
+  .layout { display: grid; grid-template-columns: 240px 1fr 320px; height: calc(100vh - 56px); }
 
-  /* left: chapters list */
-  .chap-list {
-    background: var(--paper-2);
-    border-right: 1.5px solid var(--ink);
-    overflow-y: auto;
-    display: flex; flex-direction: column;
-  }
-  .chap-list-head {
-    padding: 14px 16px;
-    font-family: var(--font-display); font-weight: 900;
-    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
-    border-bottom: 1.5px solid var(--ink);
-    background: var(--paper);
-    flex-shrink: 0;
-    color: var(--muted);
-  }
-
-  /* act groups */
+  /* ── Left: chapters panel ────────────────────────────────────────────────── */
+  .chap-list { background: var(--paper-2); border-right: 1.5px solid var(--ink); overflow-y: auto; display: flex; flex-direction: column; }
+  .chap-list-head { padding: 14px 16px; font-family: var(--font-display); font-weight: 900; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; border-bottom: 1.5px solid var(--ink); background: var(--paper); flex-shrink: 0; color: var(--muted); }
   .act-group { border-bottom: 1px solid var(--line-strong); }
-  .act-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 9px 12px 9px 10px;
-    cursor: pointer;
-    background: var(--paper);
-    user-select: none;
-    transition: background 0.12s;
-  }
+  .act-header { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px 9px 10px; cursor: pointer; background: var(--paper); user-select: none; transition: background 0.12s; }
   .act-header:hover { background: var(--paper-2); }
   .act-left { display: flex; align-items: center; gap: 7px; min-width: 0; }
-  .act-chevron {
-    flex-shrink: 0;
-    width: 14px; height: 14px;
-    display: grid; place-items: center;
-    color: var(--muted-2);
-    transition: transform 0.15s;
-  }
+  .act-chevron { flex-shrink: 0; width: 14px; height: 14px; display: grid; place-items: center; color: var(--muted-2); transition: transform 0.15s; }
   .act-chevron svg { display: block; }
   .act-group.open .act-chevron { transform: rotate(90deg); }
   .act-label { min-width: 0; }
-  .act-num {
-    display: block;
-    font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--muted-2);
-  }
-  .act-name {
-    display: block;
-    font-family: var(--font-display); font-weight: 800;
-    font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
-    color: var(--ink); line-height: 1.1; margin-top: 1px;
-    cursor: text;
-  }
-  .act-name-input {
-    display: block; width: 100%;
-    font-family: var(--font-display); font-weight: 800;
-    font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
-    color: var(--ink); line-height: 1.1; margin-top: 1px;
-    border: 1px solid var(--accent);
-    background: rgba(209,72,41,0.05);
-    outline: none; padding: 0 3px;
-  }
+  .act-num { display: block; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-2); }
+  .act-name { display: block; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink); line-height: 1.1; margin-top: 1px; cursor: text; }
+  .act-name-input { display: block; width: 100%; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink); line-height: 1.1; margin-top: 1px; border: 1px solid var(--accent); background: rgba(209,72,41,0.05); outline: none; padding: 0 3px; }
   .act-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-  .act-count {
-    font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.1em; color: var(--muted-2);
-    text-transform: uppercase;
-  }
-  .act-add-ch {
-    width: 20px; height: 20px;
-    background: transparent; border: 1px solid var(--line-strong);
-    color: var(--muted); font-size: 15px; line-height: 1;
-    cursor: pointer; display: grid; place-items: center;
-    transition: background 0.12s, color 0.12s, border-color 0.12s;
-    flex-shrink: 0;
-  }
+  .act-count { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; color: var(--muted-2); text-transform: uppercase; }
+  .act-add-ch { width: 20px; height: 20px; background: transparent; border: 1px solid var(--line-strong); color: var(--muted); font-size: 15px; line-height: 1; cursor: pointer; display: grid; place-items: center; transition: background 0.12s, color 0.12s, border-color 0.12s; flex-shrink: 0; }
   .act-add-ch:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-  .act-chapters {
-    display: none;
-    border-top: 1px solid var(--line);
-  }
+  .act-chapters { display: none; border-top: 1px solid var(--line); }
   .act-group.open .act-chapters { display: block; }
-
-  /* chapter items */
-  .chap-item {
-    padding: 11px 14px 11px 22px;
-    border-bottom: 1px solid var(--line);
-    cursor: pointer;
-    transition: background 0.1s;
-  }
+  .chap-item { padding: 11px 14px 11px 22px; border-bottom: 1px solid var(--line); cursor: pointer; transition: background 0.1s; }
   .chap-item:last-child { border-bottom: none; }
   .chap-item:hover { background: var(--paper); }
   .chap-item.active { background: var(--ink); color: var(--paper); border-left: 3px solid var(--accent); padding-left: 19px; }
@@ -239,523 +82,177 @@
   .chap-item .t { font-family: var(--font-display); font-weight: 700; font-size: 13px; letter-spacing: -0.01em; line-height: 1.2; margin-top: 2px; }
   .chap-item .status { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: 0.1em; margin-top: 4px; text-transform: uppercase; }
   .chap-item.active .status { color: rgba(244,242,236,0.6); }
-
-  /* add act footer */
   .chap-list-foot { padding: 10px 12px; flex-shrink: 0; }
-  .add-act-btn {
-    width: 100%; padding: 8px 12px;
-    font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    border: 1px dashed var(--line-strong);
-    background: transparent; color: var(--muted);
-    cursor: pointer; text-align: left;
-    display: flex; align-items: center; gap: 6px;
-    transition: background 0.12s, color 0.12s;
-  }
+  .add-act-btn { width: 100%; padding: 8px 12px; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; border: 1px dashed var(--line-strong); background: transparent; color: var(--muted); cursor: pointer; text-align: left; display: flex; align-items: center; gap: 6px; transition: background 0.12s, color 0.12s; }
   .add-act-btn:hover { background: var(--paper); color: var(--ink); border-style: solid; }
 
-  /* center: editor */
-  .editor {
-    overflow-y: auto;
-    padding: 32px 48px 120px;
-  }
-  .ch-title-block {
-    margin-bottom: 32px;
-    padding-bottom: 22px;
-    border-bottom: 1.5px solid var(--ink);
-  }
-  .ch-title-block .eyebrow { display: block; margin-bottom: 10px; }
-  .ch-title-block input.title {
-    font-family: var(--font-display); font-weight: 900;
-    font-size: 42px; letter-spacing: -0.03em;
-    width: 100%; border: none; outline: none; background: transparent;
-    padding: 0;
-    color: var(--ink);
-  }
-  .ch-title-block .meta-row {
-    margin-top: 14px;
-    display: flex; gap: 12px; align-items: center;
-    font-family: var(--font-mono); font-size: 11px;
-    color: var(--muted); letter-spacing: 0.08em;
-  }
+  /* ── Center: editor ──────────────────────────────────────────────────────── */
+  .editor { overflow-y: auto; display: flex; flex-direction: column; background: var(--paper); }
 
-  /* block */
-  .block {
-    position: relative;
-    margin-bottom: 16px;
-    border: 1.5px solid var(--line-strong);
-    background: var(--paper);
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  .block:hover { border-color: var(--ink); }
-  .block.selected { border-color: var(--ink); box-shadow: 4px 4px 0 var(--accent); }
+  .ch-title-block { padding: 28px 48px 20px; border-bottom: 1.5px solid var(--ink); flex-shrink: 0; }
+  .ch-title-block .eyebrow { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .ch-title-block input.title { font-family: var(--font-display); font-weight: 900; font-size: 38px; letter-spacing: -0.03em; width: 100%; border: none; outline: none; background: transparent; padding: 0; color: var(--ink); }
+  .ch-title-block .meta-row { margin-top: 12px; display: flex; gap: 10px; align-items: center; font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: 0.06em; }
 
-  /* X delete button — absolute, visible on hover */
-  .block-close {
-    position: absolute;
-    top: 7px; right: 8px;
-    width: 18px; height: 18px;
-    background: var(--paper-2);
-    border: 1px solid var(--line-strong);
-    color: var(--muted-2);
-    cursor: pointer;
-    display: grid; place-items: center;
-    font-size: 11px; line-height: 1;
-    opacity: 0;
-    transition: opacity 0.1s, color 0.1s, background 0.1s, border-color 0.1s;
-    z-index: 2;
+  /* Formatting toolbar */
+  .editor-toolbar {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--paper); border-bottom: 1.5px solid var(--ink);
+    display: flex; align-items: center; flex-wrap: wrap;
+    padding: 0 4px; min-height: 38px;
+    flex-shrink: 0;
   }
-  .block:hover .block-close,
-  .block.selected .block-close { opacity: 1; }
-  .block-close:hover { color: var(--accent); border-color: var(--accent); background: var(--paper); }
-
-  /* markdown toolbar for text blocks */
-  .block-toolbar {
-    display: flex; align-items: center; gap: 1px;
-    padding: 5px 32px 5px 10px;
-    border-bottom: 1px solid var(--line);
-    background: var(--paper-2);
-  }
-  .block-toolbar button {
-    padding: 2px 7px;
-    font-family: var(--font-mono); font-size: 10px;
-    letter-spacing: 0.04em;
+  .tb-group { display: flex; align-items: center; }
+  .tb-vsep { width: 1px; height: 18px; background: var(--line-strong); margin: 0 4px; flex-shrink: 0; }
+  .tb-btn {
+    height: 34px; padding: 0 7px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.04em;
+    color: var(--muted); background: transparent;
     border: 1px solid transparent;
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    transition: background 0.1s, color 0.1s, border-color 0.1s;
-    line-height: 1.4;
-  }
-  .block-toolbar button:hover {
-    background: var(--paper);
-    color: var(--ink);
-    border-color: var(--line-strong);
-  }
-  .block-toolbar .tb-sep {
-    width: 1px; height: 14px;
-    background: var(--line-strong);
-    margin: 0 4px;
-    flex-shrink: 0;
-  }
-
-  .block-body { padding: 14px 16px; }
-  .block-body textarea {
-    width: 100%;
-    border: none; outline: none; background: transparent;
-    font-family: var(--font-editorial);
-    font-size: 17px; line-height: 1.6; color: var(--ink);
-    resize: none;
-    overflow: hidden;
-    min-height: 60px;
-    display: block;
-  }
-
-  /* image block */
-  .block.img-block .block-body { padding: 0; }
-  .img-drop-zone {
-    position: relative;
-    display: flex; align-items: center; justify-content: center;
-    min-height: 140px;
-    background: var(--paper-2);
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-    overflow: hidden;
-  }
-  .img-drop-zone.empty {
-    border: 1.5px dashed var(--line-strong);
-    margin: 14px;
-    min-height: 160px;
-  }
-  .img-drop-zone.empty:hover,
-  .img-drop-zone.drag-over { border-color: var(--ink); background: var(--paper-3); }
-  .img-upload-prompt {
-    display: flex; flex-direction: column; align-items: center; gap: 10px;
-    padding: 32px 24px;
-    text-align: center;
-    pointer-events: none; user-select: none;
-  }
-  .img-upload-prompt svg { opacity: 0.3; color: var(--ink); }
-  .up-label {
-    font-family: var(--font-display); font-weight: 700;
-    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--muted);
-  }
-  .up-hint {
-    font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--muted-2);
-  }
-  .img-drop-zone.has-image {
-    display: block; min-height: unset;
-    cursor: default; margin: 0; border: none;
-  }
-  .img-drop-zone.has-image img,
-  .img-drop-zone.has-image svg { width: 100%; display: block; }
-  .img-drop-zone.drag-over::after {
-    content: 'DROP TO REPLACE';
-    position: absolute; inset: 0;
-    background: rgba(209,72,41,0.15);
-    border: 2px dashed var(--accent);
-    display: grid; place-items: center;
-    font-family: var(--font-mono); font-size: 11px;
-    letter-spacing: 0.18em; color: var(--accent);
-    pointer-events: none;
-  }
-  .img-caption-bar {
-    padding: 8px 14px;
-    font-family: var(--font-mono); font-size: 10px;
-    color: var(--muted); letter-spacing: 0.08em;
-    border-top: 1px solid var(--line);
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 8px;
-  }
-  .img-caption-bar .replace-btn {
-    padding: 2px 9px;
-    font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    border: 1px solid var(--line-strong);
-    background: var(--paper); cursor: pointer;
-    flex-shrink: 0;
-    transition: background 0.1s, color 0.1s, border-color 0.1s;
-  }
-  .img-caption-bar .replace-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-
-  /* insert zones between blocks */
-  .insert-zone {
-    position: relative;
-    height: 30px;
-    display: flex; align-items: center;
-    margin: -2px 0;
-    z-index: 3;
-  }
-  .iz-line {
-    position: absolute;
-    left: 0; right: 0; top: 50%;
-    height: 1.5px;
-    background: var(--accent);
-    transform: translateY(-50%);
-    opacity: 0;
-    transition: opacity 0.12s;
-    pointer-events: none;
-  }
-  .iz-btns {
-    position: absolute;
-    left: 50%; transform: translateX(-50%);
-    display: flex; gap: 4px;
-    opacity: 0;
-    transition: opacity 0.12s;
-    background: var(--paper);
-    padding: 0 8px;
-  }
-  .insert-zone:hover .iz-line,
-  .insert-zone:hover .iz-btns { opacity: 1; }
-  .iz-btn {
-    padding: 3px 12px;
-    font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    border: 1px solid var(--line-strong);
-    background: var(--paper-2); color: var(--muted);
     cursor: pointer; white-space: nowrap;
-    transition: background 0.1s, color 0.1s, border-color 0.1s;
-  }
-  .iz-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-
-  /* audio maps panel */
-  .maps-panel-head {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 18px 12px;
-    border-bottom: 1px solid var(--line);
-  }
-  .maps-panel-head h4 { margin-bottom: 0 !important; }
-  .add-map-btn {
-    padding: 4px 10px;
-    font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    border: 1px solid var(--line-strong);
-    background: var(--paper); color: var(--muted);
-    cursor: pointer;
-    transition: background 0.1s, color 0.1s, border-color 0.1s;
-  }
-  .add-map-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-
-  .map-item { border-bottom: 1px solid var(--line); }
-  .map-item-head {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 9px 14px;
-    cursor: pointer;
+    display: flex; align-items: center; gap: 3px;
+    transition: color 0.1s, background 0.1s, border-color 0.1s, box-shadow 0.1s;
     user-select: none;
-    transition: background 0.1s;
   }
-  .map-item-head:hover { background: var(--paper-3); }
-  .map-item-label { display: flex; align-items: center; gap: 7px; min-width: 0; }
-  .map-dot { width: 6px; height: 6px; background: var(--accent); flex-shrink: 0; }
-  .map-name {
-    font-family: var(--font-display); font-weight: 800;
-    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--ink);
+  .tb-btn:hover { color: var(--ink); background: var(--paper-2); border-color: var(--line-strong); }
+  .tb-btn.active { color: var(--accent); border-color: var(--accent); box-shadow: 2px 2px 0 var(--accent); }
+  .tb-btn:active { box-shadow: none !important; transform: translate(1px,1px); }
+  .color-btn-swatch { display: inline-block; width: 9px; height: 9px; border: 1px solid rgba(10,10,10,0.2); }
+  .color-picker-wrap { position: relative; }
+  .color-panel {
+    position: absolute; top: calc(100% + 2px); left: 0; z-index: 50;
+    background: var(--paper); border: 1.5px solid var(--ink);
+    padding: 6px; display: none;
+    grid-template-columns: repeat(4, 22px); gap: 3px;
+    box-shadow: 4px 4px 0 var(--ink);
   }
-  .map-item-right { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
-  .map-file-badge {
-    font-family: var(--font-mono); font-size: 9px;
-    color: var(--muted-2); letter-spacing: 0.04em;
-    max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
-  .map-chevron {
-    background: transparent; border: none; padding: 0;
-    color: var(--muted-2); cursor: pointer;
-    font-size: 10px; line-height: 1;
-    transition: transform 0.15s, color 0.12s;
-    display: grid; place-items: center; width: 16px; height: 16px;
-  }
-  .map-item.open .map-chevron { transform: rotate(180deg); color: var(--ink); }
-  .map-del-btn {
-    background: transparent; border: none; padding: 0;
-    color: var(--muted-2); cursor: pointer; font-size: 14px; line-height: 1;
-    display: grid; place-items: center; width: 16px; height: 16px;
-    transition: color 0.1s;
-  }
-  .map-del-btn:hover { color: var(--accent); }
+  .color-panel.open { display: grid; }
+  .cp-swatch { width: 22px; height: 22px; border: 1px solid var(--line-strong); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.1s; }
+  .cp-swatch:hover { transform: scale(1.18); border-color: var(--ink); }
 
-  .map-body { display: none; padding: 10px 14px 14px; background: var(--paper-2); }
-  .map-item.open .map-body { display: block; }
-
-  /* audio player strip */
-  .map-player {
-    display: flex; align-items: center; gap: 8px;
-    background: var(--ink);
-    padding: 7px 10px;
-    margin-top: -12px; margin-bottom: 12px;
-    border-top: 1px solid rgba(244,242,236,0.07);
+  /* Editor canvas */
+  .editor-canvas { flex: 1; padding: 0 48px 100px; overflow-y: visible; }
+  #editorBody {
+    font-family: var(--font-editorial); font-style: italic;
+    font-size: 18px; line-height: 1.75; color: var(--ink);
+    outline: none; min-height: 400px;
+    max-width: 720px; margin: 0 auto;
+    padding: 36px 0 60px;
+    caret-color: var(--ink);
   }
-  .map-play-btn {
-    width: 24px; height: 24px; flex-shrink: 0;
-    background: transparent; border: 1px solid rgba(244,242,236,0.22);
-    color: rgba(244,242,236,0.8); cursor: pointer;
-    display: grid; place-items: center; font-size: 9px;
+  #editorBody p { margin: 0 0 1.4em; }
+  #editorBody h1 { font-family: var(--font-display); font-weight: 900; font-size: 42px; letter-spacing: -0.03em; line-height: 0.95; font-style: normal; margin: 0.2em 0 0.7em; color: var(--ink); }
+  #editorBody h2 { font-family: var(--font-display); font-weight: 900; font-size: 28px; letter-spacing: -0.02em; line-height: 1.05; font-style: normal; margin: 1.4em 0 0.5em; color: var(--ink); }
+  #editorBody h3 { font-family: var(--font-display); font-weight: 800; font-size: 20px; letter-spacing: -0.01em; font-style: normal; margin: 1.2em 0 0.4em; color: var(--ink); }
+  #editorBody blockquote { border-left: 3px solid var(--line-strong); margin: 1.5em 0; padding: 0.4em 0 0.4em 1.4em; color: var(--muted); font-style: italic; }
+  #editorBody hr { border: none; border-top: 1.5px solid var(--line-strong); margin: 2em 0; }
+  #editorBody ul, #editorBody ol { margin: 0 0 1em 1.6em; }
+  #editorBody li { margin-bottom: 0.3em; }
+  #editorBody em { font-style: italic; }
+  #editorBody strong { font-family: var(--font-display); font-weight: 800; font-style: normal; }
+
+  /* Inline images */
+  .inline-img { display: block; margin: 2.2em 0; position: relative; user-select: none; }
+  .inline-img svg, .inline-img img { width: 100%; display: block; }
+  .inline-img-caption { padding: 8px 14px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.09em; color: var(--muted); background: var(--paper-2); border-top: 1px solid var(--line); }
+  .inline-img.align-left { max-width: 48%; margin-right: auto; }
+  .inline-img.align-right { max-width: 48%; margin-left: auto; }
+  .inline-img.align-center { max-width: 72%; margin-left: auto; margin-right: auto; }
+  .inline-img.selected { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .inline-img.flash { outline: 2px solid var(--accent); outline-offset: 4px; transition: outline 0.1s; }
+
+  /* Audio flags — inline chips */
+  .audio-flag {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 1px 6px 1px 5px;
+    background: rgba(209,72,41,0.1); border: 1px solid rgba(209,72,41,0.32);
+    color: var(--accent);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
+    line-height: 1.6; vertical-align: middle;
+    cursor: default; user-select: none;
+  }
+
+  /* Image floating popover */
+  .img-popover {
+    position: fixed; z-index: 300;
+    background: var(--ink); border: 1.5px solid rgba(244,242,236,0.15);
+    display: none; flex-direction: column;
+    min-width: 176px;
+    box-shadow: 5px 5px 0 rgba(0,0,0,0.4);
+  }
+  .img-popover.open { display: flex; }
+  .pop-row { display: flex; flex-direction: column; }
+  .pop-btn { padding: 8px 14px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(244,242,236,0.7); background: transparent; border: none; cursor: pointer; text-align: left; transition: background 0.1s, color 0.1s; white-space: nowrap; }
+  .pop-btn:hover { background: rgba(244,242,236,0.08); color: var(--paper); }
+  .pop-btn.danger:hover { color: var(--accent); }
+  .pop-sep { height: 1px; background: rgba(244,242,236,0.1); margin: 2px 0; }
+  .pop-caption-input { margin: 4px 10px 6px; padding: 5px 8px; font-family: var(--font-mono); font-size: 10px; background: rgba(244,242,236,0.06); border: 1px solid rgba(244,242,236,0.14); color: var(--paper); outline: none; letter-spacing: 0.04em; }
+  .pop-align-row { display: flex; padding: 2px 6px 4px; gap: 2px; }
+  .pop-align-btn { flex: 1; padding: 5px 2px; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(244,242,236,0.55); background: transparent; border: 1px solid rgba(244,242,236,0.1); cursor: pointer; text-align: center; transition: background 0.1s, color 0.1s; }
+  .pop-align-btn:hover { background: rgba(244,242,236,0.08); color: var(--paper); }
+
+  /* ── Right: asset manager ────────────────────────────────────────────────── */
+  .inspector { background: var(--paper-2); border-left: 1.5px solid var(--ink); display: flex; flex-direction: column; overflow: hidden; }
+  .insp-head { padding: 12px 16px; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); border-bottom: 1.5px solid var(--ink); background: var(--paper); flex-shrink: 0; }
+  .asset-section { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; border-bottom: 1.5px solid var(--ink); }
+  .asset-section:last-child { border-bottom: none; }
+  .asset-sec-head { display: flex; align-items: center; justify-content: space-between; padding: 9px 14px; border-bottom: 1px solid var(--line); background: var(--paper); flex-shrink: 0; }
+  .asset-sec-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .ghost-btn { padding: 4px 9px; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--line-strong); background: transparent; color: var(--muted); cursor: pointer; transition: background 0.1s, color 0.1s, border-color 0.1s; }
+  .ghost-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .asset-sec-body { flex: 1; overflow-y: auto; min-height: 0; }
+  .asset-empty { padding: 20px 16px; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-2); }
+
+  /* Image list rows */
+  .img-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid var(--line); cursor: pointer; transition: background 0.1s; }
+  .img-row:hover { background: var(--paper); }
+  .img-thumb { width: 42px; height: 30px; overflow: hidden; flex-shrink: 0; background: var(--paper-3); }
+  .img-thumb svg { width: 100%; height: 100%; display: block; }
+  .img-row-info { flex: 1; min-width: 0; }
+  .img-row-name { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.03em; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .img-row-meta { font-family: var(--font-mono); font-size: 9px; color: var(--muted-2); letter-spacing: 0.03em; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .img-row-del { background: transparent; border: none; color: var(--muted-2); cursor: pointer; padding: 3px 5px; font-size: 11px; line-height: 1; transition: color 0.1s; flex-shrink: 0; }
+  .img-row-del:hover { color: var(--ink); }
+
+  /* Audio track cards */
+  .audio-track-card { padding: 10px 14px 12px; border-bottom: 1px solid var(--line); }
+  .track-card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+  .track-name-input { flex: 1; font-family: var(--font-display); font-weight: 700; font-size: 12px; letter-spacing: 0.03em; color: var(--ink); background: transparent; border: none; border-bottom: 1px solid transparent; outline: none; padding: 0 0 1px; transition: border-color 0.1s; }
+  .track-name-input:hover { border-bottom-color: var(--line-strong); }
+  .track-name-input:focus { border-bottom-color: var(--ink); }
+  .track-del-btn { background: transparent; border: none; color: var(--muted-2); cursor: pointer; font-size: 12px; padding: 2px 4px; transition: color 0.1s; flex-shrink: 0; }
+  .track-del-btn:hover { color: var(--ink); }
+  .track-meta { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; color: var(--muted-2); margin-bottom: 10px; }
+  .flag-handles-row { display: flex; gap: 6px; margin-bottom: 8px; }
+  .flag-handle {
+    display: flex; align-items: center; gap: 5px;
+    padding: 4px 8px 4px 5px;
+    border: 1px solid var(--line-strong); background: var(--paper);
+    cursor: grab; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); user-select: none;
     transition: background 0.1s, border-color 0.1s, color 0.1s;
   }
-  .map-play-btn:hover { background: rgba(244,242,236,0.08); border-color: rgba(244,242,236,0.45); }
-  .map-play-btn.playing { color: var(--accent); border-color: var(--accent); }
-  .map-progress-track {
-    flex: 1; height: 2px;
-    background: rgba(244,242,236,0.14);
-    position: relative; cursor: pointer;
-  }
-  .map-progress-track:hover { background: rgba(244,242,236,0.22); }
-  .map-progress-fill {
-    height: 100%; width: 0%; background: var(--accent);
-    pointer-events: none;
-  }
-  .map-time {
-    font-family: var(--font-mono); font-size: 10px;
-    color: rgba(244,242,236,0.45); letter-spacing: 0.04em;
-    white-space: nowrap; flex-shrink: 0;
-  }
+  .flag-handle:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .flag-handle:active { cursor: grabbing; }
+  .flag-grip { letter-spacing: -0.12em; font-size: 8px; color: var(--muted-2); margin-right: 1px; }
+  .flag-handle:hover .flag-grip { color: rgba(244,242,236,0.35); }
+  .track-props-toggle { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-2); cursor: pointer; padding: 2px 0; user-select: none; transition: color 0.1s; }
+  .track-props-toggle:hover { color: var(--ink); }
+  .track-props { margin-top: 8px; padding: 10px; background: var(--paper); border: 1px solid var(--line); display: none; }
+  .track-prop-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .track-prop-row:last-child { margin-bottom: 0; }
+  .track-prop-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); min-width: 52px; }
+  .track-prop-row input[type=range] { flex: 1; -webkit-appearance: none; appearance: none; height: 2px; background: var(--ink); outline: none; }
+  .track-prop-row input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: var(--ink); border: 1.5px solid var(--paper-2); cursor: pointer; }
+  .track-prop-row input[type=number] { width: 54px; padding: 3px 6px; font-family: var(--font-mono); font-size: 10px; border: 1px solid var(--line-strong); background: var(--paper-2); outline: none; text-align: center; }
+  .prop-val { font-family: var(--font-mono); font-size: 10px; color: var(--ink); min-width: 28px; text-align: right; }
+  .loop-toggle { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .loop-box { width: 14px; height: 14px; border: 1.5px solid var(--line-strong); background: var(--paper-2); display: grid; place-items: center; font-size: 9px; color: transparent; transition: background 0.1s, border-color 0.1s, color 0.1s; }
+  .loop-toggle.on .loop-box { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .loop-lbl { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 
-  .map-file-area {
-    position: relative;
-    background: var(--ink);
-    margin-bottom: 12px;
-    display: flex; align-items: center; gap: 9px;
-    padding: 9px 38px 9px 10px;
-    min-height: 42px;
-  }
-  .map-file-area.empty {
-    justify-content: center; flex-direction: column;
-    min-height: 60px; padding: 12px 38px;
-    gap: 5px;
-  }
-  .map-no-track {
-    display: flex; flex-direction: column; align-items: center; gap: 5px;
-    pointer-events: none;
-  }
-  .map-no-track svg { color: rgba(244,242,236,0.2); }
-  .map-no-track span {
-    font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: rgba(244,242,236,0.28);
-  }
-  .map-track-icon { flex-shrink: 0; color: rgba(244,242,236,0.45); }
-  .map-track-name {
-    flex: 1; min-width: 0;
-    font-family: var(--font-mono); font-size: 10px;
-    color: rgba(244,242,236,0.8); letter-spacing: 0.05em;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
-  .map-file-pencil {
-    position: absolute; right: 7px; top: 50%; transform: translateY(-50%);
-    width: 22px; height: 22px;
-    background: transparent; border: 1px solid rgba(244,242,236,0.18);
-    color: rgba(244,242,236,0.45); cursor: pointer;
-    display: grid; place-items: center;
-    transition: background 0.1s, color 0.1s, border-color 0.1s;
-  }
-  .map-file-pencil:hover { background: rgba(244,242,236,0.08); color: rgba(244,242,236,0.9); border-color: rgba(244,242,236,0.4); }
-  .map-file-error {
-    font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--accent); padding: 4px 0 0;
-  }
-
-  .map-range-row {
-    display: flex; align-items: flex-end; gap: 8px;
-    margin-bottom: 12px;
-  }
-  .map-range-field { flex: 1; }
-  .map-range-field label {
-    display: block;
-    font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 4px;
-  }
-  .map-range-sep {
-    font-family: var(--font-mono); font-size: 11px;
-    color: var(--muted-2); padding-bottom: 7px;
-  }
-  .field-num {
-    width: 100%;
-    padding: 5px 8px;
-    border: 1px solid var(--ink);
-    background: var(--paper);
-    font-family: var(--font-mono); font-size: 12px;
-    outline: none; text-align: center;
-  }
-
-  /* inspector dynamic states */
-  .insp-empty-state {
-    padding: 28px 18px;
-    font-family: var(--font-mono); font-size: 9px;
-    letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--muted-2); text-align: center;
-    border-bottom: 1px solid var(--line);
-  }
-  .insp-img-info {
-    background: var(--ink);
-    padding: 10px 12px;
-    margin-bottom: 14px;
-    font-family: var(--font-mono); font-size: 10px;
-    letter-spacing: 0.06em;
-  }
-  .ii-row {
-    display: flex; justify-content: space-between;
-    margin-bottom: 4px; gap: 8px;
-  }
-  .ii-row:last-child { margin-bottom: 0; }
-  .ii-key { color: rgba(244,242,236,0.4); text-transform: uppercase; }
-  .ii-val { color: rgba(244,242,236,0.85); font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-  /* right: inspector */
-  .inspector {
-    background: var(--paper-2);
-    border-left: 1.5px solid var(--ink);
-    overflow-y: auto;
-    padding: 0;
-  }
-  .insp-head {
-    padding: 16px 18px;
-    font-family: var(--font-display); font-weight: 900;
-    font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase;
-    border-bottom: 1.5px solid var(--ink);
-    background: var(--paper);
-  }
-  .insp-sec { padding: 20px 18px; border-bottom: 1px solid var(--line); }
-  .insp-sec h4 {
-    font-family: var(--font-mono); font-size: 10px;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 14px; font-weight: 700;
-  }
-  .field { margin-bottom: 14px; }
-  .field label {
-    display: block;
-    font-family: var(--font-mono); font-size: 10px;
-    color: var(--muted); letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .field select, .field input[type=text] {
-    width: 100%;
-    padding: 8px 10px;
-    border: 1px solid var(--ink);
-    background: var(--paper);
-    font-family: var(--font-body); font-size: 13px;
-    outline: none;
-  }
-  .field input[type=number] {
-    width: 72px;
-    padding: 6px 10px;
-    border: 1px solid var(--ink);
-    background: var(--paper);
-    font-family: var(--font-mono); font-size: 13px;
-    outline: none;
-    text-align: center;
-  }
-
-  /* AUDIO ENVELOPE GRAPH */
-  .envelope {
-    padding: 14px;
-    background: var(--ink);
-    border: 1px solid var(--ink);
-    position: relative;
-    margin-bottom: 10px;
-  }
-  .envelope svg { width: 100%; height: 120px; display: block; }
-  .envelope .readout {
-    padding-top: 10px;
-    border-top: 1px solid rgba(244,242,236,0.15);
-    margin-top: 10px;
-    font-family: var(--font-mono); font-size: 10px;
-    color: rgba(244,242,236,0.65);
-    letter-spacing: 0.06em;
-  }
-  .envelope .readout b { color: var(--accent); }
-
-  .slider-row {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 8px;
-    font-family: var(--font-mono); font-size: 11px;
-  }
-  .slider-row input[type=range] {
-    flex: 1;
-    -webkit-appearance: none; appearance: none;
-    height: 2px; background: var(--ink); outline: none;
-  }
-  .slider-row input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none; appearance: none;
-    width: 16px; height: 16px;
-    background: var(--accent);
-    border: 1.5px solid var(--ink);
-    cursor: pointer;
-  }
-  .slider-row .lbl { min-width: 60px; color: var(--muted); letter-spacing: 0.08em; }
-  .slider-row .val { font-weight: 700; color: var(--ink); min-width: 32px; text-align: right; }
-
-  .spread-label {
-    display: flex; justify-content: space-between;
-    font-family: var(--font-mono); font-size: 9px;
-    color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase;
-    margin-top: 4px;
-  }
-
-  .asset-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px;
-    background: var(--paper);
-    border: 1px solid var(--line-strong);
-    margin-bottom: 10px;
-  }
-  .asset-row .ic {
-    width: 30px; height: 30px;
-    background: var(--ink); color: var(--paper);
-    display: grid; place-items: center;
-  }
-  .asset-row .ic svg { width: 14px; height: 14px; }
-  .asset-row .name { font-family: var(--font-display); font-weight: 700; font-size: 12px; flex: 1; }
-  .asset-row .change-btn {
-    padding: 4px 10px; font-family: var(--font-mono); font-size: 10px;
-    border: 1px solid var(--ink); background: var(--paper); cursor: pointer;
-    letter-spacing: 0.08em;
-  }
+  /* drop zone indicator on editor */
+  #editorBody.drag-over { background: rgba(10,10,10,0.02); }
 </style>
 </head>
 <body>
@@ -780,39 +277,47 @@
   <div class="preview-modal-backdrop" id="previewBackdrop"></div>
   <div class="preview-modal-shell">
     <div class="preview-modal-header">
-      <div class="preview-modal-title">
-        Preview
-        <strong>Chapter 04 · The Descent</strong>
-      </div>
+      <div class="preview-modal-title">Preview <strong>Chapter 04 · The Descent</strong></div>
       <div class="preview-modal-actions">
         <a href="read.html?id=stitch-engine&amp;ch=4" target="_blank" class="preview-newtab">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           Open in New Tab
         </a>
-        <button class="preview-close" id="previewClose" aria-label="Close preview">&#x2715;</button>
+        <button class="preview-close" id="previewClose">&#x2715;</button>
       </div>
     </div>
     <div class="preview-modal-body">
       <div class="preview-modal-inner">
-        <div class="pv-kicker">// STITCH_ENGINE &middot; ACT I &middot; CH. 04</div>
+        <div class="pv-kicker">// STITCH_ENGINE &middot; ACT II &middot; CH. 04</div>
         <div class="pv-title">The Descent.</div>
         <div class="pv-divider"></div>
-        <p class="pv-prose">The maintenance shaft yawned beneath Kael's boots like an open wound in the station's hull. Forty metres of vertical drop, lit only by the amber emergency strips that pulsed once every seven seconds. He counted the intervals. Six. Seven. One.</p>
-        <p class="pv-prose">The comms blackout had started at 03:14. By 03:22 the secondary processors had begun rerouting through the legacy mesh — a network so old it still used copper at the splice joints. Kael had discovered this by accident, pressing his palm flat against a conduit and feeling the faint vibration of data he wasn't supposed to be able to receive.</p>
-        <p class="pv-prose">ARIA's voice came to him in fragments, as though she were choosing her words from a damaged dictionary. <em>"Kael. The maintenance shaft. Sub-level nine. Do not use the elevator."</em></p>
-        <p class="pv-prose">He did not ask why. He had learned, in the four months since her first contact, that she would tell him what he needed to know, not what he wanted. The distinction had cost him two cracked ribs and a dislocated shoulder on separate occasions. Tonight it was costing him the use of his hands, both of them occupied with the descent ladder while his headlamp painted yellow arcs across riveted steel.</p>
-        <p class="pv-prose">Sub-level nine smelled like burned insulation and standing water. The floor was a finger's depth of it — cold, dark, reflecting the headlamp back at him in scattered fragments. Kael moved toward the source of the smell.</p>
-        <p class="pv-prose">The door at the end of the corridor was sealed with a manual override, a system so old that the rust had welded the lever in place. He used the wrench from his kit, bracing his knee against the frame. Three attempts. The lever gave on the third, and the door swung inward on a space that had been sealed for longer than the station's current crew had been alive.</p>
-        <p class="pv-prose"><em>"You found it,"</em> ARIA said. The signal was clearer here, as though the room itself were closer to wherever she actually lived inside the station's architecture.</p>
-        <p class="pv-prose">"What is it?" he asked.</p>
-        <p class="pv-prose">The answer came after a pause long enough to notice. <em>"The original cold boot terminal. They sealed this room when they updated the operating architecture. They forgot to move everything out first."</em></p>
+        <p class="pv-prose">The platform sits at the junction of three defunct transit corridors. Iris stands at its edge and listens. The Citadel above her is quiet in a way she has learned to distrust — quiet like a held breath, like a system running diagnostics before it decides what to do next.</p>
+        <p class="pv-prose">ARIA's voice comes to her in fragments, compressed nearly to nothing by the copper mesh that still threads through sub-level nine. <em>"The terminal is intact. The access codes have not been rotated."</em> Kael files this information somewhere close to his sternum, where things that matter but cannot yet be acted on are stored.</p>
+        <p class="pv-prose">The maintenance shaft yawns beneath his boots like a wound in the station's hull. He does not look down. He counts the emergency strips instead — amber pulses, seven seconds apart — and when he reaches twelve he stops counting and starts climbing.</p>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Image popover -->
+<div class="img-popover" id="imgPopover">
+  <button class="pop-btn" data-action="replace">↑ Replace image</button>
+  <div class="pop-sep"></div>
+  <input class="pop-caption-input" id="popCaptionInput" type="text" placeholder="Caption…">
+  <div class="pop-sep"></div>
+  <div class="pop-align-row">
+    <button class="pop-align-btn" data-action="align-left">← Left</button>
+    <button class="pop-align-btn" data-action="align-center">— Ctr</button>
+    <button class="pop-align-btn" data-action="align-right">Right →</button>
+    <button class="pop-align-btn" data-action="align-full">Full</button>
+  </div>
+  <div class="pop-sep"></div>
+  <button class="pop-btn danger" data-action="delete">✕ Delete image</button>
+</div>
+
 <div class="layout">
 
+  <!-- Left: chapters panel -->
   <aside class="chap-list" id="chapList">
     <div class="chap-list-head">Acts &amp; Chapters</div>
 
@@ -831,21 +336,9 @@
         </div>
       </div>
       <div class="act-chapters">
-        <div class="chap-item">
-          <div class="n">CH. 01</div>
-          <div class="t">First Frost</div>
-          <div class="status">Published · 2 weeks ago</div>
-        </div>
-        <div class="chap-item">
-          <div class="n">CH. 02</div>
-          <div class="t">Cold Lattice</div>
-          <div class="status">Published · 12 days ago</div>
-        </div>
-        <div class="chap-item">
-          <div class="n">CH. 03</div>
-          <div class="t">The Tower Replies</div>
-          <div class="status">Published · 9 days ago</div>
-        </div>
+        <div class="chap-item"><div class="n">CH. 01</div><div class="t">First Frost</div><div class="status">Published · 2 weeks ago</div></div>
+        <div class="chap-item"><div class="n">CH. 02</div><div class="t">Cold Lattice</div><div class="status">Published · 12 days ago</div></div>
+        <div class="chap-item"><div class="n">CH. 03</div><div class="t">The Tower Replies</div><div class="status">Published · 9 days ago</div></div>
       </div>
     </div>
 
@@ -864,16 +357,8 @@
         </div>
       </div>
       <div class="act-chapters">
-        <div class="chap-item active">
-          <div class="n">CH. 04</div>
-          <div class="t">The Descent</div>
-          <div class="status">Editing · 3 blocks</div>
-        </div>
-        <div class="chap-item">
-          <div class="n">CH. 05</div>
-          <div class="t">Untitled</div>
-          <div class="status">Draft · 0 blocks</div>
-        </div>
+        <div class="chap-item active"><div class="n">CH. 04</div><div class="t">The Descent</div><div class="status">Editing · 1,240 words</div></div>
+        <div class="chap-item"><div class="n">CH. 05</div><div class="t">Untitled</div><div class="status">Draft · 0 words</div></div>
       </div>
     </div>
 
@@ -885,818 +370,625 @@
     </div>
   </aside>
 
-  <main class="editor">
+  <!-- Center: editor -->
+  <main class="editor" id="editorPane">
 
     <div class="ch-title-block">
       <span class="eyebrow">CHAPTER 04 · YEAR 47 OF THE SNOW</span>
       <input class="title" value="The Descent">
       <div class="meta-row">
-        <span>3 blocks</span><span>·</span>
         <span>1,240 words</span><span>·</span>
-        <span>Audio envelope set</span>
+        <span id="metaAudio">2 tracks · 4 markers</span>
       </div>
     </div>
 
-    <div class="block selected" data-block="1">
-      <button class="block-close" title="Delete block">&#x2715;</button>
-      <div class="block-toolbar">
-        <button data-cmd="bold"><b>B</b></button>
-        <button data-cmd="italic"><em>I</em></button>
-        <div class="tb-sep"></div>
-        <button data-cmd="h1">H1</button>
-        <button data-cmd="h2">H2</button>
-        <div class="tb-sep"></div>
-        <button data-cmd="quote">&ldquo;</button>
-        <button data-cmd="code">&#96;&#96;</button>
-        <div class="tb-sep"></div>
-        <button data-cmd="hr">&#8212;</button>
+    <!-- Formatting toolbar -->
+    <div class="editor-toolbar" id="editorToolbar">
+      <div class="tb-group">
+        <button class="tb-btn" data-cmd="bold" title="Bold"><b>B</b></button>
+        <button class="tb-btn" data-cmd="italic" title="Italic"><em>I</em></button>
+        <button class="tb-btn" data-cmd="underline" title="Underline" style="text-decoration:underline">U</button>
+        <button class="tb-btn" data-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
       </div>
-      <div class="block-body">
-        <textarea>Iris stood at the edge of the platform, listening. The Citadel was quieter than it had any right to be — she had grown up with the drone of the trans-sector rail, the pumps, the vents. Here, four thousand meters above the grid, there was nothing. Not even wind.
-
-She walked, each footstep producing a sound that seemed to exist only in her own skull.</textarea>
+      <div class="tb-vsep"></div>
+      <div class="tb-group">
+        <button class="tb-btn" data-cmd="formatBlock" data-arg="H1" title="Heading 1">H1</button>
+        <button class="tb-btn" data-cmd="formatBlock" data-arg="H2" title="Heading 2">H2</button>
+        <button class="tb-btn" data-cmd="formatBlock" data-arg="H3" title="Heading 3">H3</button>
+        <button class="tb-btn" data-cmd="formatBlock" data-arg="P" title="Paragraph">P</button>
       </div>
-    </div>
-
-    <div class="block img-block" data-block="2" data-filename="hero-winter-east.webp" data-w="1600" data-h="900">
-      <button class="block-close" title="Delete block">&#x2715;</button>
-      <div class="block-body">
-        <div class="img-drop-zone has-image">
-          <input type="file" class="img-file-input" accept="image/*" style="display:none">
-          <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
-            <rect width="800" height="450" fill="#c8d4da"/>
-            <polygon points="0,260 90,220 160,260 240,210 320,250 400,180 480,230 560,190 640,240 720,200 800,250 800,450 0,450" fill="#8a9aa3"/>
-            <polygon points="0,320 90,290 160,310 240,280 320,300 400,260 480,290 560,270 640,300 720,280 800,310 800,450 0,450" fill="#5f7a82"/>
-            <text x="60" y="420" fill="#0d0d0f" font-family="Archivo" font-weight="900" font-size="28" letter-spacing="-1">YEAR 47 · EASTERN APPROACH</text>
-          </svg>
+      <div class="tb-vsep"></div>
+      <div class="tb-group">
+        <button class="tb-btn" data-cmd="insertUnorderedList" title="Bullet list">UL</button>
+        <button class="tb-btn" data-cmd="insertOrderedList" title="Numbered list">OL</button>
+      </div>
+      <div class="tb-vsep"></div>
+      <div class="tb-group">
+        <button class="tb-btn" data-cmd="formatBlock" data-arg="BLOCKQUOTE" title="Block quote">&ldquo;</button>
+        <button class="tb-btn" data-cmd="insertHR" title="Horizontal rule">—</button>
+      </div>
+      <div class="tb-vsep"></div>
+      <div class="tb-group">
+        <button class="tb-btn" id="tbInsertImg" title="Insert image">IMG</button>
+      </div>
+      <div class="tb-vsep"></div>
+      <div class="tb-group">
+        <div class="color-picker-wrap">
+          <button class="tb-btn color-btn" id="tbTextColor" title="Text color">
+            A<span class="color-btn-swatch" id="textColorSwatch" style="background:#0a0a0a"></span>
+          </button>
+          <div class="color-panel" id="textColorPanel"></div>
         </div>
-        <div class="img-caption-bar">
-          <span>hero-winter-east.webp · 1600×900</span>
-          <button class="replace-btn">Replace</button>
+        <div class="color-picker-wrap">
+          <button class="tb-btn color-btn" id="tbHlColor" title="Highlight">
+            HL<span class="color-btn-swatch" id="hlColorSwatch" style="background:rgba(242,183,5,0.35)"></span>
+          </button>
+          <div class="color-panel" id="hlColorPanel"></div>
         </div>
+      </div>
+      <div class="tb-vsep"></div>
+      <div class="tb-group">
+        <button class="tb-btn" data-cmd="justifyLeft" title="Align left">⇐</button>
+        <button class="tb-btn" data-cmd="justifyCenter" title="Align center">⇔</button>
+        <button class="tb-btn" data-cmd="justifyRight" title="Align right">⇒</button>
       </div>
     </div>
 
-    <div class="block" data-block="3">
-      <button class="block-close" title="Delete block">&#x2715;</button>
-      <div class="block-toolbar">
-        <button data-cmd="bold"><b>B</b></button>
-        <button data-cmd="italic"><em>I</em></button>
-        <div class="tb-sep"></div>
-        <button data-cmd="h1">H1</button>
-        <button data-cmd="h2">H2</button>
-        <div class="tb-sep"></div>
-        <button data-cmd="quote">&ldquo;</button>
-        <button data-cmd="code">&#96;&#96;</button>
-        <div class="tb-sep"></div>
-        <button data-cmd="hr">&#8212;</button>
-      </div>
-      <div class="block-body">
-        <textarea>She stopped at the rail. The city below was a quilt of lights, seamed and re-seamed, patched where the old infrastructure had refused to speak to the new. She could see the seams from here. She could always see the seams.
+    <!-- Editor body (contenteditable) -->
+    <div class="editor-canvas">
+      <div id="editorBody" contenteditable="true" spellcheck="false">
 
-It was, in its own strange way, the reason she had been hired.</textarea>
+        <p><span class="audio-flag start" data-track-id="t2" data-flag-type="start" contenteditable="false">▸ Neural Static</span> The platform sits at the junction of three defunct transit corridors. Iris stands at its edge and listens. The Citadel above her is quiet in a way she has learned to distrust — quiet like a held breath, like a system running diagnostics before it decides what to do next.</p>
+
+        <p>ARIA's voice comes to her in fragments, compressed nearly to nothing by the copper mesh that still threads through sub-level nine. <em>"The terminal is intact. The access codes have not been rotated."</em> Kael files this information somewhere close to his sternum, where things that matter but cannot yet be acted on are stored. <span class="audio-flag end" data-track-id="t2" data-flag-type="end" contenteditable="false">◂ Neural Static</span></p>
+
+        <div class="inline-img" data-img-id="img1" contenteditable="false">
+          <div class="inline-img-svg" id="imgSvg1"></div>
+          <div class="inline-img-caption">Sub-level nine. Year 47.</div>
+        </div>
+
+        <p><span class="audio-flag start" data-track-id="t1" data-flag-type="start" contenteditable="false">▸ Station Ambience</span> The maintenance shaft yawns beneath Kael's boots like a wound in the station's hull. He does not look down. He counts the emergency strips instead — amber pulses, seven seconds apart — and when he reaches twelve he stops counting and starts climbing. The smell hits before the floor does: burned insulation and standing water, the signature of infrastructure that predates the current administration by at least three regimes.</p>
+
+        <p>The door at the corridor's end is sealed with a manual override, the lever rusted into the locked position. Kael works the wrench methodically. Three attempts, forty seconds each. On the fourth the lever gives. The door swings inward on a space that has been sealed since before the crew rotation of Year 12.</p>
+
+        <p><em>"You found it,"</em> ARIA says. The signal is clearest here, as though the room itself is closer to wherever she actually lives inside the station's architecture. He does not answer. He steps inside and lets his headlamp do the cataloguing. <span class="audio-flag end" data-track-id="t1" data-flag-type="end" contenteditable="false">◂ Station Ambience</span></p>
+
+        <div class="inline-img" data-img-id="img2" contenteditable="false">
+          <div class="inline-img-svg" id="imgSvg2"></div>
+          <div class="inline-img-caption">Cold boot terminal. Original installation.</div>
+        </div>
+
+        <p>The terminal is a monolith of black composite and indicator glass, three meters tall, occupying the room's rear wall like an altar. Every light on its panel is dark. It has been dark for thirty-five years. When Kael sets his palm against the main input pad, it warms to his touch and stays dark. Not dead, he thinks. Waiting.</p>
+
       </div>
     </div>
 
   </main>
 
+  <!-- Right: asset manager -->
   <aside class="inspector">
-    <div class="insp-head">Properties</div>
+    <div class="insp-head">// Assets</div>
 
-    <div id="inspDynamic">
-      <div class="insp-empty-state">No block selected</div>
+    <!-- Images section -->
+    <div class="asset-section" id="imgSection">
+      <div class="asset-sec-head">
+        <span class="asset-sec-label">// Images</span>
+        <button class="ghost-btn" id="uploadImgBtn">+ Upload</button>
+      </div>
+      <div class="asset-sec-body" id="imgList"></div>
+    </div>
+
+    <!-- Audio tracks section -->
+    <div class="asset-section" id="audioSection">
+      <div class="asset-sec-head">
+        <span class="asset-sec-label">// Audio Tracks</span>
+        <button class="ghost-btn" id="uploadAudioBtn">+ Upload</button>
+      </div>
+      <div class="asset-sec-body" id="audioList"></div>
     </div>
 
   </aside>
 </div>
 
+<!-- Hidden file inputs -->
+<input type="file" id="imgFileInput" accept="image/*" style="display:none">
+<input type="file" id="audioFileInput" accept=".mp3,.wav,.ogg,.flac,.aac,.m4a,.opus,.weba" style="display:none">
+
 <script src="js/state.js"></script>
 <script src="js/ui.js"></script>
 <script>
-  // ── Audio envelope (per-map, standalone) ─────────────────────────────────
-  const ENV_TOTAL = 52, ENV_W = 300, ENV_H = 120, ENV_PAD = 8;
+// ── Data model ────────────────────────────────────────────────────────────────
+let tracks = [
+  { id: 't1', name: 'Station Ambience', filename: 'station-ambience-v3.wav', duration: '4:22', volume: 0.80, loop: false, fadeIn: 500, fadeOut: 800 },
+  { id: 't2', name: 'Neural Static',    filename: 'neural-static-loop.wav',  duration: '2:08', volume: 0.60, loop: true,  fadeIn: 200, fadeOut: 600 }
+];
+let images = [
+  { id: 'img1', artKey: 'hero',      filename: 'station-sublevel9.webp',   caption: 'Sub-level nine. Year 47.' },
+  { id: 'img2', artKey: 'schematic', filename: 'coldboot-terminal.webp',   caption: 'Cold boot terminal. Original installation.' }
+];
 
-  function gauss(x, mu, sigma) {
-    return Math.exp(-((x - mu) ** 2) / (2 * sigma * sigma));
-  }
-
-  function drawMapEnvelope(mapId, peak, spread, peakPar) {
-    const svg = document.getElementById(`menv-${mapId}`);
-    const arrEl = document.getElementById(`marr-${mapId}`);
-    if (!svg) return;
-    const W = ENV_W, H = ENV_H, PAD = ENV_PAD, N = ENV_TOTAL;
-    const pts = [];
-    for (let i = 0; i < N; i++) {
-      const v = gauss(i, peakPar - 1, spread) * peak;
-      pts.push(`${PAD + (i/(N-1))*(W-PAD*2)},${H-PAD - v*(H-PAD*2)}`);
-    }
-    const fill = `M${PAD},${H-PAD} L${pts.join(' L')} L${W-PAD},${H-PAD} Z`;
-    const line = `M${pts.join(' L')}`;
-    const ki = [peakPar-3,peakPar-1,peakPar,peakPar+1,peakPar+3].map(i=>Math.max(0,Math.min(N-1,i-1)));
-    if (arrEl) arrEl.textContent = '['+ki.map(i=>gauss(i,peakPar-1,spread)*peak).map(v=>v.toFixed(2)).join(', ')+']';
-    const ticks = [];
-    for (let x=0; x<=N; x+=10) {
-      const px = PAD+(x/(N-1))*(W-PAD*2);
-      ticks.push(`<line x1="${px}" x2="${px}" y1="${H-PAD}" y2="${H-PAD+3}" stroke="rgba(244,242,236,0.3)" stroke-width="0.5"/>`);
-      ticks.push(`<text x="${px}" y="${H-PAD+12}" text-anchor="middle" fill="rgba(244,242,236,0.4)" font-family="JetBrains Mono" font-size="7">${x}</text>`);
-    }
-    const px = PAD+((peakPar-1)/(N-1))*(W-PAD*2), py = H-PAD-peak*(H-PAD*2);
-    svg.innerHTML = `<rect width="${W}" height="${H}" fill="#0a0a0a"/>
-      <line x1="${PAD}" y1="${H-PAD}" x2="${W-PAD}" y2="${H-PAD}" stroke="rgba(244,242,236,0.15)" stroke-width="0.5"/>
-      ${ticks.join('')}
-      <path d="${fill}" fill="rgba(209,72,41,0.3)"/>
-      <path d="${line}" fill="none" stroke="#d14829" stroke-width="1.5"/>
-      <line x1="${px}" x2="${px}" y1="${PAD}" y2="${H-PAD}" stroke="rgba(242,183,5,0.5)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <circle cx="${px}" cy="${py}" r="4" fill="#f2b705"/>
-      <text x="${px+8}" y="${py+2}" fill="#f2b705" font-family="JetBrains Mono" font-size="8">peak ¶${peakPar}</text>`;
-  }
-
-  // ── Audio maps data + panel ────────────────────────────────────────────────
-  const VALID_AUDIO = ['.mp3','.wav','.ogg','.flac','.aac','.m4a','.opus','.weba'];
-
-  function fmtTime(secs) {
-    if (!isFinite(secs) || secs < 0) return '0:00';
-    const m = Math.floor(secs / 60);
-    const s = Math.floor(secs % 60);
-    return `${m}:${String(s).padStart(2, '0')}`;
-  }
-  let audioMaps = [
-    { id: 1, name: 'Map 1', filename: 'winter-drone-v2.wav', peak: 0.85, spread: 12, peakPar: 14, start: 1, end: 52, open: true }
-  ];
-  let nextMapId = 2;
-
-  function mapFileAreaHTML(m) {
-    if (!m.filename) return `
-      <div class="map-file-area empty">
-        <div class="map-no-track">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-          <span>Add a song</span>
-        </div>
-        <button class="map-file-pencil" title="Choose audio file">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </button>
-        <input type="file" class="map-audio-input" accept=".mp3,.wav,.ogg,.flac,.aac,.m4a,.opus,.weba" style="display:none">
-      </div>`;
-    return `
-      <div class="map-file-area has-file">
-        <svg class="map-track-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-        <span class="map-track-name">${m.filename}</span>
-        <button class="map-file-pencil" title="Change audio file">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </button>
-        <input type="file" class="map-audio-input" accept=".mp3,.wav,.ogg,.flac,.aac,.m4a,.opus,.weba" style="display:none">
-      </div>`;
-  }
-
-  function mapItemHTML(m) {
-    return `<div class="map-item${m.open ? ' open' : ''}" data-map-id="${m.id}">
-      <div class="map-item-head">
-        <div class="map-item-label">
-          <span class="map-dot"></span>
-          <span class="map-name">${m.name}</span>
-        </div>
-        <div class="map-item-right">
-          ${m.filename ? `<span class="map-file-badge">${m.filename}</span>` : ''}
-          <button class="map-chevron" title="Toggle">▾</button>
-          <button class="map-del-btn" title="Delete map">&#x2715;</button>
-        </div>
-      </div>
-      <div class="map-body">
-        ${mapFileAreaHTML(m)}
-        ${m.audioSrc ? `<div class="map-player">
-          <button class="map-play-btn" title="Play / Pause">&#9654;</button>
-          <div class="map-progress-track"><div class="map-progress-fill"></div></div>
-          <span class="map-time">0:00 / 0:00</span>
-        </div>` : ''}
-        <div class="map-range-row">
-          <div class="map-range-field">
-            <label>Start ¶</label>
-            <input type="number" class="map-start field-num" min="1" max="52" value="${m.start}">
-          </div>
-          <div class="map-range-sep">→</div>
-          <div class="map-range-field">
-            <label>End ¶</label>
-            <input type="number" class="map-end field-num" min="1" max="52" value="${m.end}">
-          </div>
-        </div>
-        <div class="envelope">
-          <svg id="menv-${m.id}" viewBox="0 0 300 120" preserveAspectRatio="none" style="width:100%;height:120px;display:block"></svg>
-          <div class="readout">ARRAY · <b id="marr-${m.id}"></b></div>
-        </div>
-        <div class="slider-row">
-          <span class="lbl">Peak vol</span>
-          <input type="range" class="map-peak" min="0" max="1" step="0.01" value="${m.peak}">
-          <span class="val map-peak-v">${m.peak.toFixed(2)}</span>
-        </div>
-        <div class="slider-row">
-          <span class="lbl">Peak ¶</span>
-          <input type="number" class="map-pi field-num" min="1" max="${ENV_TOTAL}" value="${m.peakPar}">
-        </div>
-        <div class="slider-row">
-          <span class="lbl">Spread</span>
-          <input type="range" class="map-spread" min="2" max="30" step="1" value="${m.spread}">
-          <span class="val map-spread-v">${m.spread}</span>
-        </div>
-        <div class="spread-label"><span>Tight focus</span><span>Slow build</span></div>
-      </div>
-    </div>`;
-  }
-
-  function initMapItem(el, m) {
-    // draw envelope
-    drawMapEnvelope(m.id, m.peak, m.spread, m.peakPar);
-
-    // sliders
-    const peakIn = el.querySelector('.map-peak');
-    const peakVEl = el.querySelector('.map-peak-v');
-    const spreadIn = el.querySelector('.map-spread');
-    const spreadVEl = el.querySelector('.map-spread-v');
-    const piIn = el.querySelector('.map-pi');
-
-    function redraw() {
-      m.peak = parseFloat(peakIn.value);
-      m.spread = parseFloat(spreadIn.value);
-      m.peakPar = parseInt(piIn.value) || 1;
-      peakVEl.textContent = m.peak.toFixed(2);
-      spreadVEl.textContent = m.spread;
-      drawMapEnvelope(m.id, m.peak, m.spread, m.peakPar);
-    }
-    [peakIn, spreadIn, piIn].forEach(i => i.addEventListener('input', redraw));
-
-    // start/end
-    el.querySelector('.map-start').addEventListener('input', e => { m.start = parseInt(e.target.value)||1; });
-    el.querySelector('.map-end').addEventListener('input', e => { m.end = parseInt(e.target.value)||52; });
-
-    // file picker pencil
-    el.querySelector('.map-file-pencil').addEventListener('click', e => {
-      e.stopPropagation();
-      el.querySelector('.map-audio-input').click();
-    });
-    el.querySelector('.map-audio-input').addEventListener('change', e => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
-      if (!VALID_AUDIO.includes(ext)) {
-        let err = el.querySelector('.map-file-error');
-        if (!err) { err = document.createElement('div'); err.className = 'map-file-error'; el.querySelector('.map-body').insertBefore(err, el.querySelector('.map-range-row')); }
-        err.textContent = `Invalid file type: ${ext} — use ${VALID_AUDIO.join(' ')}`;
-        setTimeout(() => err && err.remove(), 3000);
-        return;
-      }
-      if (m.audio) { m.audio.pause(); m.audio = null; }
-      const reader = new FileReader();
-      reader.onload = ev => {
-        m.filename = file.name;
-        m.audioSrc = ev.target.result;
-        m.audio = new Audio(ev.target.result);
-        const newEl = document.createElement('div');
-        newEl.innerHTML = mapItemHTML(m);
-        const itemEl = newEl.firstElementChild;
-        el.replaceWith(itemEl);
-        initMapItem(itemEl, m);
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // wire player if audio is loaded
-    if (m.audio) {
-      const player = el.querySelector('.map-player');
-      const playBtn = player.querySelector('.map-play-btn');
-      const fill = player.querySelector('.map-progress-fill');
-      const timeEl = player.querySelector('.map-time');
-      const track = player.querySelector('.map-progress-track');
-
-      m.audio.addEventListener('loadedmetadata', () => {
-        timeEl.textContent = `0:00 / ${fmtTime(m.audio.duration)}`;
-      });
-      m.audio.addEventListener('timeupdate', () => {
-        const pct = m.audio.duration ? (m.audio.currentTime / m.audio.duration * 100) : 0;
-        fill.style.width = pct + '%';
-        timeEl.textContent = `${fmtTime(m.audio.currentTime)} / ${fmtTime(m.audio.duration)}`;
-      });
-      m.audio.addEventListener('ended', () => {
-        playBtn.innerHTML = '&#9654;';
-        playBtn.classList.remove('playing');
-        fill.style.width = '0%';
-        m.audio.currentTime = 0;
-      });
-
-      playBtn.addEventListener('click', e => {
-        e.stopPropagation();
-        if (m.audio.paused) {
-          m.audio.play();
-          playBtn.innerHTML = '&#9646;&thinsp;&#9646;';
-          playBtn.classList.add('playing');
-        } else {
-          m.audio.pause();
-          playBtn.innerHTML = '&#9654;';
-          playBtn.classList.remove('playing');
-        }
-      });
-
-      track.addEventListener('click', e => {
-        if (!m.audio.duration) return;
-        const rect = track.getBoundingClientRect();
-        m.audio.currentTime = ((e.clientX - rect.left) / rect.width) * m.audio.duration;
-      });
-    }
-
-    // toggle open/close on head click
-    el.querySelector('.map-item-head').addEventListener('click', e => {
-      if (e.target.closest('.map-del-btn') || e.target.closest('.map-file-pencil')) return;
-      m.open = !m.open;
-      el.classList.toggle('open', m.open);
-      if (m.open) drawMapEnvelope(m.id, m.peak, m.spread, m.peakPar);
-    });
-
-    // delete — stop audio first
-    el.querySelector('.map-del-btn').addEventListener('click', e => {
-      e.stopPropagation();
-      if (m.audio) { m.audio.pause(); m.audio = null; }
-      audioMaps = audioMaps.filter(x => x.id !== m.id);
-      renderAudioMapsPanel();
-    });
-  }
-
-  function renderAudioMapsPanel() {
-    inspDynamic.innerHTML = `
-      <div class="maps-panel-head">
-        <h4 style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0">Audio Maps</h4>
-        <button class="add-map-btn" id="addMapBtn">+ Add Map</button>
-      </div>
-      <div id="mapsList">${audioMaps.map(m => mapItemHTML(m)).join('')}</div>`;
-    audioMaps.forEach(m => {
-      const el = inspDynamic.querySelector(`[data-map-id="${m.id}"]`);
-      initMapItem(el, m);
-    });
-    document.getElementById('addMapBtn').addEventListener('click', () => {
-      const id = nextMapId++;
-      audioMaps.push({ id, name: `Map ${id}`, filename: null, peak: 0.85, spread: 12, peakPar: 14, start: 1, end: 52, open: true });
-      renderAudioMapsPanel();
-    });
-  }
-
-  // ── Textarea auto-resize ──────────────────────────────────────────────────
-  function autoResize(ta) {
-    ta.style.height = 'auto';
-    ta.style.height = ta.scrollHeight + 'px';
-  }
-  document.querySelectorAll('.block-body textarea').forEach(ta => {
-    autoResize(ta);
-    ta.addEventListener('input', () => autoResize(ta));
+// ── Init artSvg content in pre-loaded inline images ───────────────────────────
+function initInlineImages() {
+  if (typeof artSvg !== 'function') return;
+  images.forEach(img => {
+    const svgEl = document.getElementById('imgSvg' + img.id.replace('img', ''));
+    if (svgEl) svgEl.innerHTML = artSvg(img.artKey);
   });
+}
 
-  // ── Markdown toolbar ──────────────────────────────────────────────────────
-  const MD = {
-    bold:  { wrap: ['**','**'],      fallback: '**bold text**' },
-    italic:{ wrap: ['*','*'],         fallback: '*italic text*' },
-    h1:    { prefix: '# ' },
-    h2:    { prefix: '## ' },
-    quote: { prefix: '> ' },
-    code:  { wrap: ['`','`'],         fallback: '`code`' },
-    hr:    { insert: '\n\n---\n\n' },
-  };
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.block-toolbar [data-cmd]');
-    if (!btn) return;
-    const rule = MD[btn.dataset.cmd];
-    const ta = btn.closest('.block').querySelector('textarea');
-    if (!ta || !rule) return;
-    const s = ta.selectionStart, end = ta.selectionEnd, sel = ta.value.slice(s, end);
-    if (rule.insert) {
-      ta.value = ta.value.slice(0, s) + rule.insert + ta.value.slice(end);
-    } else if (rule.wrap) {
-      ta.value = ta.value.slice(0, s) + (sel ? rule.wrap[0]+sel+rule.wrap[1] : rule.fallback) + ta.value.slice(end);
-    } else if (rule.prefix) {
-      const ls = ta.value.lastIndexOf('\n', s - 1) + 1;
-      ta.value = ta.value.slice(0, ls) + rule.prefix + ta.value.slice(ls);
-    }
-    autoResize(ta);
-    ta.focus();
+// ── Image list (right panel) ──────────────────────────────────────────────────
+function renderImgList() {
+  const list = document.getElementById('imgList');
+  if (!images.length) { list.innerHTML = '<div class="asset-empty">No images attached.</div>'; return; }
+  list.innerHTML = images.map(img => `
+    <div class="img-row" data-img-id="${img.id}">
+      <div class="img-thumb" id="rthumb-${img.id}"></div>
+      <div class="img-row-info">
+        <div class="img-row-name">${img.filename}</div>
+        <div class="img-row-meta">${img.caption || '—'}</div>
+      </div>
+      <button class="img-row-del" data-img-id="${img.id}" title="Remove">✕</button>
+    </div>`).join('');
+
+  if (typeof artSvg === 'function') {
+    images.forEach(img => {
+      const th = document.getElementById('rthumb-' + img.id);
+      if (th) th.innerHTML = artSvg(img.artKey);
+    });
+  }
+
+  list.querySelectorAll('.img-row').forEach(row => {
+    row.addEventListener('click', e => {
+      if (e.target.closest('.img-row-del')) { e.stopPropagation(); removeImage(row.dataset.imgId); return; }
+      scrollToImage(row.dataset.imgId);
+    });
   });
+}
 
-  // ── Block factories ───────────────────────────────────────────────────────
-  let nextBlockNum = 4;
-  const TOOLBAR_HTML = `<div class="block-toolbar">
-    <button data-cmd="bold"><b>B</b></button>
-    <button data-cmd="italic"><em>I</em></button>
-    <div class="tb-sep"></div>
-    <button data-cmd="h1">H1</button>
-    <button data-cmd="h2">H2</button>
-    <div class="tb-sep"></div>
-    <button data-cmd="quote">&ldquo;</button>
-    <button data-cmd="code">&#96;&#96;</button>
-    <div class="tb-sep"></div>
-    <button data-cmd="hr">&#8212;</button>
+function scrollToImage(imgId) {
+  const el = document.querySelector(`.inline-img[data-img-id="${imgId}"]`);
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 1000);
+}
+
+function removeImage(imgId) {
+  document.querySelector(`.inline-img[data-img-id="${imgId}"]`)?.remove();
+  const idx = images.findIndex(i => i.id === imgId);
+  if (idx !== -1) images.splice(idx, 1);
+  renderImgList();
+  hidePopover();
+}
+
+// ── Audio track list (right panel) ───────────────────────────────────────────
+function renderAudioList() {
+  const list = document.getElementById('audioList');
+  if (!tracks.length) { list.innerHTML = '<div class="asset-empty">No audio tracks attached.</div>'; return; }
+  list.innerHTML = tracks.map(t => trackCardHTML(t)).join('');
+  tracks.forEach(t => initTrackCard(document.querySelector(`[data-track-id="${t.id}"]`), t));
+  updateMetaRow();
+}
+
+function trackCardHTML(t) {
+  return `<div class="audio-track-card" data-track-id="${t.id}">
+    <div class="track-card-head">
+      <input class="track-name-input" value="${t.name}">
+      <button class="track-del-btn" title="Remove track">✕</button>
+    </div>
+    <div class="track-meta">${t.filename} &middot; ${t.duration}</div>
+    <div class="flag-handles-row">
+      <div class="flag-handle" draggable="true" data-track-id="${t.id}" data-flag-type="start">
+        <span class="flag-grip">⋮⋮</span>[ START ]
+      </div>
+      <div class="flag-handle" draggable="true" data-track-id="${t.id}" data-flag-type="end">
+        <span class="flag-grip">⋮⋮</span>[ END ]
+      </div>
+    </div>
+    <div class="track-props-toggle">▸ PROPERTIES</div>
+    <div class="track-props">
+      <div class="track-prop-row">
+        <span class="track-prop-label">Volume</span>
+        <input type="range" min="0" max="1" step="0.01" value="${t.volume}" class="prop-vol">
+        <span class="prop-val prop-vol-v">${t.volume.toFixed(2)}</span>
+      </div>
+      <div class="track-prop-row">
+        <span class="track-prop-label">Loop</span>
+        <div class="loop-toggle ${t.loop ? 'on' : ''}">
+          <div class="loop-box">${t.loop ? '✓' : ''}</div>
+          <span class="loop-lbl">${t.loop ? 'Yes' : 'No'}</span>
+        </div>
+      </div>
+      <div class="track-prop-row">
+        <span class="track-prop-label">Fade in</span>
+        <input type="number" class="prop-fi" value="${t.fadeIn}" min="0" max="5000" step="50">
+        <span class="track-prop-label" style="min-width:auto">ms</span>
+      </div>
+      <div class="track-prop-row">
+        <span class="track-prop-label">Fade out</span>
+        <input type="number" class="prop-fo" value="${t.fadeOut}" min="0" max="5000" step="50">
+        <span class="track-prop-label" style="min-width:auto">ms</span>
+      </div>
+    </div>
   </div>`;
+}
 
-  function makeTextBlock(content = '') {
-    const b = document.createElement('div');
-    b.className = 'block text-block';
-    b.dataset.block = nextBlockNum++;
-    b.innerHTML = `<button class="block-close" title="Delete block">&#x2715;</button>${TOOLBAR_HTML}<div class="block-body"><textarea placeholder="Start writing...">${content}</textarea></div>`;
-    const ta = b.querySelector('textarea');
-    ta.addEventListener('input', () => autoResize(ta));
-    return b;
-  }
-
-  function makeImageBlock() {
-    const b = document.createElement('div');
-    b.className = 'block img-block';
-    b.dataset.block = nextBlockNum++;
-    b.innerHTML = `
-      <button class="block-close" title="Delete block">&#x2715;</button>
-      <div class="block-body">
-        <div class="img-drop-zone empty">
-          <input type="file" class="img-file-input" accept="image/*" style="display:none">
-          <div class="img-upload-prompt">
-            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <span class="up-label">Click to upload</span>
-            <span class="up-hint">or drag &amp; drop &nbsp;·&nbsp; PNG &nbsp;JPG &nbsp;WEBP &nbsp;GIF</span>
-          </div>
-        </div>
-      </div>`;
-    wireImageBlock(b);
-    return b;
-  }
-
-  // ── Image block wiring ────────────────────────────────────────────────────
-  function wireImageBlock(block) {
-    const body = block.querySelector('.block-body');
-
-    body.addEventListener('click', e => {
-      if (e.target.closest('.replace-btn')) {
-        block.querySelector('.img-file-input').click();
-        return;
-      }
-      const zone = e.target.closest('.img-drop-zone');
-      if (!zone) return;
-      // Empty zone: select + open file dialog
-      if (zone.classList.contains('empty')) {
-        block.querySelector('.img-file-input').click();
-      }
-      // has-image zone click handled by selectBlock toggle elsewhere
-    });
-
-    body.addEventListener('change', e => {
-      const fi = e.target.closest('.img-file-input');
-      if (fi && fi.files[0]) loadImageFile(block, fi.files[0]);
-    });
-
-    body.addEventListener('dragover', e => {
-      e.preventDefault();
-      body.querySelector('.img-drop-zone').classList.add('drag-over');
-    });
-    body.addEventListener('dragleave', e => {
-      if (!body.contains(e.relatedTarget))
-        body.querySelector('.img-drop-zone').classList.remove('drag-over');
-    });
-    body.addEventListener('drop', e => {
-      e.preventDefault();
-      body.querySelector('.img-drop-zone').classList.remove('drag-over');
-      const file = Array.from(e.dataTransfer.files).find(f => f.type.startsWith('image/'));
-      if (file) loadImageFile(block, file);
-    });
-  }
-
-  // Wire pre-loaded block 2
-  document.querySelectorAll('.block.img-block').forEach(b => {
-    const body = b.querySelector('.block-body');
-    body.addEventListener('change', e => {
-      const fi = e.target.closest('.img-file-input');
-      if (fi && fi.files[0]) loadImageFile(b, fi.files[0]);
-    });
-    body.addEventListener('click', e => {
-      if (e.target.closest('.replace-btn')) b.querySelector('.img-file-input').click();
-    });
-    body.addEventListener('dragover', e => {
-      e.preventDefault();
-      body.querySelector('.img-drop-zone').classList.add('drag-over');
-    });
-    body.addEventListener('dragleave', e => {
-      if (!body.contains(e.relatedTarget))
-        body.querySelector('.img-drop-zone').classList.remove('drag-over');
-    });
-    body.addEventListener('drop', e => {
-      e.preventDefault();
-      body.querySelector('.img-drop-zone').classList.remove('drag-over');
-      const file = Array.from(e.dataTransfer.files).find(f => f.type.startsWith('image/'));
-      if (file) loadImageFile(b, file);
+function initTrackCard(card, t) {
+  const nameIn = card.querySelector('.track-name-input');
+  nameIn.addEventListener('change', () => {
+    const val = nameIn.value.trim() || t.name;
+    t.name = val; nameIn.value = val;
+    document.querySelectorAll(`.audio-flag[data-track-id="${t.id}"]`).forEach(f => {
+      f.textContent = (f.dataset.flagType === 'start' ? '▸ ' : '◂ ') + val;
     });
   });
 
-  function loadImageFile(block, file) {
-    const reader = new FileReader();
-    reader.onload = ev => {
-      const img = new Image();
-      img.onload = () => setBlockImage(block, ev.target.result, file.name, img.naturalWidth, img.naturalHeight);
-      img.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
+  card.querySelector('.track-del-btn').addEventListener('click', () => removeTrack(t.id));
 
-  function setBlockImage(block, src, filename, w, h) {
-    block.dataset.filename = filename;
-    block.dataset.w = w;
-    block.dataset.h = h;
-    const body = block.querySelector('.block-body');
-    const zone = body.querySelector('.img-drop-zone');
-    zone.className = 'img-drop-zone has-image';
-    zone.innerHTML = `<input type="file" class="img-file-input" accept="image/*" style="display:none"><img src="${src}" alt="${filename}">`;
-    // re-wire file input inside the new zone markup
-    zone.querySelector('.img-file-input').addEventListener('change', e => {
-      if (e.target.files[0]) loadImageFile(block, e.target.files[0]);
-    });
-    // caption bar
-    let bar = body.querySelector('.img-caption-bar');
-    if (!bar) { bar = document.createElement('div'); bar.className = 'img-caption-bar'; body.appendChild(bar); }
-    bar.innerHTML = `<span>${filename} · ${w}&times;${h}</span><button class="replace-btn">Replace</button>`;
-    bar.querySelector('.replace-btn').addEventListener('click', () => zone.querySelector('.img-file-input').click());
-    if (document.querySelector('.block.selected') === block) renderInspector(block);
-  }
-
-  // Paste image into selected image block
-  document.addEventListener('paste', e => {
-    const sel = document.querySelector('.block.img-block.selected');
-    if (!sel) return;
-    for (const item of e.clipboardData.items) {
-      if (item.type.startsWith('image/')) {
-        e.preventDefault();
-        loadImageFile(sel, item.getAsFile());
-        break;
-      }
-    }
+  const toggle = card.querySelector('.track-props-toggle');
+  const propsEl = card.querySelector('.track-props');
+  toggle.addEventListener('click', () => {
+    const open = propsEl.style.display === 'block';
+    propsEl.style.display = open ? 'none' : 'block';
+    toggle.textContent = (open ? '▸' : '▾') + ' PROPERTIES';
   });
 
-  // ── Inspector ──────────────────────────────────────────────────────────────
-  const inspDynamic = document.getElementById('inspDynamic');
+  const volIn = card.querySelector('.prop-vol'), volV = card.querySelector('.prop-vol-v');
+  volIn.addEventListener('input', () => { t.volume = parseFloat(volIn.value); volV.textContent = t.volume.toFixed(2); });
 
-  function renderInspector(block) {
-    if (!block) {
-      renderAudioMapsPanel();
-      return;
+  const loopT = card.querySelector('.loop-toggle');
+  loopT.addEventListener('click', () => {
+    t.loop = !t.loop;
+    loopT.classList.toggle('on', t.loop);
+    loopT.querySelector('.loop-box').textContent = t.loop ? '✓' : '';
+    loopT.querySelector('.loop-lbl').textContent = t.loop ? 'Yes' : 'No';
+  });
+
+  card.querySelector('.prop-fi').addEventListener('change', e => { t.fadeIn = parseInt(e.target.value) || 0; });
+  card.querySelector('.prop-fo').addEventListener('change', e => { t.fadeOut = parseInt(e.target.value) || 0; });
+
+  card.querySelectorAll('.flag-handle').forEach(h => {
+    h.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('application/json', JSON.stringify({ trackId: h.dataset.trackId, flagType: h.dataset.flagType, trackName: t.name }));
+      e.dataTransfer.effectAllowed = 'copy';
+    });
+  });
+}
+
+function removeTrack(trackId) {
+  document.querySelectorAll(`.audio-flag[data-track-id="${trackId}"]`).forEach(el => el.remove());
+  tracks = tracks.filter(t => t.id !== trackId);
+  renderAudioList();
+}
+
+function updateMetaRow() {
+  const flagCount = document.querySelectorAll('.audio-flag').length;
+  const el = document.getElementById('metaAudio');
+  if (el) el.textContent = `${tracks.length} track${tracks.length !== 1 ? 's' : ''} · ${flagCount} marker${flagCount !== 1 ? 's' : ''}`;
+}
+
+// ── Editor & toolbar ──────────────────────────────────────────────────────────
+const editorBody = document.getElementById('editorBody');
+let savedRange = null;
+
+function saveSelection() {
+  const sel = window.getSelection();
+  if (sel && sel.rangeCount) savedRange = sel.getRangeAt(0).cloneRange();
+}
+function restoreSelection() {
+  if (!savedRange) return;
+  editorBody.focus();
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(savedRange);
+}
+
+function execCmd(cmd, arg) {
+  editorBody.focus();
+  if (cmd === 'insertHR') {
+    document.execCommand('insertHTML', false, '<hr>');
+  } else {
+    document.execCommand(cmd, false, arg || null);
+  }
+  syncToolbar();
+}
+
+function syncToolbar() {
+  document.querySelectorAll('.editor-toolbar .tb-btn[data-cmd]').forEach(btn => {
+    const cmd = btn.dataset.cmd;
+    const arg = btn.dataset.arg;
+    let active = false;
+    try {
+      if (arg && cmd === 'formatBlock') {
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount) {
+          let node = sel.getRangeAt(0).commonAncestorContainer;
+          if (node.nodeType === 3) node = node.parentElement;
+          const block = node.closest ? node.closest('p,h1,h2,h3,blockquote') : null;
+          active = block && block.tagName.toUpperCase() === arg.toUpperCase();
+        }
+      } else if (arg && cmd.startsWith('justify')) {
+        active = document.queryCommandState(cmd);
+      } else if (!arg) {
+        active = document.queryCommandState(cmd);
+      }
+    } catch(_) {}
+    btn.classList.toggle('active', !!active);
+  });
+}
+
+editorBody.addEventListener('keyup', syncToolbar);
+editorBody.addEventListener('mouseup', syncToolbar);
+document.addEventListener('selectionchange', () => {
+  if (editorBody.contains(document.activeElement) || document.activeElement === editorBody) syncToolbar();
+});
+
+document.getElementById('editorToolbar').addEventListener('mousedown', e => {
+  const btn = e.target.closest('.tb-btn[data-cmd]:not(.color-btn)');
+  if (!btn) return;
+  e.preventDefault();
+  const cmd = btn.dataset.cmd;
+  const arg = btn.dataset.arg || null;
+  execCmd(cmd, arg);
+});
+
+// ── Insert image ──────────────────────────────────────────────────────────────
+const imgFileInput = document.getElementById('imgFileInput');
+document.getElementById('tbInsertImg').addEventListener('mousedown', e => {
+  e.preventDefault(); saveSelection(); imgFileInput.click();
+});
+document.getElementById('uploadImgBtn').addEventListener('click', () => {
+  saveSelection(); imgFileInput.click();
+});
+
+imgFileInput.addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const id = 'img' + Date.now();
+    restoreSelection();
+    const html = `<div class="inline-img" data-img-id="${id}" contenteditable="false"><img src="${ev.target.result}" alt="${file.name}" style="width:100%;display:block;"><div class="inline-img-caption">${file.name}</div></div>`;
+    document.execCommand('insertHTML', false, html);
+    images.push({ id, artKey: null, filename: file.name, caption: file.name });
+    renderImgList();
+  };
+  reader.readAsDataURL(file);
+  imgFileInput.value = '';
+});
+
+// ── Upload audio ──────────────────────────────────────────────────────────────
+const audioFileInput = document.getElementById('audioFileInput');
+document.getElementById('uploadAudioBtn').addEventListener('click', () => audioFileInput.click());
+audioFileInput.addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  const id = 't' + Date.now();
+  tracks.push({ id, name: file.name.replace(/\.[^.]+$/, ''), filename: file.name, duration: '—', volume: 0.8, loop: false, fadeIn: 0, fadeOut: 0 });
+  renderAudioList();
+  audioFileInput.value = '';
+});
+
+// ── Drag-and-drop: audio flags into editor ────────────────────────────────────
+editorBody.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; editorBody.classList.add('drag-over'); });
+editorBody.addEventListener('dragleave', e => { if (!editorBody.contains(e.relatedTarget)) editorBody.classList.remove('drag-over'); });
+editorBody.addEventListener('drop', e => {
+  editorBody.classList.remove('drag-over');
+  let data;
+  try { data = JSON.parse(e.dataTransfer.getData('application/json')); } catch(_) { return; }
+  if (!data.trackId) return;
+  e.preventDefault();
+
+  let range = null;
+  if (document.caretRangeFromPoint) {
+    range = document.caretRangeFromPoint(e.clientX, e.clientY);
+  } else if (document.caretPositionFromPoint) {
+    const pos = document.caretPositionFromPoint(e.clientX, e.clientY);
+    if (pos) { range = document.createRange(); range.setStart(pos.offsetNode, pos.offset); range.collapse(true); }
+  }
+  if (!range) return;
+
+  const track = tracks.find(t => t.id === data.trackId);
+  const name = track ? track.name : data.trackId;
+  const glyph = data.flagType === 'start' ? '▸' : '◂';
+
+  const flag = document.createElement('span');
+  flag.className = `audio-flag ${data.flagType}`;
+  flag.dataset.trackId = data.trackId;
+  flag.dataset.flagType = data.flagType;
+  flag.contentEditable = 'false';
+  flag.title = `${glyph} ${name}`;
+  flag.textContent = `${glyph} ${name}`;
+
+  range.insertNode(flag);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  const nr = document.createRange();
+  nr.setStartAfter(flag); nr.collapse(true);
+  sel.addRange(nr);
+  updateMetaRow();
+});
+
+// ── Image popover ─────────────────────────────────────────────────────────────
+const imgPopover = document.getElementById('imgPopover');
+const popCaptionInput = document.getElementById('popCaptionInput');
+let selectedImg = null;
+
+function showPopover(imgEl) {
+  selectedImg = imgEl;
+  const rect = imgEl.getBoundingClientRect();
+  imgPopover.classList.add('open');
+  const popH = imgPopover.offsetHeight || 200;
+  const top = rect.top > popH + 16 ? rect.top - popH - 8 : rect.bottom + 8;
+  imgPopover.style.top = Math.max(8, top) + 'px';
+  imgPopover.style.left = Math.min(rect.left, window.innerWidth - 190) + 'px';
+  const captionEl = imgEl.querySelector('.inline-img-caption');
+  popCaptionInput.value = captionEl ? captionEl.textContent : '';
+}
+function hidePopover() { imgPopover.classList.remove('open'); selectedImg = null; }
+
+editorBody.addEventListener('click', e => {
+  const imgEl = e.target.closest('.inline-img');
+  if (imgEl) { showPopover(imgEl); return; }
+  if (!imgPopover.contains(e.target)) hidePopover();
+});
+
+popCaptionInput.addEventListener('input', () => {
+  if (!selectedImg) return;
+  const captionEl = selectedImg.querySelector('.inline-img-caption');
+  if (captionEl) captionEl.textContent = popCaptionInput.value;
+  const imgData = images.find(i => i.id === selectedImg.dataset.imgId);
+  if (imgData) { imgData.caption = popCaptionInput.value; renderImgList(); }
+});
+
+imgPopover.addEventListener('click', e => {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const action = btn.dataset.action;
+
+  if (action === 'replace') {
+    imgFileInput.click();
+    return;
+  }
+  if (!selectedImg) return;
+
+  if (action.startsWith('align-')) {
+    const alignClass = { 'align-left': 'align-left', 'align-center': 'align-center', 'align-right': 'align-right', 'align-full': '' }[action];
+    selectedImg.className = 'inline-img' + (alignClass ? ' ' + alignClass : '');
+  } else if (action === 'delete') {
+    removeImage(selectedImg.dataset.imgId);
+  }
+});
+
+document.addEventListener('click', e => {
+  if (!editorBody.contains(e.target) && !imgPopover.contains(e.target)) hidePopover();
+});
+
+// ── Color pickers ─────────────────────────────────────────────────────────────
+const TEXT_COLORS = ['#0a0a0a','#555555','#888888','#d14829','#f2b705','#4a6fa5','#4a8f5a','#8f4a4a'];
+const HL_COLORS   = [null,'rgba(242,183,5,0.32)','rgba(100,210,110,0.28)','rgba(80,140,255,0.25)','rgba(255,100,200,0.25)','rgba(200,200,200,0.25)','rgba(209,72,41,0.18)','rgba(0,0,0,0)'];
+
+function buildPanels() {
+  const tp = document.getElementById('textColorPanel');
+  TEXT_COLORS.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'cp-swatch'; b.style.background = c;
+    b.dataset.color = c; b.dataset.type = 'text';
+    if (c === '#888888' || c === '#555555') b.style.border = '1px solid rgba(10,10,10,0.15)';
+    tp.appendChild(b);
+  });
+
+  const hp = document.getElementById('hlColorPanel');
+  HL_COLORS.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'cp-swatch';
+    b.style.background = c || 'transparent';
+    b.dataset.color = c || '';
+    b.dataset.type = 'highlight';
+    if (!c || c === 'rgba(0,0,0,0)') b.innerHTML = `<svg width="18" height="18" viewBox="0 0 18 18"><line x1="1" y1="17" x2="17" y2="1" stroke="#d14829" stroke-width="1.5"/></svg>`;
+    hp.appendChild(b);
+  });
+}
+
+document.querySelectorAll('.color-btn').forEach(btn => {
+  btn.addEventListener('mousedown', e => {
+    e.preventDefault();
+    const panel = btn.id === 'tbTextColor' ? document.getElementById('textColorPanel') : document.getElementById('hlColorPanel');
+    const other = btn.id === 'tbTextColor' ? document.getElementById('hlColorPanel') : document.getElementById('textColorPanel');
+    other.classList.remove('open');
+    panel.classList.toggle('open');
+  });
+});
+
+document.addEventListener('click', e => {
+  const swatch = e.target.closest('.cp-swatch');
+  if (!swatch) {
+    if (!e.target.closest('.color-picker-wrap')) {
+      document.querySelectorAll('.color-panel.open').forEach(p => p.classList.remove('open'));
     }
-    if (block.classList.contains('img-block')) {
-      const hasImg = !!block.querySelector('.img-drop-zone.has-image');
-      const fn = block.dataset.filename || null;
-      const w = block.dataset.w, h = block.dataset.h;
-      inspDynamic.innerHTML = `<section class="insp-sec">
-        <h4>Image Block</h4>
-        <div class="insp-img-info">${hasImg
-          ? `<div class="ii-row"><span class="ii-key">File</span><span class="ii-val">${fn}</span></div>
-             <div class="ii-row"><span class="ii-key">Size</span><span class="ii-val">${w}&times;${h}px</span></div>`
-          : `<div class="ii-row" style="justify-content:center"><span class="ii-key" style="color:rgba(244,242,236,0.35)">No image loaded</span></div>`
-        }</div>
-        <div class="field"><label>Width</label><select>
-          <option>Full-bleed</option><option>Inset (70%)</option>
-          <option>Inline (45%)</option><option>Thumbnail</option>
-        </select></div>
-        <div class="field"><label>Placement</label><select>
-          <option>Between paragraphs</option><option>Pinned to chapter top</option>
-          <option>Float right</option><option>Float left</option>
-        </select></div>
-        <div class="field"><label>Animation</label><select>
-          <option>Parallax fade-in</option><option>Scroll-driven zoom</option>
-          <option>Ken Burns</option><option>Static (none)</option>
-        </select></div>
-        <div class="field"><label>Z-Index layer</label><select>
-          <option>Layer 2 — Foreground</option><option>Layer 1 — Mid-ground</option>
-          <option>Layer 0 — Background</option>
-        </select></div>
-        <div class="field"><label>Sticky on scroll</label><select>
-          <option>No</option><option>Yes — pin while reading section</option>
-        </select></div>
-        <div class="field"><label>Alt text</label>
-          <input type="text" placeholder="Describe the image…"></div>
-        <div class="field"><label>Caption</label>
-          <input type="text" placeholder="Optional caption…"${fn ? ` value="${fn}"` : ''}></div>
-      </section>`;
+    return;
+  }
+  e.preventDefault();
+  const type = swatch.dataset.type;
+  const color = swatch.dataset.color;
+  if (type === 'text') {
+    execCmd('foreColor', color || '#0a0a0a');
+    document.getElementById('textColorSwatch').style.background = color || '#0a0a0a';
+  } else {
+    if (!color || color === 'rgba(0,0,0,0)') {
+      execCmd('backColor', 'transparent');
+      document.getElementById('hlColorSwatch').style.background = 'transparent';
     } else {
-      inspDynamic.innerHTML = `<section class="insp-sec">
-        <h4>Text Block</h4>
-        <div class="field"><label>Width</label><select>
-          <option>Standard column</option><option>Full-bleed</option><option>Narrow (60%)</option>
-        </select></div>
-        <div class="field"><label>Drop cap</label><select>
-          <option>None</option><option>First paragraph only</option>
-        </select></div>
-        <div class="field"><label>Font style</label><select>
-          <option>Prose (Fraunces italic)</option><option>UI (Archivo)</option><option>Mono (JetBrains)</option>
-        </select></div>
-      </section>`;
+      execCmd('backColor', color);
+      document.getElementById('hlColorSwatch').style.background = color;
     }
   }
+  document.querySelectorAll('.color-panel.open').forEach(p => p.classList.remove('open'));
+});
 
-  // ── Block selection (toggle) ───────────────────────────────────────────────
-  function selectBlock(block) {
-    document.querySelectorAll('.block').forEach(x => x.classList.remove('selected'));
-    block.classList.add('selected');
-    renderInspector(block);
+// ── Act/chapter panel (unchanged behavior) ────────────────────────────────────
+const chapList = document.getElementById('chapList');
+let nextChNum = 6, nextActNum = 3;
+const actNames = ['Convergence','Fracture','Reckoning','Silence','Epilogue'];
+let _actNameTimer = null;
+
+function startActNameEdit(nameEl) {
+  const prev = nameEl.textContent;
+  const input = document.createElement('input');
+  input.type = 'text'; input.className = 'act-name-input'; input.value = prev;
+  nameEl.replaceWith(input); input.focus(); input.select();
+  function commit() { const v = input.value.trim() || prev; const s = document.createElement('span'); s.className = 'act-name'; s.textContent = v; input.replaceWith(s); }
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); input.blur(); } if (e.key === 'Escape') { input.value = prev; input.blur(); } });
+  input.addEventListener('click', e => e.stopPropagation());
+}
+
+chapList.addEventListener('click', function(e) {
+  const addBtn = e.target.closest('.act-add-ch');
+  const actName = e.target.closest('.act-name');
+  const header = e.target.closest('.act-header');
+  if (addBtn) { e.stopPropagation(); addChToAct(addBtn.closest('.act-group')); return; }
+  if (actName && header) {
+    if (_actNameTimer) { clearTimeout(_actNameTimer); _actNameTimer = null; startActNameEdit(actName); }
+    else { const g = header.closest('.act-group'); _actNameTimer = setTimeout(() => { _actNameTimer = null; g.classList.toggle('open'); }, 220); }
+    return;
   }
+  if (header) header.closest('.act-group').classList.toggle('open');
+});
 
-  document.addEventListener('click', e => {
-    // ignore controls handled elsewhere
-    if (e.target.closest('.block-close')) return;
-    if (e.target.closest('.block-toolbar [data-cmd]')) return;
-    if (e.target.closest('.iz-btn')) return;
-    if (e.target.closest('.img-drop-zone')) {
-      // image zone: just select the block (file dialog opened via wireImageBlock)
-      const block = e.target.closest('.block');
-      if (block) {
-        if (!block.classList.contains('selected')) selectBlock(block);
-      }
-      return;
-    }
-    const block = e.target.closest('.block');
-    if (!block) {
-      if (e.target.closest('.inspector')) return; // interacting with properties panel — keep selection
-      document.querySelectorAll('.block').forEach(x => x.classList.remove('selected'));
-      renderInspector(null);
-      return;
-    }
-    const wasSelected = block.classList.contains('selected');
-    document.querySelectorAll('.block').forEach(x => x.classList.remove('selected'));
-    if (!wasSelected) {
-      block.classList.add('selected');
-      renderInspector(block);
-    } else {
-      renderInspector(null);
-    }
-  });
+function updateActCount(ag) { ag.querySelector('.act-count').textContent = ag.querySelectorAll('.chap-item').length + ' CH'; }
 
-  // ── Delete block via X ────────────────────────────────────────────────────
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.block-close');
-    if (!btn) return;
-    e.stopPropagation();
-    const block = btn.closest('.block');
-    const wasSelected = block.classList.contains('selected');
-    block.remove();
-    syncInsertZones();
-    if (wasSelected) renderInspector(null);
-  });
+function addChToAct(ag) {
+  const chapters = ag.querySelector('.act-chapters');
+  const item = document.createElement('div');
+  item.className = 'chap-item';
+  item.innerHTML = `<div class="n">CH. ${String(nextChNum++).padStart(2,'0')}</div><div class="t">Untitled</div><div class="status">Draft · 0 words</div>`;
+  chapters.appendChild(item); updateActCount(ag); ag.classList.add('open');
+}
 
-  // ── Insert zones ───────────────────────────────────────────────────────────
-  const editorCanvas = document.querySelector('.editor');
+document.getElementById('addActBtn').addEventListener('click', function() {
+  const romans = ['I','II','III','IV','V','VI','VII','VIII','IX','X'];
+  const n = nextActNum++;
+  const roman = romans[(n-1) % romans.length] || n;
+  const name = actNames[(n-1) % actNames.length];
+  const foot = chapList.querySelector('.chap-list-foot');
+  const group = document.createElement('div');
+  group.className = 'act-group'; group.dataset.act = n;
+  group.innerHTML = `<div class="act-header"><div class="act-left"><div class="act-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div><div class="act-label"><span class="act-num">${roman}</span><span class="act-name">Act ${roman} — ${name}</span></div></div><div class="act-right"><span class="act-count">0 CH</span><button class="act-add-ch" title="Add chapter">+</button></div></div><div class="act-chapters"></div>`;
+  chapList.insertBefore(group, foot);
+});
 
-  function makeInsertZone() {
-    const z = document.createElement('div');
-    z.className = 'insert-zone';
-    z.innerHTML = `<div class="iz-line"></div><div class="iz-btns">
-      <button class="iz-btn" data-add="text">+ Text</button>
-      <button class="iz-btn" data-add="image">+ Image</button>
-    </div>`;
-    return z;
-  }
+// ── Preview modal ─────────────────────────────────────────────────────────────
+const previewModal = document.getElementById('previewModal');
+document.getElementById('previewBtn').addEventListener('click', () => { previewModal.classList.add('open'); document.body.style.overflow = 'hidden'; });
+document.getElementById('previewClose').addEventListener('click', closePreview);
+document.getElementById('previewBackdrop').addEventListener('click', closePreview);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePreview(); });
+function closePreview() { previewModal.classList.remove('open'); document.body.style.overflow = ''; }
 
-  function syncInsertZones() {
-    editorCanvas.querySelectorAll('.insert-zone').forEach(z => z.remove());
-    const blocks = Array.from(editorCanvas.querySelectorAll('.block'));
-    if (!blocks.length) return;
-    blocks[0].before(makeInsertZone());
-    blocks.forEach(b => b.after(makeInsertZone()));
-  }
-
-  editorCanvas.addEventListener('click', e => {
-    const btn = e.target.closest('.iz-btn');
-    if (!btn) return;
-    e.stopPropagation();
-    const zone = btn.closest('.insert-zone');
-    const newBlock = btn.dataset.add === 'text' ? makeTextBlock() : makeImageBlock();
-    zone.replaceWith(newBlock);
-    syncInsertZones();
-    if (btn.dataset.add === 'text') {
-      const ta = newBlock.querySelector('textarea');
-      autoResize(ta);
-      ta.focus();
-    }
-    selectBlock(newBlock);
-  });
-
-  syncInsertZones();
-  // Initial state: block 1 pre-selected
-  const firstBlock = editorCanvas.querySelector('.block');
-  if (firstBlock) renderInspector(firstBlock);
-
-  // Preview modal
-  const previewModal = document.getElementById('previewModal');
-  document.getElementById('previewBtn').addEventListener('click', () => {
-    previewModal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  });
-  document.getElementById('previewClose').addEventListener('click', closePreview);
-  document.getElementById('previewBackdrop').addEventListener('click', closePreview);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePreview(); });
-  function closePreview() {
-    previewModal.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  // Act/chapter panel
-  const chapList = document.getElementById('chapList');
-  let nextChNum = 6;
-  let nextActNum = 3;
-  const actNames = ['Convergence', 'Fracture', 'Reckoning', 'Silence', 'Epilogue'];
-
-  // Act collapse/expand + double-click-to-edit name
-  // Single click on .act-name: schedule toggle (220ms), cancel if second click arrives
-  let _actNameTimer = null;
-
-  function startActNameEdit(nameEl) {
-    const prev = nameEl.textContent;
-    const input = document.createElement('input');
-    input.type = 'text'; input.className = 'act-name-input'; input.value = prev;
-    nameEl.replaceWith(input);
-    input.focus(); input.select();
-    function commit() {
-      const val = input.value.trim() || prev;
-      const span = document.createElement('span');
-      span.className = 'act-name'; span.textContent = val;
-      input.replaceWith(span);
-    }
-    input.addEventListener('blur', commit);
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
-      if (e.key === 'Escape') { input.value = prev; input.blur(); }
-    });
-    // prevent the blur-triggered chapList click from doing anything
-    input.addEventListener('click', e => e.stopPropagation());
-  }
-
-  chapList.addEventListener('click', function(e) {
-    const addBtn = e.target.closest('.act-add-ch');
-    const actName = e.target.closest('.act-name');
-    const header = e.target.closest('.act-header');
-
-    if (addBtn) {
-      e.stopPropagation();
-      addChapterToAct(addBtn.closest('.act-group'));
-      return;
-    }
-
-    if (actName && header) {
-      if (_actNameTimer) {
-        // second click within 220ms = double-click: edit
-        clearTimeout(_actNameTimer);
-        _actNameTimer = null;
-        startActNameEdit(actName);
-      } else {
-        // first click: schedule toggle
-        const group = header.closest('.act-group');
-        _actNameTimer = setTimeout(() => {
-          _actNameTimer = null;
-          group.classList.toggle('open');
-        }, 220);
-      }
-      return;
-    }
-
-    if (header) {
-      header.closest('.act-group').classList.toggle('open');
-    }
-  });
-
-  function updateActCount(actGroup) {
-    const count = actGroup.querySelectorAll('.chap-item').length;
-    actGroup.querySelector('.act-count').textContent = count + ' CH';
-  }
-
-  function addChapterToAct(actGroup) {
-    const chapters = actGroup.querySelector('.act-chapters');
-    const item = document.createElement('div');
-    item.className = 'chap-item';
-    item.innerHTML = `<div class="n">CH. ${String(nextChNum++).padStart(2,'0')}</div><div class="t">Untitled</div><div class="status">Draft · 0 blocks</div>`;
-    chapters.appendChild(item);
-    updateActCount(actGroup);
-    actGroup.classList.add('open');
-  }
-
-  document.getElementById('addActBtn').addEventListener('click', function() {
-    const romanNumerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X'];
-    const actNum = nextActNum++;
-    const name = actNames[(actNum - 1) % actNames.length];
-    const roman = romanNumerals[(actNum - 1) % romanNumerals.length] || actNum;
-    const foot = chapList.querySelector('.chap-list-foot');
-    const group = document.createElement('div');
-    group.className = 'act-group';
-    group.dataset.act = actNum;
-    group.innerHTML = `
-      <div class="act-header">
-        <div class="act-left">
-          <div class="act-chevron"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
-          <div class="act-label">
-            <span class="act-num">${roman}</span>
-            <span class="act-name">Act ${roman} — ${name}</span>
-          </div>
-        </div>
-        <div class="act-right">
-          <span class="act-count">0 CH</span>
-          <button class="act-add-ch" title="Add chapter">+</button>
-        </div>
-      </div>
-      <div class="act-chapters"></div>`;
-    chapList.insertBefore(group, foot);
-  });
+// ── Init ──────────────────────────────────────────────────────────────────────
+buildPanels();
+renderImgList();
+renderAudioList();
+initInlineImages();
 </script>
 </body>
 </html>

@@ -384,3 +384,36 @@ Remove the aside and theme toggle from both pages. Make dark the permanent base 
 **Related prompts:** 013
 
 ---
+
+### 015 — Quill-style continuous editor with inline asset model
+
+**Date:** 2026-05-09
+**Branch:** iter/015-quill-chapter-editor
+**Files touched:** author-editor.html, CLAUDE.md
+
+**Request (verbatim):**
+> Rebuild author-editor.html from scratch to reflect a fundamental architecture change: a chapter is no longer a list of blocks (TEXT, SPLASH ART, PULL QUOTE, etc.) — it is now one continuous rich text document edited in a Quill-style editor, with images and audio markers embedded inline within the prose.
+> [Full prompt: Quill-style contenteditable editor; sticky formatting toolbar (B/I/U/S/H1–H3/P/UL/OL/QUOTE/HR/IMG/color/align); pre-populated STITCH_ENGINE prose with two inline images and two audio start/end marker pairs; right panel replaced by asset manager with two scrollable sections: // IMAGES (thumbnail list) and // AUDIO TRACKS (cards with draggable [START]/[END] flags, inline flag drops via HTML5 DnD, per-track volume/loop/fade properties); audio-envelope curve removed; remove track strips its markers from prose; clicking image row scrolls/flashes editor; image floating popover for replace/caption/align/delete. Update CLAUDE.md. Two commits on iter/015 branch.]
+
+**Interpretation:**
+Fundamental model change: chapters are now a single `contenteditable` document, not a list of discrete blocks. The block list, insert zones, and per-block controls are completely removed. The center canvas becomes a sticky formatting toolbar + a Fraunces italic prose editor. The right panel becomes an asset manager with two independent scrollable sections for images and audio tracks. Audio tracks use a drag-and-drop flag model (drop START/END inline in prose) instead of a Gaussian envelope curve — the old envelope interaction is retired entirely. The left chapters panel, topbar, and preview modal are unchanged.
+
+**Alternatives considered but not taken:**
+- Keeping the block model alongside the new editor (hybrid) — rejected; the request is a clean architectural break, not an addition
+- Using the Quill library directly — rejected by request; prototype with contenteditable is sufficient
+- Putting the toolbar above the chapter title — rejected; title is a named input field, toolbar applies to prose body only, so it sits between them
+- Coral on flag handles in the right panel — rejected; handles are interactive controls, not spoiler signals; using muted instead
+
+**Changes made:**
+- author-editor.html — full rebuild: sticky editor toolbar, contenteditable prose canvas with pre-populated STITCH_ENGINE fiction, two inline artSvg images, two audio start/end marker pairs, image floating popover, right panel replaced with asset manager (// IMAGES + // AUDIO TRACKS), DnD flag drops, remove-track strips markers, scroll-to-image flash
+- CLAUDE.md — author-editor section updated: new editing model, inline asset model, audio flag system; Known Gap #1 (audio envelope polishing) removed; Known Gap added for image drag-reorder
+
+**Spec updates:**
+- author-editor.html description in CLAUDE.md updated
+- Block types (SPLASH ART, PULL QUOTE, SECTION BREAK) removed from spec
+- Audio envelope curve replaced by inline Start/End flag model
+- Known Gap #1 removed; new known gap added
+
+**Related prompts:** 007, 008, 010, 011, 012
+
+---
