@@ -55,7 +55,7 @@ Final app stack (for reference, not prototype): Spring Boot Java + PostgreSQL + 
 
 ### Director's Suite, desktop-first (5)
 - `author-dashboard.html` — Metrics + direct actions
-- `author-editor.html` — Chapter editor (signature page — audio envelope is the hero feature)
+- `author-editor.html` — Chapter editor (signature page — inline audio Start/End flag model is the hero feature)
 - `author-cms-home.html` — Drag-drop CMS for novel home (from scratch)
 - `author-cms-community.html` — Drag-drop CMS for community page (from scratch)
 - `author-story-bible.html` — Wiki + asset library (from scratch)
@@ -452,37 +452,20 @@ All author pages use this shell:
     - Open Chapter Editor → `author-editor.html`
 
 #### `author-editor.html` — **SIGNATURE PAGE**
-- Tabstrip below topbar: EDITOR / STORY BIBLE / ASSETS
-- **3-column layout**:
-  - **LEFT (240px) — CHAPTERS panel**:
-    - List: 01–05, current chapter (04) highlighted coral
-    - "+ NEW CHAPTER" button
-  - **CENTER — Editor canvas**:
-    - Chapter title input: "Chapter 04: The Descent" (Archivo 900)
-    - **Block-based editor** (Jupyter-style):
-      - BLOCK 1 (TEXT): rich text area with content
-      - BLOCK 2 (SPLASH ART): image preview + re-upload button
-      - BLOCK 3 (TEXT): more text
-    - Each block has: Split / Merge / Delete / Move up/down controls
-    - "+ ADD NEW BLOCK" button at bottom (choose type: text, splash, pull-quote, section break)
-  - **RIGHT (320px) — Inspector**:
-    - Selected block controls change based on block type
-    - For **SPLASH ART** block (BLOCK 2 SETTINGS):
-      - Animation dropdown: Fade / Parallax / Ken Burns / None
-      - Z-Index dropdown: Background / Midground / Foreground
-      - Placement dropdown: Full bleed / Inset / Margin note
-    - **AUDIO MAP** section (THE SIGNATURE FEATURE):
-      - Track name + Change button
-      - **Interactive SVG normal-distribution curve**:
-        - Drag peak handle (vertical) to adjust peak volume (0.0–1.0)
-        - Drag spread handle (horizontal) to adjust sigma (tight ↔ slow build)
-        - Drag horizontal position to change peak-paragraph index
-      - Live-update numeric array output beneath: e.g. `[0.1, 0.3, 0.6, 0.9, 1.0, 0.9, 0.6, 0.3, 0.1]`
-      - Labels: "TIGHT FOCUS ↔ SLOW BUILD"
-      - Peak Volume slider (0.0–1.0, default 0.85)
-      - Paragraph Index for Peak (numeric stepper)
-      - Spread (Blocks) range slider
-- This is the most important page. The audio envelope interaction is the single most novel feature of STITCH.
+- Unified nav topbar + 3-column layout (≥1280px assumed)
+- **LEFT (240px) — CHAPTERS panel**: act-grouped collapsible list, current chapter (04) highlighted coral, "+ Add Chapter" per act, "+ Add Act" footer button, act names double-click-to-edit
+- **CENTER — Continuous rich text editor**:
+  - Chapter title input (Archivo 900, 38px) above a sticky formatting toolbar
+  - **Formatting toolbar** (JetBrains Mono labels, hairline borders, no rounded corners): B / I / U / S / H1 / H2 / H3 / P / UL / OL / " (blockquote) / — (hr) / IMG (insert image) / text color swatch / highlight swatch / ⇐ ⇔ ⇒ (alignment)
+  - Active toolbar buttons show coral border + 2px hard shadow (valid active-state coral use)
+  - **`contenteditable` prose canvas**: Fraunces italic 18px, line-height 1.75, max-width 720px centered
+  - Inline images embedded as `.inline-img` divs (`contenteditable="false"`) between paragraphs; clicking an image shows a floating popover with Replace / Caption / Align (Left, Center, Right, Full) / Delete
+  - **Audio Start/End markers** embedded as inline `.audio-flag` spans (`contenteditable="false"`): coral chip with `▸ Track Name` (start) or `◂ Track Name` (end). Inline like punctuation; can be deleted with backspace. Coral is valid here as a spoiler-boundary-style signal for audio zone boundaries.
+  - Pre-populated with STITCH_ENGINE-voice prose, two inline images (artSvg keys), two audio marker pairs
+- **RIGHT (320px) — Asset manager** (two independent scrollable sections):
+  - **`// IMAGES`**: list of attached images (tiny artSvg thumbnail + filename + caption); clicking a row scrolls editor to that image and flashes a 1s coral outline; `+ UPLOAD IMAGE` ghost button inserts image at cursor; `✕ Remove` deletes image from editor and list
+  - **`// AUDIO TRACKS`**: one card per attached track — editable track name, filename + duration (mono kicker), draggable **[ START ]** and **[ END ]** flag handles (HTML5 DnD: drop into editor inserts inline flag span at caret), collapsible properties row (Volume slider, Loop toggle, Fade-in ms, Fade-out ms), `✕ Remove track` strips all matching flags from prose; `+ UPLOAD AUDIO` ghost button adds a new track card
+- **Signature interaction**: dragging [ START ] / [ END ] handles from the audio track cards into the prose to bracket an audio zone. The Start/End flag model replaces the former Gaussian envelope curve. Per-track volume is a simple slider in the track's property row.
 
 #### `author-cms-home.html` (BUILT FROM SCRATCH)
 - Same author shell
@@ -567,7 +550,7 @@ All author pages use this shell:
 ## Behavioral promises already implemented
 
 1. **Pulsing chevron at top of novel pages** → hidden navbar slides in on hover of top 24px hotzone → back-arrow top-left for exit. Implemented in `novel-nav.css` + `ui.js mountNovelNav()`.
-2. **Audio envelope UI** in author-editor: interactive SVG curve, draggable handles, live numeric array output. **This is the signature feature — don't weaken it.**
+2. **Inline audio Start/End flag system** in author-editor: drag [ START ] / [ END ] handles from the audio track cards in the right panel into the prose; flags land as inline coral chips at the drop position. Remove a track to strip all its flags. This is the signature interaction — the former Gaussian envelope curve has been retired.
 3. **Spoiler blur**: real CSS `filter: blur(14px)`, tappable overlay, based on `readCap` vs chapter.
 4. **Live filters**: tag chips, novel filters, fanart/meme toggles, chapter-depth slider all actually filter the rendered list.
 5. **Procedural SVG covers and art**: no image hosting.
@@ -578,7 +561,7 @@ All author pages use this shell:
 
 ## Known gaps / things to push further
 
-1. **`author-editor.html` audio envelope** — the SVG curve is drawn but the drag handles could be tighter. Worth polishing since this is the signature feature.
+1. **`author-editor.html` inline image drag-reorder** — repositioning an embedded image within the prose via drag is prototype-quality only (no dedicated DnD handler; the image floating popover offers align options instead). Full-fidelity inline media manipulation needs the real Quill integration.
 2. **Desktop side rails on `novel-home.html` and `read.html`** — `.rail-left` / `.rail-right` divs are present at ≥1200px but empty. Content to fill in a future iter: novel metadata panel, chapter selector, marginalia for the reader.
 3. **`author-cms-*` pages** — drag-drop works for adding blocks but reordering via drag isn't implemented (only via Up/Down buttons in the inspector).
 4. **Real audio playback** in reader is stubbed (the scrollytelling audio is not actually wired up).
